@@ -1,5 +1,11 @@
-function ParentPage() {
-  return <h1>Parent Page</h1>;
+function Parent() {
+  return (
+    <>
+      <h1>Parent Dashboard</h1>
+
+      <p>Parent insights coming soon.</p>
+    </>
+  );
 }
 
-export default ParentPage;
+export default Parent;

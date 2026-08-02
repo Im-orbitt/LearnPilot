@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Dashboard() {
   return (
     <>
@@ -5,20 +7,9 @@ function Dashboard() {
 
       <p>Welcome back!</p>
 
-      <hr />
-
-      <h2>Continue Learning</h2>
-      <p>No active lessons.</p>
-
-      <hr />
-
-      <h2>Library</h2>
-      <button>Go to Library</button>
-
-      <hr />
-
-      <h2>Progress</h2>
-      <p>0%</p>
+      <Link to="/app/library">
+        <button>Go to Library</button>
+      </Link>
     </>
   );
 }

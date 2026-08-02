@@ -1,5 +1,11 @@
-function ProgressPage() {
-  return <h1>Progress Page</h1>;
+function Progress() {
+  return (
+    <>
+      <h1>Progress</h1>
+
+      <p>Progress tracking coming soon.</p>
+    </>
+  );
 }
 
-export default ProgressPage;
+export default Progress;

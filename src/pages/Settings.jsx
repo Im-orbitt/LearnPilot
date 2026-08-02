@@ -1,5 +1,11 @@
-function SettingsPage() {
-  return <h1>Settings Page</h1>;
+function Settings() {
+  return (
+    <>
+      <h1>Settings</h1>
+
+      <p>Settings coming soon.</p>
+    </>
+  );
 }
 
-export default SettingsPage;
+export default Settings;

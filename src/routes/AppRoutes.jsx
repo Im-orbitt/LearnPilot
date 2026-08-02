@@ -19,26 +19,27 @@ function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public */}
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Landing />} />
         </Route>
 
+        {/* Authentication */}
         <Route path="/login" element={<AuthLayout />}>
           <Route index element={<Login />} />
         </Route>
 
+        {/* Application */}
         <Route path="/app" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="library" element={<Library />} />
           <Route path="subject" element={<Subject />} />
           <Route path="chapter" element={<Chapter />} />
           <Route path="lesson" element={<Lesson />} />
           <Route path="progress" element={<Progress />} />
           <Route path="settings" element={<Settings />} />
-        </Route>
-
-        <Route path="/parent" element={<DashboardLayout />}>
-          <Route index element={<Parent />} />
+          <Route path="parent" element={<Parent />} />
         </Route>
       </Routes>
     </BrowserRouter>
