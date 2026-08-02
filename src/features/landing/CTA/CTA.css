@@ -1,0 +1,32 @@
+.cta {
+    width: min(var(--container-width), calc(100% - 48px));
+    margin: var(--section-spacing) auto;
+    padding: 4rem 2rem;
+
+    text-align: center;
+
+    background: var(--primary-light);
+    border-radius: var(--radius-lg);
+}
+
+.cta h2 {
+    margin-bottom: 1rem;
+}
+
+.cta p {
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+}
+
+.cta-btn {
+    padding: .9rem 1.8rem;
+
+    border: none;
+    border-radius: var(--radius-full);
+
+    background: var(--primary);
+    color: white;
+
+    font-weight: 600;
+    cursor: pointer;
+}
