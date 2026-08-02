@@ -1,44 +1,67 @@
 :root {
 
-    /* Brand */
+    /* ========= COLORS ========= */
 
     --primary: #14B8A6;
     --primary-hover: #0F9E90;
     --primary-light: #CCFBF1;
 
-    /* Background */
-
     --background: #FFFFFF;
     --surface: #FFFFFF;
-
-    /* Text */
+    --surface-secondary: #F8FAFC;
 
     --text-primary: #0F172A;
     --text-secondary: #64748B;
-
-    /* Borders */
+    --text-light: #94A3B8;
 
     --border: #E2E8F0;
-
-    /* Status */
+    --border-hover: #CBD5E1;
 
     --success: #22C55E;
     --warning: #F59E0B;
     --error: #EF4444;
 
-    /* Shadows */
+    /* ========= TYPOGRAPHY ========= */
 
-    --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
-    --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
-    --shadow-lg: 0 20px 60px rgba(15, 23, 42, 0.12);
+    --font-family: "Inter", sans-serif;
 
-    /* Radius */
+    --font-xs: .75rem;
+    --font-sm: .875rem;
+    --font-md: 1rem;
+    --font-lg: 1.125rem;
+    --font-xl: 1.5rem;
+    --font-2xl: 2rem;
+
+    /* ========= SPACING ========= */
+
+    --space-xs: .25rem;
+    --space-sm: .5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+
+    /* ========= RADIUS ========= */
 
     --radius-sm: 10px;
     --radius-md: 16px;
     --radius-lg: 24px;
+    --radius-full: 999px;
 
-    /* Transition */
+    /* ========= SHADOWS ========= */
 
-    --transition-base: 250ms ease;
+    --shadow-sm: 0 2px 8px rgba(15, 23, 42, .05);
+    --shadow-md: 0 8px 24px rgba(15, 23, 42, .08);
+    --shadow-lg: 0 20px 60px rgba(15, 23, 42, .12);
+
+    /* ========= TRANSITIONS ========= */
+
+    --transition-fast: .15s ease;
+    --transition-base: .25s ease;
+    --transition-slow: .4s ease;
+
+    /* ========= LAYOUT ========= */
+
+    --container-width: 1200px;
+    --section-spacing: 6rem;
 }

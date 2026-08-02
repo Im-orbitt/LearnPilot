@@ -9,7 +9,7 @@ html {
 }
 
 body {
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-family);
     background: var(--background);
     color: var(--text-primary);
 }

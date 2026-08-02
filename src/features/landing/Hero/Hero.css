@@ -1,0 +1,137 @@
+.hero {
+    width: min(var(--container-width), calc(100% - 48px));
+    margin: var(--section-spacing) auto;
+    text-align: center;
+    position: relative;
+}
+
+.gradient-text {
+    color: var(--primary);
+}
+
+.eyebrow {
+    display: inline-block;
+    padding: 0.6rem 1.1rem;
+    border-radius: var(--radius-full);
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.hero h1 {
+    font-size: clamp(3.8rem, 8vw, 6rem);
+    line-height: 1;
+    letter-spacing: -3px;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+.subtitle {
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 3rem 0 5rem;
+}
+
+.primary-btn,
+.secondary-btn {
+    padding: 0.95rem 1.75rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.primary-btn {
+    background: var(--primary);
+    color: white;
+}
+
+.primary-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.secondary-btn {
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.secondary-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-sm);
+}
+
+.hero-preview {
+    position: relative;
+    width: min(1120px, 100%);
+    margin: 40px auto 0;
+}
+
+.dashboard-placeholder {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: grid;
+    place-items: center;
+    border-radius: 28px;
+    border: 1px solid var(--border);
+    background: var(--surface-secondary);
+    color: var(--text-light);
+    font-size: 1.2rem;
+    font-weight: 600;
+    box-shadow: var(--shadow-lg);
+}
+
+.floating-card {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.15rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--shadow-sm);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    z-index: 2;
+    transition: transform var(--transition-base);
+}
+
+.floating-card:hover {
+    transform: translateY(-4px);
+}
+
+.floating-card svg {
+    color: var(--primary);
+}
+
+.card1 {
+    top: 32px;
+    left: -18px;
+}
+
+.card2 {
+    top: 180px;
+    right: -18px;
+}
+
+.card3 {
+    bottom: 24px;
+    left: 70px;
+}
