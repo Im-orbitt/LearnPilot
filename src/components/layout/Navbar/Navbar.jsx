@@ -1,5 +1,26 @@
+import "./Navbar.css";
+import { Link } from "react-router-dom";
+import { Brain } from "lucide-react";
+
 function Navbar() {
-  return <nav>Navbar</nav>;
+  return (
+    <header className="navbar">
+      <Link to="/" className="logo">
+        <Brain size={30} />
+        <span>LearnPilot</span>
+      </Link>
+
+      <nav className="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it Works</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <Link to="/app/library">
+        <button className="nav-btn">Get Started</button>
+      </Link>
+    </header>
+  );
 }
 
 export default Navbar;
