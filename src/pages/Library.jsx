@@ -19,7 +19,7 @@ function Library() {
 
     const data = await response.json();
 
-    setText(data.text);
+    setText(data.summary);
   }
 
   return (
