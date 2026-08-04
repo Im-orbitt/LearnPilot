@@ -8,7 +8,6 @@ import Landing from "../pages/Landing";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import Library from "../pages/Library";
-import Subject from "../pages/Subject";
 import Chapter from "../pages/Chapter";
 import Lesson from "../pages/Lesson";
 import Progress from "../pages/Progress";
@@ -34,7 +33,6 @@ function AppRoutes() {
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="library" element={<Library />} />
-          <Route path="subject" element={<Subject />} />
           <Route path="chapter" element={<Chapter />} />
           <Route path="lesson" element={<Lesson />} />
           <Route path="progress" element={<Progress />} />
