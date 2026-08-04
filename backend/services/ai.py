@@ -39,29 +39,36 @@ Text:
     return response.text
   
 def generate_notes(text: str):
-    response = client.models.generate_content(
-        model="gemini-3.5-flash-lite",
-        contents=f"""
-You are an expert teacher.
-
-Create detailed study notes from the textbook content below.
-
-Return ONLY valid Markdown.
-
-The notes should:
-- Use clear headings.
-- Use bullet points where appropriate.
-- Explain concepts simply.
-- Include important definitions.
-- Include examples if present in the textbook.
-- Do not invent information not found in the text.
-
-Text:
-{text}
-"""
-    )
-
-    if response.text is None:
-        raise ValueError("Gemini returned no text.")
-
-    return response.text
+  response = client.models.generate_content(
+    model="gemini-3.5-flash-lite",
+    contents=f"""
+    You are an expert school teacher.
+    Read the textbook chapter below.
+    For EACH topic, generate detailed study notes.
+    Return ONLY valid JSON.
+    Format:
+    {{
+      "topics": [
+        {{
+          "title": "Topic name",
+          "notes": "Markdown notes for this topic."
+        }}
+      ]
+    }}
+    Rules:
+    - Keep the same topic order as the textbook.
+    - Explain concepts simply.
+    - Use markdown headings and bullet points.
+    - Include definitions and examples from the textbook.
+    - Do NOT invent information.
+    - Return ONLY JSON.
+    - Do NOT wrap the response in markdown.
+    - Do NOT use json or .
+    Chapter:
+    {text}
+    """
+  )
+  
+  if response.text is None:
+      raise ValueError("Gemini returned no text.")
+  return response.text
