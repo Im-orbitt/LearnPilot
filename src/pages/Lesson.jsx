@@ -1,19 +1,27 @@
+import { getCurrentTopic } from "../data/currentTopic";
+
 function Lesson() {
+  const topic = getCurrentTopic();
+
+  if (!topic) {
+    return <p>No lesson selected.</p>;
+  }
+
   return (
     <>
-      <h1>Lesson</h1>
+      <h1>{topic.title}</h1>
 
       <h2>Notes</h2>
 
-      <p>AI-generated notes will appear here.</p>
+      <pre>{topic.notes}</pre>
 
       <h2>Quiz</h2>
 
-      <p>Quiz will appear here.</p>
+      <p>Coming soon...</p>
 
       <h2>AI Tutor</h2>
 
-      <p>Chat with your AI tutor here.</p>
+      <p>Coming soon...</p>
     </>
   );
 }
