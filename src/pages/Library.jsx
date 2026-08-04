@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Library() {
-  const [text, setText] = useState("");
+  const [book, setBook] = useState(null);
 
   async function handleUpload(event) {
     const file = event.target.files[0];
@@ -19,7 +19,7 @@ function Library() {
 
     const data = await response.json();
 
-    setText(data.summary);
+    setBook(data);
   }
 
   return (
@@ -30,7 +30,21 @@ function Library() {
 
       <p>No books uploaded.</p>
 
-      <pre>{text}</pre>
+      {book && (
+        <>
+          <h2>{book.title}</h2>
+
+          <p>{book.summary}</p>
+
+          <h3>Topics</h3>
+
+          <ul>
+            {book.topics.map((topic) => (
+              <li key={topic}>{topic}</li>
+            ))}
+          </ul>
+        </>
+      )}
 
       <Link to="/app/subject">
         <button>Open Subject</button>
