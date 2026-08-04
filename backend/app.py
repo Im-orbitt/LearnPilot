@@ -27,8 +27,6 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     text = extract_text(pdf_bytes)
 
-    result = process_pdf(text)
-
     chapter = process_pdf(text)
     notes = process_notes(text)
     

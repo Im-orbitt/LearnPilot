@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+import { getBook, setBook as saveBook } from "../data/book";
+
 function Library() {
-  const [book, setBook] = useState(null);
+  const [book, setBook] = useState(getBook());
 
   async function handleUpload(event) {
     const file = event.target.files[0];
@@ -19,7 +21,10 @@ function Library() {
 
     const data = await response.json();
 
-    setBook(data);
+    console.log(data);
+
+    setBook(data); // updates this page
+    saveBook(data); // saves it globally
   }
 
   return (
@@ -40,18 +45,23 @@ function Library() {
 
           <ul>
             {book.chapter.topics.map((topic) => (
-              <li key={topic}>{topic}</li>
+              <li key={topic.title}>{topic.title}</li>
             ))}
           </ul>
 
           <h3>Notes</h3>
 
-          <pre>{book.notes}</pre>
+          {book.notes.topics.map((topic) => (
+            <div key={topic.title}>
+              <h4>{topic.title}</h4>
+              <pre>{topic.notes}</pre>
+            </div>
+          ))}
         </>
       )}
 
-      <Link to="/app/subject">
-        <button>Open Subject</button>
+      <Link to="/app/chapter">
+        <button>Open Chapter</button>
       </Link>
     </>
   );
