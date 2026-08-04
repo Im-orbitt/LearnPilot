@@ -32,17 +32,21 @@ function Library() {
 
       {book && (
         <>
-          <h2>{book.title}</h2>
+          <h2>{book.chapter.title}</h2>
 
-          <p>{book.summary}</p>
+          <p>{book.chapter.summary}</p>
 
           <h3>Topics</h3>
 
           <ul>
-            {book.topics.map((topic) => (
+            {book.chapter.topics.map((topic) => (
               <li key={topic}>{topic}</li>
             ))}
           </ul>
+
+          <h3>Notes</h3>
+
+          <pre>{book.notes}</pre>
         </>
       )}
 
