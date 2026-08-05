@@ -48,15 +48,6 @@ function Library() {
               <li key={topic.title}>{topic.title}</li>
             ))}
           </ul>
-
-          <h3>Notes</h3>
-
-          {book.notes.topics.map((topic) => (
-            <div key={topic.title}>
-              <h4>{topic.title}</h4>
-              <pre>{topic.notes}</pre>
-            </div>
-          ))}
         </>
       )}
 

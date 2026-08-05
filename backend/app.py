@@ -37,9 +37,11 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     quiz = process_quiz(notes)
 
+    for chapter_topic, notes_topic in zip(chapter["topics"], notes["topics"]):
+        chapter_topic["notes"] = notes_topic["notes"]
+
     return {
         "filename": file.filename,
         "chapter": chapter,
-        "notes": notes,
         "quiz": quiz,
     }
