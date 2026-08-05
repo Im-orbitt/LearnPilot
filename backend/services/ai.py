@@ -17,14 +17,21 @@ Read the textbook content below.
 
 Return ONLY valid JSON.
 
+Return each topic as an object with a "title" field.
+
+Do not return topics as strings.
+
 Format:
 {{
   "title": "...",
   "summary": "...",
   "topics": [
-    "Topic 1",
-    "Topic 2",
-    "Topic 3"
+    {
+      "title": "Topic 1"
+    },
+    {
+      "title": "Topic 2"
+    }
   ]
 }}
 

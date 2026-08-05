@@ -16,9 +16,9 @@ function Chapter() {
 
       <ul>
         {book.chapter.topics.map((topic) => (
-          <li key={topic}>
+          <li key={topic.title}>
             <Link to="/app/lesson" onClick={() => setCurrentTopic(topic)}>
-              {topic}
+              {topic.title}
             </Link>
           </li>
         ))}
