@@ -95,7 +95,7 @@ def generate_quiz(notes_json: str):
         contents=f"""
 You are an expert school teacher.
 
-Generate exactly 5 multiple choice questions based ONLY on these notes.
+Generate exactly 5 multiple choice questions based ONLY on the notes for THIS SINGLE TOPIC.
 
 Return ONLY valid JSON.
 

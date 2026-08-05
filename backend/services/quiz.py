@@ -2,10 +2,23 @@ import json
 
 from services.ai import generate_quiz
 
+
 def process_quiz(notes: dict):
-    result = generate_quiz(json.dumps(notes))
+    topics = []
 
-    if result is None:
-        raise ValueError("Gemini returned no quiz.")
+    for topic in notes["topics"]:
+        result = generate_quiz(topic["notes"])
 
-    return json.loads(result)
+        if result is None:
+            raise ValueError(f"Gemini returned no quiz for {topic['title']}")
+
+        quiz = json.loads(result)
+
+        topics.append({
+            "title": topic["title"],
+            "quiz": quiz["questions"]
+        })
+
+    return {
+        "topics": topics
+    }
