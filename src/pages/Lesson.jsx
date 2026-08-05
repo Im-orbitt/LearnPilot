@@ -21,7 +21,7 @@ function Lesson() {
 
       <h2>Quiz</h2>
 
-      {book.quiz.questions.map((question, index) => (
+      {topic.quiz.map((question, index) => (
         <div key={index}>
           <h3>
             {index + 1}. {question.question}

@@ -40,8 +40,14 @@ async def upload_pdf(file: UploadFile = File(...)):
     for chapter_topic, notes_topic in zip(chapter["topics"], notes["topics"]):
         chapter_topic["notes"] = notes_topic["notes"]
 
+    for question in quiz["questions"]:
+        for topic in chapter["topics"]:
+            if "quiz" not in topic:
+                topic["quiz"] = []
+
+            topic["quiz"].append(question)
+
     return {
         "filename": file.filename,
         "chapter": chapter,
-        "quiz": quiz,
     }

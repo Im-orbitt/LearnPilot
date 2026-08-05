@@ -33,7 +33,7 @@ function Library() {
 
       <input type="file" accept=".pdf" onChange={handleUpload} />
 
-      <p>No books uploaded.</p>
+      {!book && <p>No books uploaded.</p>}
 
       {book && (
         <>
