@@ -45,7 +45,7 @@ function Library() {
 
           <ul>
             {book.chapter.topics.map((topic) => (
-              <li key={topic.title}>{topic.title}</li>
+              <li key={topic}>{topic}</li>
             ))}
           </ul>
 
