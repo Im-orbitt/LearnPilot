@@ -38,15 +38,17 @@ Text:
 
     return response.text
 
-def generate_notes(text: str):
+def generate_notes(text: str, topics: list[str]):
     response = client.models.generate_content(
         model="gemini-3.5-flash-lite",
         contents=f"""
 You are an expert school teacher.
 
-Read the textbook chapter below.
+The textbook has already been divided into these topics:
 
-For EACH topic, generate detailed study notes.
+{topics}
+
+Generate notes for EVERY topic above.
 
 Return ONLY valid JSON.
 
@@ -61,13 +63,12 @@ Format:
 }}
 
 Rules:
-- Keep the same topic order as the textbook.
-- Explain concepts simply.
-- Use markdown headings and bullet points.
-- Include definitions and examples from the textbook.
-- Do NOT invent information.
+- Use EXACTLY the same topic titles.
+- Keep the same order.
+- Do not add or remove topics.
+- Explain simply.
+- Use markdown.
 - Return ONLY JSON.
-- Do NOT wrap the response in markdown.
 
 Chapter:
 {text}
@@ -79,45 +80,45 @@ Chapter:
 
     return response.text
 
-# def generate_quiz(notes: str):
-#     response = client.models.generate_content(
-#         model="gemini-3.5-flash-lite",
-#         contents=f"""
-# You are an expert school teacher.
-# 
-# Generate exactly 5 multiple choice questions based ONLY on these notes.
-# 
-# Return ONLY valid JSON.
-# 
-# Format:
-# {{
-#   "questions": [
-#     {{
-#       "question": "...",
-#       "options": [
-#         "...",
-#         "...",
-#         "...",
-#         "..."
-#       ],
-#       "answer": "..."
-#     }}
-#   ]
-# }}
-# 
-# Rules:
-# - Exactly 5 questions.
-# - Exactly 4 options each.
-# - Only one correct answer.
-# - Don't invent information.
-# - Return ONLY JSON.
-# 
-# Notes:
-# {notes}
-# """
-#     )
-# 
-#     if response.text is None:
-#         raise ValueError("Gemini returned no quiz.")
-# 
-#     return response.text
+def generate_quiz(notes_json: str):
+    response = client.models.generate_content(
+        model="gemini-3.5-flash-lite",
+        contents=f"""
+You are an expert school teacher.
+
+Generate exactly 5 multiple choice questions based ONLY on these notes.
+
+Return ONLY valid JSON.
+
+Format:
+{{
+  "questions": [
+    {{
+      "question": "...",
+      "options": [
+        "...",
+        "...",
+        "...",
+        "..."
+      ],
+      "answer": "..."
+    }}
+  ]
+}}
+
+Rules:
+- Exactly 5 questions.
+- Exactly 4 options each.
+- Only one correct answer.
+- Don't invent information.
+- Return ONLY JSON.
+
+Notes JSON:
+{notes_json}
+"""
+    )
+
+    if response.text is None:
+        raise ValueError("Gemini returned no quiz.")
+
+    return response.text

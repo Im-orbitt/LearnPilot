@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from services.pdf import extract_text
 from services.parser import process_pdf
 from services.notes import process_notes
+from services.quiz import process_quiz
 
 app = FastAPI()
 
@@ -18,7 +19,7 @@ app.add_middleware(
 
 @app.get("/")
 def root():
-    return {"message": "Hello from LearnPilot!"}
+    return {"message": "Backend Online!"}
 
 
 @app.post("/upload")
@@ -29,9 +30,11 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     chapter = process_pdf(text)
     notes = process_notes(text)
-    
+    quiz = process_quiz(text)
+
     return {
         "filename": file.filename,
         "chapter": chapter,
         "notes": notes,
+        "quiz": quiz,
     }
