@@ -22,20 +22,22 @@ Return each topic as an object with a "title" field.
 Do not return topics as strings.
 
 Format:
+
 {{
-  "title": "...",
-  "summary": "...",
-  "topics": [
-    {
-      "title": "Topic 1"
-    },
-    {
-      "title": "Topic 2"
-    }
+  "title":"...",
+  "summary":"...",
+  "topics":[
+    {{
+      "title":"Topic 1"
+    }},
+    {{
+      "title":"Topic 2"
+    }}
   ]
 }}
 
 Text:
+
 {text}
 """
     )
