@@ -1,7 +1,7 @@
 import json
 
 from services.ai import generate_quiz
-
+from services.ai import clean_json
 
 def process_quiz(notes: dict):
     topics = []
@@ -12,7 +12,7 @@ def process_quiz(notes: dict):
         if result is None:
             raise ValueError(f"Gemini returned no quiz for {topic['title']}")
 
-        quiz = json.loads(result)
+        quiz = json.loads(clean_json(result))
 
         topics.append({
             "title": topic["title"],

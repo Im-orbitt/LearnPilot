@@ -7,6 +7,20 @@ load_dotenv()
 
 client = genai.Client(api_key=os.getenv("GENAI_API_KEY"))
 
+def clean_json(text: str):
+    text = text.strip()
+
+    if text.startswith("```json"):
+        text = text.removeprefix("```json").strip()
+
+    elif text.startswith("```"):
+        text = text.removeprefix("```").strip()
+
+    if text.endswith("```"):
+        text = text.removesuffix("```").strip()
+
+    return text
+
 def generate_chapter_structure(text: str):
     response = client.models.generate_content(
         model="gemini-3.5-flash-lite",
