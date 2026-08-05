@@ -2,7 +2,7 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 
 from services.pdf import extract_text
-from services.parser import process_pdf
+from services.parser import process_chapter
 from services.notes import process_notes
 from services.quiz import process_quiz
 
@@ -28,9 +28,14 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     text = extract_text(pdf_bytes)
 
-    chapter = process_pdf(text)
-    notes = process_notes(text)
-    quiz = process_quiz(text)
+    chapter = process_chapter(text)
+    
+    notes = process_notes(
+        text,
+        chapter["topics"]
+    )
+
+    quiz = process_quiz(notes)
 
     return {
         "filename": file.filename,
