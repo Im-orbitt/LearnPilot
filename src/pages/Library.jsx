@@ -4,6 +4,7 @@ import { useBook } from "../hooks/useBook";
 import { uploadPdf } from "../services/api";
 
 import Button from "../components/ui/Button/Button";
+import Spinner from "../components/ui/Spinner/Spinner";
 
 function Library() {
   const { book, setBook } = useBook();
@@ -44,7 +45,12 @@ function Library() {
         disabled={uploading}
       />
 
-      {uploading && <p>Generating chapter...</p>}
+      {uploading && (
+        <>
+          <Spinner />
+          <p>Generating chapter...</p>
+        </>
+      )}
 
       {success && <p>{success}</p>}
 
