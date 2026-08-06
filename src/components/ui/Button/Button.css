@@ -1,0 +1,23 @@
+.btn {
+    border: none;
+    border-radius: var(--radius-full);
+    padding: 0.9rem 1.5rem;
+    cursor: pointer;
+    font: inherit;
+    transition: all var(--transition-fast);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
