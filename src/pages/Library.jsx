@@ -4,6 +4,7 @@ import { useBook } from "../hooks/useBook";
 
 import { uploadPdf } from "../services/api";
 
+import Button from "../components/ui/Button/Button";
 import Spinner from "../components/ui/Spinner/Spinner";
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
 import BookCard from "../components/cards/BookCard/BookCard";
@@ -67,7 +68,13 @@ function Library() {
         />
       )}
 
-      {book && <BookCard book={book} onOpen={() => navigate("/app/chapter")} />}
+      {book && (
+        <>
+          <BookCard chapter={book.chapter} />
+
+          <Button onClick={() => navigate("/app/chapter")}>Open Chapter</Button>
+        </>
+      )}
     </>
   );
 }

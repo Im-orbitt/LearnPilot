@@ -1,9 +1,30 @@
 .book-card {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: white;
+    box-shadow: var(--shadow-sm);
+    margin: 1.5rem 0;
+}
+
+.book-card h2 {
+    margin-bottom: .75rem;
 }
 
 .book-card p {
     color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.book-meta {
+    margin-top: 1rem;
+    display: flex;
+    gap: .75rem;
+}
+
+.book-meta span {
+    padding: .35rem .8rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, .05);
+    font-size: .9rem;
 }
