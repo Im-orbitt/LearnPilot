@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useBook } from "../hooks/useBook";
+import { uploadPdf } from "../services/api";
 
 function Library() {
   const { book, setBook } = useBook();
@@ -9,15 +10,7 @@ function Library() {
 
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append("file", file);
-
-    const response = await fetch("http://127.0.0.1:8000/upload", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await response.json();
+    const data = await uploadPdf(file);
 
     console.log(data);
 

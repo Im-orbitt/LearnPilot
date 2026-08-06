@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getBackendStatus } from "../services/api";
 
 function Dashboard() {
   const [message, setMessage] = useState("Loading...");
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/")
-      .then((response) => response.json())
+    getBackendStatus()
       .then((data) => setMessage(data.message))
       .catch(() => setMessage("Backend offline"));
   }, []);
