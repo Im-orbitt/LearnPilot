@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 
-import { getBook } from "../data/book";
-import { setCurrentTopic } from "../data/currentTopic";
+import { useBook } from "../hooks/useBook";
 
 function Chapter() {
-  const book = getBook();
+  const { book, setCurrentTopic } = useBook();
 
   if (!book) {
     return <p>No chapter loaded.</p>;

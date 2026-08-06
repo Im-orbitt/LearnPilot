@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-
-import { getBook, setBook as saveBook } from "../data/book";
+import { useBook } from "../hooks/useBook";
 
 function Library() {
-  const [book, setBook] = useState(getBook());
+  const { book, setBook } = useBook();
 
   async function handleUpload(event) {
     const file = event.target.files[0];
@@ -24,7 +22,6 @@ function Library() {
     console.log(data);
 
     setBook(data); // updates this page
-    saveBook(data); // saves it globally
   }
 
   return (

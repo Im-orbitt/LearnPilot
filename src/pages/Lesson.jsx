@@ -1,9 +1,7 @@
-import { getCurrentTopic } from "../data/currentTopic";
-import { getBook } from "../data/book";
+import { useBook } from "../hooks/useBook";
 
 function Lesson() {
-  const topic = getCurrentTopic();
-  const book = getBook();
+  const { currentTopic: topic, book } = useBook();
 
   if (!topic || !book) {
     return <p>No lesson selected.</p>;
