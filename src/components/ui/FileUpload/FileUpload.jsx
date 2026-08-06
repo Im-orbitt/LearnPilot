@@ -1,8 +1,9 @@
 import "./FileUpload.css";
+import { UploadCloud, FileText } from "lucide-react";
 
 function FileUpload({ onChange, disabled }) {
   return (
-    <label className="file-upload">
+    <label className={`file-upload ${disabled ? "disabled" : ""}`}>
       <input
         type="file"
         accept=".pdf"
@@ -10,11 +11,14 @@ function FileUpload({ onChange, disabled }) {
         disabled={disabled}
       />
 
-      <div className="file-upload-content">
-        <h3>📚 Upload your textbook</h3>
+      <UploadCloud size={52} className="upload-icon" />
 
-        <p>Click here to choose a PDF</p>
+      <h3>Upload your textbook</h3>
 
+      <p>Choose an NCERT or any study PDF.</p>
+
+      <div className="upload-badge">
+        <FileText size={16} />
         <span>PDF only</span>
       </div>
     </label>
