@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useBook } from "../hooks/useBook";
 import { uploadPdf } from "../services/api";
@@ -5,23 +6,35 @@ import { uploadPdf } from "../services/api";
 function Library() {
   const { book, setBook } = useBook();
 
+  const [uploading, setUploading] = useState(false);
+
   async function handleUpload(event) {
     const file = event.target.files[0];
 
     if (!file) return;
 
-    const data = await uploadPdf(file);
+    setUploading(true);
 
-    console.log(data);
-
-    setBook(data); // updates this page
+    try {
+      const data = await uploadPdf(file);
+      setBook(data);
+    } finally {
+      setUploading(false);
+    }
   }
 
   return (
     <>
       <h1>Library</h1>
 
-      <input type="file" accept=".pdf" onChange={handleUpload} />
+      <input
+        type="file"
+        accept=".pdf"
+        onChange={handleUpload}
+        disabled={uploading}
+      />
+
+      {uploading && <p>Generating chapter...</p>}
 
       {!book && <p>No books uploaded.</p>}
 
@@ -42,7 +55,7 @@ function Library() {
       )}
 
       <Link to="/app/chapter">
-        <button>Open Chapter</button>
+        <button disabled={!book}>Open Chapter</button>
       </Link>
     </>
   );
