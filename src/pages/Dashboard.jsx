@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { BookOpen, Layers, Brain } from "lucide-react";
+
 import { useBook } from "../hooks/useBook";
 
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
-import Button from "../components/ui/Button/Button";
+import StatCard from "../components/cards/StatCard/StatCard";
 
 function Dashboard() {
   const { book } = useBook();
@@ -20,15 +21,24 @@ function Dashboard() {
     <>
       <h2>Welcome back!</h2>
 
-      <p>
-        Continue learning <strong>{book.chapter.title}</strong>.
-      </p>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3,1fr)",
+          gap: "1rem",
+          marginTop: "2rem",
+        }}
+      >
+        <StatCard title="Chapter" value="1" icon={BookOpen} />
 
-      <Link to="/app/chapter">
-        <Button>Continue Learning</Button>
-      </Link>
+        <StatCard
+          title="Topics"
+          value={book.chapter.topics.length}
+          icon={Layers}
+        />
+
+        <StatCard title="AI Ready" value="✓" icon={Brain} />
+      </div>
     </>
   );
 }
-
-export default Dashboard;

@@ -1,0 +1,23 @@
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    padding: 1.5rem;
+
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-card h3 {
+    margin: 0;
+    font-size: 1.6rem;
+}
+
+.stat-card p {
+    margin-top: .25rem;
+    color: var(--text-secondary);
+}
