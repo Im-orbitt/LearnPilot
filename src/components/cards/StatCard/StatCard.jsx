@@ -1,11 +1,13 @@
 import "./StatCard.css";
 
-function StatCard({ title, value, icon: Icon }) {
+function StatCard({ title, value, icon: Icon, color = "var(--primary)" }) {
   return (
     <div className="stat-card">
-      <Icon size={28} />
+      <div className="stat-card-icon" style={{ color }}>
+        <Icon size={26} />
+      </div>
 
-      <div>
+      <div className="stat-card-content">
         <h3>{value}</h3>
         <p>{title}</p>
       </div>
