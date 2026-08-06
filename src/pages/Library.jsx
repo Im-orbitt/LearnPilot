@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useBook } from "../hooks/useBook";
+
 import { uploadPdf } from "../services/api";
 
-import Button from "../components/ui/Button/Button";
 import Spinner from "../components/ui/Spinner/Spinner";
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
+import BookCard from "../components/cards/BookCard/BookCard";
 
 function Library() {
   const { book, setBook } = useBook();
+
+  const navigate = useNavigate();
 
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -64,25 +67,7 @@ function Library() {
         />
       )}
 
-      {book && (
-        <>
-          <h2>{book.chapter.title}</h2>
-
-          <p>{book.chapter.summary}</p>
-
-          <h3>Topics</h3>
-
-          <ul>
-            {book.chapter.topics.map((topic) => (
-              <li key={topic.title}>{topic.title}</li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      <Link to="/app/chapter">
-        <Button disabled={!book}>Open Chapter</Button>
-      </Link>
+      {book && <BookCard book={book} onOpen={() => navigate("/app/chapter")} />}
     </>
   );
 }
