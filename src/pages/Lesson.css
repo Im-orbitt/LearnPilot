@@ -1,0 +1,30 @@
+.lesson-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.lesson-header {
+    margin-bottom: 2rem;
+}
+
+.lesson-section {
+    margin-block: 2rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: white;
+}
+
+.quiz-card {
+    margin-top: 1rem;
+}
+
+.quiz-card ul {
+    padding-left: 1.25rem;
+}
+
+pre {
+    white-space: pre-wrap;
+    font-family: inherit;
+}

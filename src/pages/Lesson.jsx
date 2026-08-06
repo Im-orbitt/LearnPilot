@@ -1,44 +1,56 @@
+import "./Lesson.css";
+
 import { useBook } from "../hooks/useBook";
 
-function Lesson() {
-  const { currentTopic: topic, book } = useBook();
+import EmptyState from "../components/feedback/EmptyState/EmptyState";
 
-  if (!topic || !book) {
-    return <p>No lesson selected.</p>;
+function Lesson() {
+  const { currentTopic } = useBook();
+
+  if (!currentTopic) {
+    return (
+      <EmptyState
+        title="No topic selected"
+        message="Choose a topic from the Chapter page."
+      />
+    );
   }
 
   return (
-    <>
-      <h1>{topic.title}</h1>
+    <div className="lesson-page">
+      <header className="lesson-header">
+        <h1>{currentTopic.title}</h1>
+      </header>
 
-      <h2>Notes</h2>
+      <section className="lesson-section">
+        <h2>📝 Notes</h2>
 
-      <pre>{topic.notes}</pre>
+        <pre>{currentTopic.notes}</pre>
+      </section>
 
-      <hr />
+      <section className="lesson-section">
+        <h2>🧠 Quiz</h2>
 
-      <h2>Quiz</h2>
+        {currentTopic.quiz.map((question, index) => (
+          <div className="quiz-card" key={index}>
+            <h3>
+              {index + 1}. {question.question}
+            </h3>
 
-      {topic.quiz.map((question, index) => (
-        <div key={index}>
-          <h3>
-            {index + 1}. {question.question}
-          </h3>
+            <ul>
+              {question.options.map((option) => (
+                <li key={option}>{option}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
 
-          <ul>
-            {question.options.map((option) => (
-              <li key={option}>{option}</li>
-            ))}
-          </ul>
-        </div>
-      ))}
-
-      <hr />
-
-      <h2>AI Tutor</h2>
-
-      <p>Coming soon...</p>
-    </>
+      <section className="lesson-section">
+        <h2>🤖 AI Tutor</h2>
+        <p>Coming soon...</p>
+      </section>
+    </div>
   );
 }
 
