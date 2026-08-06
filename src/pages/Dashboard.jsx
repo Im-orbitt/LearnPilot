@@ -1,3 +1,5 @@
+import "./Dashboard.css";
+
 import { BookOpen, Layers, Brain } from "lucide-react";
 
 import { useBook } from "../hooks/useBook";
@@ -18,17 +20,10 @@ function Dashboard() {
   }
 
   return (
-    <>
-      <h2>Welcome back!</h2>
+    <div className="dashboard-page">
+      <h2>Welcome back 👋</h2>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3,1fr)",
-          gap: "1rem",
-          marginTop: "2rem",
-        }}
-      >
+      <div className="dashboard-grid">
         <StatCard title="Chapter" value="1" icon={BookOpen} />
 
         <StatCard
@@ -39,7 +34,7 @@ function Dashboard() {
 
         <StatCard title="AI Ready" value="✓" icon={Brain} />
       </div>
-    </>
+    </div>
   );
 }
 
