@@ -9,6 +9,7 @@ import Button from "../components/ui/Button/Button";
 import Spinner from "../components/ui/Spinner/Spinner";
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
 import BookCard from "../components/cards/BookCard/BookCard";
+import FileUpload from "../components/ui/FileUpload/FileUpload";
 
 function Library() {
   const { book, setBook } = useBook();
@@ -50,12 +51,7 @@ function Library() {
       </div>
 
       <div className="upload-card">
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={handleUpload}
-          disabled={uploading}
-        />
+        <FileUpload onChange={handleUpload} disabled={uploading} />
 
         {uploading && (
           <>
