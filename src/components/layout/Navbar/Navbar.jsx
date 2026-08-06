@@ -2,6 +2,8 @@ import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { Brain } from "lucide-react";
 
+import Button from "../../ui/Button/Button";
+
 function Navbar() {
   return (
     <header className="navbar">
@@ -17,7 +19,7 @@ function Navbar() {
       </nav>
 
       <Link to="/app/library">
-        <button className="nav-btn">Get Started</button>
+        <Button className="nav-btn">Get Started</Button>
       </Link>
     </header>
   );

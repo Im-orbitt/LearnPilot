@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useBook } from "../hooks/useBook";
 import { uploadPdf } from "../services/api";
 
+import Button from "../components/ui/Button/Button";
+
 function Library() {
   const { book, setBook } = useBook();
 
@@ -67,7 +69,7 @@ function Library() {
       )}
 
       <Link to="/app/chapter">
-        <button disabled={!book}>Open Chapter</button>
+        <Button disabled={!book}>Open Chapter</Button>
       </Link>
     </>
   );
