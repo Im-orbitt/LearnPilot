@@ -10,7 +10,9 @@ export async function uploadPdf(file) {
   });
 
   if (!response.ok) {
-    throw new Error(`Upload failed (${response.status})`);
+    const message = await response.text();
+
+    throw new Error(message || `Upload failed (${response.status})`);
   }
 
   return response.json();

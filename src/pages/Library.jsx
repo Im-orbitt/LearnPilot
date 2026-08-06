@@ -7,17 +7,25 @@ function Library() {
   const { book, setBook } = useBook();
 
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   async function handleUpload(event) {
     const file = event.target.files[0];
 
     if (!file) return;
 
+    setError("");
+    setSuccess("");
     setUploading(true);
 
     try {
       const data = await uploadPdf(file);
+
       setBook(data);
+      setSuccess("Chapter generated successfully!");
+    } catch (err) {
+      setError(err.message);
     } finally {
       setUploading(false);
     }
@@ -35,6 +43,10 @@ function Library() {
       />
 
       {uploading && <p>Generating chapter...</p>}
+
+      {success && <p>{success}</p>}
+
+      {error && <p>{error}</p>}
 
       {!book && <p>No books uploaded.</p>}
 

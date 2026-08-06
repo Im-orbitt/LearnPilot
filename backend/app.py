@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import HTTPException
 
 from services.pdf import extract_text
 from services.parser import process_chapter
@@ -28,14 +29,15 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     text = extract_text(pdf_bytes)
 
-    chapter = process_chapter(text)
-    
-    notes = process_notes(
-        text,
-        chapter["topics"]
-    )
-
-    quiz = process_quiz(notes)
+    try:
+        chapter = process_chapter(text)
+        notes = process_notes(text, chapter["topics"])
+        quiz = process_quiz(notes["topics"])
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
 
     for chapter_topic, notes_topic in zip(chapter["topics"], notes["topics"]):
         chapter_topic["notes"] = notes_topic["notes"]
