@@ -1,24 +1,31 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getBackendStatus } from "../services/api";
+import { useBook } from "../hooks/useBook";
+
+import EmptyState from "../components/feedback/EmptyState/EmptyState";
+import Button from "../components/ui/Button/Button";
 
 function Dashboard() {
-  const [message, setMessage] = useState("Loading...");
+  const { book } = useBook();
 
-  useEffect(() => {
-    getBackendStatus()
-      .then((data) => setMessage(data.message))
-      .catch(() => setMessage("Backend offline"));
-  }, []);
+  if (!book) {
+    return (
+      <EmptyState
+        title="Nothing to learn yet"
+        message="Upload your first textbook to get started."
+      />
+    );
+  }
 
   return (
     <>
-      <h1>Dashboard</h1>
+      <h2>Welcome back!</h2>
 
-      <p>{message}</p>
+      <p>
+        Continue learning <strong>{book.chapter.title}</strong>.
+      </p>
 
-      <Link to="/app/library">
-        <button>Go to Library</button>
+      <Link to="/app/chapter">
+        <Button>Continue Learning</Button>
       </Link>
     </>
   );

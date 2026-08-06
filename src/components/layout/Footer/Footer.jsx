@@ -3,9 +3,7 @@ import "./Footer.css";
 function Footer() {
   return (
     <footer>
-      <p className="footer-text">
-        &copy; 2026 LearnPilot. All rights reserved.
-      </p>
+      <small>&copy; 2026 LearnPilot</small>
     </footer>
   );
 }
