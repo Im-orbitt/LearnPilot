@@ -5,6 +5,7 @@ import { uploadPdf } from "../services/api";
 
 import Button from "../components/ui/Button/Button";
 import Spinner from "../components/ui/Spinner/Spinner";
+import EmptyState from "../components/feedback/EmptyState/EmptyState";
 
 function Library() {
   const { book, setBook } = useBook();
@@ -56,7 +57,12 @@ function Library() {
 
       {error && <p>{error}</p>}
 
-      {!book && <p>No books uploaded.</p>}
+      {!book && !uploading && (
+        <EmptyState
+          title="No books yet"
+          message="Upload a PDF to generate notes, quizzes and AI lessons."
+        />
+      )}
 
       {book && (
         <>
