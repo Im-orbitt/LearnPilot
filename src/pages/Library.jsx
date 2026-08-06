@@ -1,3 +1,4 @@
+import "./Library.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBook } from "../hooks/useBook";
@@ -40,31 +41,37 @@ function Library() {
   }
 
   return (
-    <>
-      <h1>Library</h1>
+    <div className="library-page">
+      <div className="library-header">
+        <h1>Library</h1>
+        <p>
+          Upload a chapter and let LearnPilot build notes, quizzes and lessons.
+        </p>
+      </div>
 
-      <input
-        type="file"
-        accept=".pdf"
-        onChange={handleUpload}
-        disabled={uploading}
-      />
+      <div className="upload-card">
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={handleUpload}
+          disabled={uploading}
+        />
 
-      {uploading && (
-        <>
-          <Spinner />
-          <p>Generating chapter...</p>
-        </>
-      )}
+        {uploading && (
+          <>
+            <Spinner />
+            <p>Generating chapter...</p>
+          </>
+        )}
 
-      {success && <p>{success}</p>}
-
-      {error && <p>{error}</p>}
+        {success && <p>{success}</p>}
+        {error && <p>{error}</p>}
+      </div>
 
       {!book && !uploading && (
         <EmptyState
           title="No books yet"
-          message="Upload a PDF to generate notes, quizzes and AI lessons."
+          message="Upload your first PDF to get started."
         />
       )}
 
@@ -72,10 +79,14 @@ function Library() {
         <>
           <BookCard chapter={book.chapter} />
 
-          <Button onClick={() => navigate("/app/chapter")}>Open Chapter</Button>
+          <div className="library-actions">
+            <Button onClick={() => navigate("/app/chapter")}>
+              Open Chapter
+            </Button>
+          </div>
         </>
       )}
-    </>
+    </div>
   );
 }
 
