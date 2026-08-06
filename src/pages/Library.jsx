@@ -5,7 +5,6 @@ import { useBook } from "../hooks/useBook";
 
 import { uploadPdf } from "../services/api";
 
-import Button from "../components/ui/Button/Button";
 import Spinner from "../components/ui/Spinner/Spinner";
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
 import BookCard from "../components/cards/BookCard/BookCard";
@@ -73,13 +72,10 @@ function Library() {
 
       {book && (
         <>
-          <BookCard chapter={book.chapter} />
-
-          <div className="library-actions">
-            <Button onClick={() => navigate("/app/chapter")}>
-              Open Chapter
-            </Button>
-          </div>
+          <BookCard
+            chapter={book.chapter}
+            onOpen={() => navigate("/app/chapter")}
+          />
         </>
       )}
     </div>

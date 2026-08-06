@@ -1,15 +1,16 @@
 import "./BookCard.css";
+import Button from "../../ui/Button/Button";
 
-function BookCard({ chapter }) {
+function BookCard({ chapter, onOpen }) {
   return (
     <div className="book-card">
       <h2>{chapter.title}</h2>
 
       <p>{chapter.summary}</p>
 
-      <div className="book-meta">
-        <span>{chapter.topics.length} Topics</span>
-      </div>
+      <p>{chapter.topics.length} Topics</p>
+
+      <Button onClick={onOpen}>Open Chapter</Button>
     </div>
   );
 }
