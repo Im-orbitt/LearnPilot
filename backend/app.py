@@ -32,7 +32,7 @@ async def upload_pdf(file: UploadFile = File(...)):
     try:
         chapter = process_chapter(text)
         notes = process_notes(text, chapter["topics"])
-        quiz = process_quiz(notes["topics"])
+        quiz = process_quiz(notes)
     except Exception as e:
         raise HTTPException(
             status_code=500,
