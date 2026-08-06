@@ -1,11 +1,38 @@
 import { NavLink } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Library,
+  BarChart3,
+  Users,
+  Settings,
+} from "lucide-react";
 
 const links = [
-  { to: "/app/dashboard", label: "Dashboard" },
-  { to: "/app/library", label: "Library" },
-  { to: "/app/progress", label: "Progress" },
-  { to: "/app/parent", label: "Parent" },
-  { to: "/app/settings", label: "Settings" },
+  {
+    to: "/app/dashboard",
+    label: "Dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    to: "/app/library",
+    label: "Library",
+    icon: Library,
+  },
+  {
+    to: "/app/progress",
+    label: "Progress",
+    icon: BarChart3,
+  },
+  {
+    to: "/app/parent",
+    label: "Parent",
+    icon: Users,
+  },
+  {
+    to: "/app/settings",
+    label: "Settings",
+    icon: Settings,
+  },
 ];
 
 function Sidebar() {
@@ -14,10 +41,11 @@ function Sidebar() {
       <h2>LearnPilot</h2>
 
       <nav>
-        {links.map((link) => (
-          <div key={link.to}>
-            <NavLink to={link.to}>{link.label}</NavLink>
-          </div>
+        {links.map(({ to, label, icon: Icon }) => (
+          <NavLink key={to} to={to}>
+            <Icon size={18} />
+            <span>{label}</span>
+          </NavLink>
         ))}
       </nav>
     </aside>

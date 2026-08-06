@@ -5,7 +5,9 @@ function Topbar() {
 
   return (
     <header>
-      <h1>{book ? book.chapter.title : "LearnPilot"}</h1>
+      <h1>LearnPilot</h1>
+
+      {book && <p>{book.filename}</p>}
     </header>
   );
 }
