@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import "./QuizCard.css";
 
-export default function QuizCard({ question, index }) {
+export default function QuizCard({ question, index, onAnswered }) {
   const [selected, setSelected] = useState(null);
   const [submitted, setSubmitted] = useState(false);
 
@@ -40,7 +40,10 @@ export default function QuizCard({ question, index }) {
         <button
           className="submit-btn"
           disabled={selected === null}
-          onClick={() => setSubmitted(true)}
+          onClick={() => {
+            setSubmitted(true);
+            onAnswered?.(correct);
+          }}
         >
           Check Answer
         </button>
