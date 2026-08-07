@@ -42,13 +42,6 @@ function Library() {
 
   return (
     <div className="library-page">
-      <div className="library-header">
-        <h1>Library</h1>
-        <p>
-          Upload a chapter and let LearnPilot build notes, quizzes and lessons.
-        </p>
-      </div>
-
       <div className="upload-card">
         <FileUpload onChange={handleUpload} disabled={uploading} />
 

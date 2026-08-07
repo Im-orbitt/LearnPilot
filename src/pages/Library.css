@@ -3,18 +3,6 @@
     margin: 0 auto;
 }
 
-.library-header {
-    margin-bottom: 2rem;
-}
-
-.library-header h1 {
-    margin-bottom: .5rem;
-}
-
-.library-header p {
-    color: var(--text-secondary);
-}
-
 .upload-card {
     padding: 2rem;
     margin-bottom: 2rem;
