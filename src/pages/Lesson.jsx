@@ -3,6 +3,7 @@ import "./Lesson.css";
 import { useBook } from "../hooks/useBook";
 
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
+import QuizCard from "../features/lesson/QuizCard/QuizCard";
 
 function Lesson() {
   const { currentTopic } = useBook();
@@ -32,17 +33,7 @@ function Lesson() {
         <h2>🧠 Quiz</h2>
 
         {currentTopic.quiz.map((question, index) => (
-          <div className="quiz-card" key={index}>
-            <h3>
-              {index + 1}. {question.question}
-            </h3>
-
-            <ul>
-              {question.options.map((option) => (
-                <li key={option}>{option}</li>
-              ))}
-            </ul>
-          </div>
+          <QuizCard key={index} question={question} index={index} />
         ))}
       </section>
 

@@ -1,7 +1,7 @@
-import FileUpload from "../../../components/ui/FileUpload/FileUpload";
-import Spinner from "../../../components/ui/Spinner/Spinner";
-
 import "./UploadSection.css";
+
+import Spinner from "../../../components/ui/Spinner/Spinner";
+import FileUpload from "../../../components/ui/FileUpload/FileUpload";
 
 export default function UploadSection({ uploading, success, error, onUpload }) {
   return (
@@ -9,14 +9,14 @@ export default function UploadSection({ uploading, success, error, onUpload }) {
       <FileUpload onChange={onUpload} disabled={uploading} />
 
       {uploading && (
-        <div className="upload-status">
+        <>
           <Spinner />
           <p>Generating chapter...</p>
-        </div>
+        </>
       )}
 
-      {success && <p className="upload-success">{success}</p>}
-      {error && <p className="upload-error">{error}</p>}
+      {success && <p>{success}</p>}
+      {error && <p>{error}</p>}
     </div>
   );
 }
