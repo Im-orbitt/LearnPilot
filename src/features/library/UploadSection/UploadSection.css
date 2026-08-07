@@ -1,0 +1,28 @@
+.upload-card {
+    padding: 2rem;
+    margin-bottom: 2rem;
+
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-lg);
+
+    background: white;
+}
+
+.upload-status {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-top: 1rem;
+}
+
+.upload-success {
+    margin-top: 1rem;
+    color: var(--success);
+    font-weight: 600;
+}
+
+.upload-error {
+    margin-top: 1rem;
+    color: var(--error);
+    font-weight: 600;
+}

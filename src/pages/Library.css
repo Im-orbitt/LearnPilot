@@ -3,20 +3,6 @@
     margin: 0 auto;
 }
 
-.upload-card {
-    padding: 2rem;
-    margin-bottom: 2rem;
-
-    border: 2px dashed var(--border);
-    border-radius: var(--radius-lg);
-
-    background: white;
-}
-
-.upload-card input {
-    margin-top: 1rem;
-}
-
 .library-actions {
     margin-top: 1.5rem;
 }

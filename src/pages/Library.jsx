@@ -5,10 +5,9 @@ import { useBook } from "../hooks/useBook";
 
 import { uploadPdf } from "../services/api";
 
-import Spinner from "../components/ui/Spinner/Spinner";
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
 import BookCard from "../components/cards/BookCard/BookCard";
-import FileUpload from "../components/ui/FileUpload/FileUpload";
+import UploadSection from "../features/library/UploadSection/UploadSection";
 
 function Library() {
   const { book, setBook } = useBook();
@@ -42,19 +41,12 @@ function Library() {
 
   return (
     <div className="library-page">
-      <div className="upload-card">
-        <FileUpload onChange={handleUpload} disabled={uploading} />
-
-        {uploading && (
-          <>
-            <Spinner />
-            <p>Generating chapter...</p>
-          </>
-        )}
-
-        {success && <p>{success}</p>}
-        {error && <p>{error}</p>}
-      </div>
+      <UploadSection
+        uploading={uploading}
+        success={success}
+        error={error}
+        onUpload={handleUpload}
+      />
 
       {!book && !uploading && (
         <EmptyState
