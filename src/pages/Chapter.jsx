@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import { useBook } from "../hooks/useBook";
 
-import Button from "../components/ui/Button/Button";
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
+import TopicCard from "../features/chapter/TopicCard/TopicCard";
 
 function Chapter() {
   const { book, setCurrentTopicIndex } = useBook();
@@ -34,11 +34,11 @@ function Chapter() {
 
       <div className="topics-grid">
         {book.chapter.topics.map((topic, index) => (
-          <div className="topic-card" key={topic.title}>
-            <h3>{topic.title}</h3>
-
-            <Button onClick={() => openTopic(index)}>Study Topic</Button>
-          </div>
+          <TopicCard
+            key={topic.title}
+            topic={topic}
+            onClick={() => openTopic(index)}
+          />
         ))}
       </div>
     </div>

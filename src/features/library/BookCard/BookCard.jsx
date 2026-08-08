@@ -1,5 +1,5 @@
 import "./BookCard.css";
-import Button from "../../ui/Button/Button";
+import Button from "../../../components/ui/Button/Button";
 
 function BookCard({ chapter, onOpen }) {
   return (

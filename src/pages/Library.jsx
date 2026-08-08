@@ -6,7 +6,7 @@ import { useBook } from "../hooks/useBook";
 import { uploadPdf } from "../services/api";
 
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
-import BookCard from "../components/cards/BookCard/BookCard";
+import BookCard from "../features/library/BookCard/BookCard";
 import UploadSection from "../features/library/UploadSection/UploadSection";
 
 function Library() {

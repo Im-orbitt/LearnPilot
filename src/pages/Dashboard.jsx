@@ -5,7 +5,7 @@ import { BookOpen, Layers, Brain } from "lucide-react";
 import { useBook } from "../hooks/useBook";
 
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
-import StatCard from "../components/cards/StatCard/StatCard";
+import StatCard from "../features/dashboard/StatCard/StatCard";
 
 function Dashboard() {
   const { book } = useBook();
