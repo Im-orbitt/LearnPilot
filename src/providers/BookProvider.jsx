@@ -1,9 +1,37 @@
-import { useState } from "react";
-import { BookContext } from "./BookContext";
+import { useEffect, useState } from "react";
+
+import BookContext from "../contexts/BookContext";
 
 export function BookProvider({ children }) {
-  const [book, setBook] = useState(null);
-  const [currentTopic, setCurrentTopic] = useState(null);
+  const [book, setBookState] = useState(() => {
+    const saved = localStorage.getItem("learnpilot-book");
+
+    if (!saved) return null;
+
+    try {
+      return JSON.parse(saved);
+    } catch {
+      localStorage.removeItem("learnpilot-book");
+      return null;
+    }
+  });
+
+  const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
+
+  function setBook(newBook) {
+    setBookState(newBook);
+    setCurrentTopicIndex(0);
+  }
+
+  useEffect(() => {
+    if (book) {
+      localStorage.setItem("learnpilot-book", JSON.stringify(book));
+    } else {
+      localStorage.removeItem("learnpilot-book");
+    }
+  }, [book]);
+
+  const currentTopic = book?.chapter?.topics?.[currentTopicIndex] ?? null;
 
   return (
     <BookContext.Provider
@@ -11,7 +39,8 @@ export function BookProvider({ children }) {
         book,
         setBook,
         currentTopic,
-        setCurrentTopic,
+        currentTopicIndex,
+        setCurrentTopicIndex,
       }}
     >
       {children}
