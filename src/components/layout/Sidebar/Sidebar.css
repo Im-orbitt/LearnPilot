@@ -1,15 +1,22 @@
 .sidebar {
-    width: 250px;
+    width: 260px;
     min-height: 100vh;
 
-    padding: 1.75rem 1rem;
+    padding: 2rem 1.25rem;
 
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 2rem;
 
     background: var(--primary);
     color: white;
+
+    transition: width var(--transition-base);
+}
+
+.sidebar--collapsed {
+    width: 82px;
+    padding: 2rem .75rem;
 }
 
 .sidebar-logo {
@@ -17,17 +24,54 @@
     align-items: center;
     gap: .75rem;
 
-    padding: 0 .75rem;
-
     color: white;
     font-size: 1.4rem;
     font-weight: 700;
 }
 
+.sidebar--collapsed .sidebar-logo {
+    justify-content: center;
+    position: relative;
+}
+
+.sidebar-toggle {
+    margin-left: auto;
+
+    display: grid;
+    place-items: center;
+
+    width: 34px;
+    height: 34px;
+
+    border: 0;
+    border-radius: var(--radius-sm);
+
+    background: rgba(255, 255, 255, .12);
+    color: white;
+
+    cursor: pointer;
+
+    transition:
+        background var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.sidebar-toggle:hover {
+    background: rgba(255, 255, 255, .2);
+}
+
+.sidebar--collapsed .sidebar-toggle {
+    position: absolute;
+    top: -1rem;
+    right: -2.2rem;
+
+    background: var(--primary);
+}
+
 .sidebar nav {
     display: flex;
     flex-direction: column;
-    gap: .35rem;
+    gap: .5rem;
 }
 
 .sidebar nav a {
@@ -35,7 +79,7 @@
     align-items: center;
     gap: .8rem;
 
-    padding: .8rem .9rem;
+    padding: .9rem 1rem;
 
     border-radius: var(--radius-sm);
 
@@ -54,5 +98,9 @@
 .sidebar nav a.active {
     background: white;
     color: var(--primary);
-    font-weight: 600;
+}
+
+.sidebar--collapsed nav a {
+    justify-content: center;
+    padding: .9rem;
 }

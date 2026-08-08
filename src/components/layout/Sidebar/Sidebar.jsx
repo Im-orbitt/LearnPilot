@@ -8,6 +8,8 @@ import {
   BarChart3,
   Users,
   Settings,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 
 const links = [
@@ -18,19 +20,33 @@ const links = [
   { to: "/app/settings", label: "Settings", icon: Settings },
 ];
 
-function Sidebar() {
+function Sidebar({ collapsed, onToggle }) {
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${collapsed ? "sidebar--collapsed" : ""}`}>
       <div className="sidebar-logo">
         <Brain size={28} />
-        <span>LearnPilot</span>
+
+        {!collapsed && <span>LearnPilot</span>}
+
+        <button
+          className="sidebar-toggle"
+          onClick={onToggle}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {collapsed ? (
+            <PanelLeftOpen size={18} />
+          ) : (
+            <PanelLeftClose size={18} />
+          )}
+        </button>
       </div>
 
       <nav>
         {links.map(({ to, label, icon: Icon }) => (
-          <NavLink key={to} to={to}>
+          <NavLink key={to} to={to} title={collapsed ? label : undefined}>
             <Icon size={18} />
-            <span>{label}</span>
+            {!collapsed && <span>{label}</span>}
           </NavLink>
         ))}
       </nav>
