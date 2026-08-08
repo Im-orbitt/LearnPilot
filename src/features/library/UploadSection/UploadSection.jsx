@@ -5,18 +5,38 @@ import FileUpload from "../../../components/ui/FileUpload/FileUpload";
 
 export default function UploadSection({ uploading, success, error, onUpload }) {
   return (
-    <div className="upload-card">
-      <FileUpload onChange={onUpload} disabled={uploading} />
+    <section className="upload-card">
+      <div className="upload-card-content">
+        <p className="upload-eyebrow">Build your study space</p>
+
+        <h2>Upload a textbook chapter</h2>
+
+        <p className="upload-description">
+          Drop in a PDF and LearnPilot will turn it into structured topics,
+          study notes, and quizzes.
+        </p>
+
+        <FileUpload onChange={onUpload} disabled={uploading} />
+      </div>
 
       {uploading && (
-        <>
+        <div className="upload-status">
           <Spinner />
-          <p>Generating chapter...</p>
-        </>
+          <p>Generating your chapter...</p>
+        </div>
       )}
 
-      {success && <p>{success}</p>}
-      {error && <p>{error}</p>}
-    </div>
+      {success && (
+        <p className="upload-success" role="status">
+          {success}
+        </p>
+      )}
+
+      {error && (
+        <p className="upload-error" role="alert">
+          {error}
+        </p>
+      )}
+    </section>
   );
 }

@@ -1,28 +1,69 @@
 .upload-card {
     padding: 2rem;
-    margin-bottom: 2rem;
 
-    border: 2px dashed var(--border);
-    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
 
-    background: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.upload-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .6rem;
+}
+
+.upload-eyebrow {
+    color: var(--primary);
+    font-size: var(--font-sm);
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.upload-card h2 {
+    color: var(--text-primary);
+    font-size: var(--font-xl);
+}
+
+.upload-description {
+    max-width: 650px;
+    margin-bottom: .75rem;
+
+    color: var(--text-secondary);
+    line-height: 1.6;
 }
 
 .upload-status {
     display: flex;
     align-items: center;
     gap: .75rem;
-    margin-top: 1rem;
+
+    margin-top: 1.25rem;
+    padding: .75rem 1rem;
+
+    background: var(--primary-light);
+    border-radius: var(--radius-sm);
+
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+    font-weight: 500;
 }
 
 .upload-success {
     margin-top: 1rem;
+
     color: var(--success);
+    font-size: var(--font-sm);
     font-weight: 600;
 }
 
 .upload-error {
     margin-top: 1rem;
+
     color: var(--error);
+    font-size: var(--font-sm);
     font-weight: 600;
 }

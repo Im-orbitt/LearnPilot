@@ -1,8 +1,15 @@
 .library-page {
-    max-width: 900px;
+    width: 100%;
+    max-width: var(--container-width);
+
     margin: 0 auto;
+    padding-bottom: var(--space-2xl);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
 }
 
 .library-actions {
-    margin-top: 1.5rem;
+    margin-top: var(--space-md);
 }

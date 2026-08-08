@@ -1,6 +1,6 @@
 .btn {
     border: none;
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-sm);
     padding: 0.9rem 1.5rem;
     cursor: pointer;
     font: inherit;

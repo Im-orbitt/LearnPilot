@@ -1,17 +1,31 @@
 import "./BookCard.css";
+
+import { BookOpen } from "lucide-react";
+
 import Button from "../../../components/ui/Button/Button";
 
 function BookCard({ chapter, onOpen }) {
   return (
-    <div className="book-card">
-      <h2>{chapter.title}</h2>
+    <article className="book-card">
+      <div className="book-card-icon">
+        <BookOpen size={24} />
+      </div>
 
-      <p>{chapter.summary}</p>
+      <div className="book-card-content">
+        <p className="book-card-eyebrow">Generated chapter</p>
 
-      <p>{chapter.topics.length} Topics</p>
+        <h2>{chapter.title}</h2>
 
-      <Button onClick={onOpen}>Open Chapter</Button>
-    </div>
+        <p className="book-card-summary">{chapter.summary}</p>
+
+        <div className="book-meta">
+          <span>{chapter.topics.length} Topics</span>
+          <span>AI Generated</span>
+        </div>
+
+        <Button onClick={onOpen}>Open Chapter</Button>
+      </div>
+    </article>
   );
 }
 
