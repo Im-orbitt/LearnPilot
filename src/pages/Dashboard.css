@@ -1,9 +1,49 @@
-.dashboard-page h2 {
-    margin-bottom: 2rem;
+.dashboard-page {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
-.dashboard-grid {
+.dashboard-welcome {
+    padding: 1.5rem 0;
+}
+
+.dashboard-eyebrow {
+    margin-bottom: .5rem;
+
+    color: var(--primary);
+    font-size: var(--font-sm);
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.dashboard-welcome h2 {
+    margin: 0;
+
+    color: var(--text-primary);
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+.dashboard-welcome p {
+    margin-top: .6rem;
+
+    max-width: 620px;
+
+    color: var(--text-secondary);
+    font-size: var(--font-md);
+    line-height: 1.6;
+}
+
+.dashboard-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (max-width: 800px) {
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
 }

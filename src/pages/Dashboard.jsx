@@ -1,6 +1,6 @@
 import "./Dashboard.css";
 
-import { BookOpen, Layers, Brain } from "lucide-react";
+import { BookOpen, Layers, Clock3 } from "lucide-react";
 
 import { useBook } from "../hooks/useBook";
 
@@ -12,18 +12,26 @@ function Dashboard() {
 
   if (!book) {
     return (
-      <EmptyState
-        title="Nothing to learn yet"
-        message="Upload your first textbook to get started."
-      />
+      <div className="dashboard-page">
+        <EmptyState
+          title="Your learning space is empty"
+          message="Upload your first textbook to generate notes, quizzes, and a personalized learning experience."
+        />
+      </div>
     );
   }
 
   return (
     <div className="dashboard-page">
-      <h2>Welcome back 👋</h2>
+      <section className="dashboard-welcome">
+        <p className="dashboard-eyebrow">Your learning space</p>
 
-      <div className="dashboard-grid">
+        <h2>Welcome back!</h2>
+
+        <p>Keep learning, track your progress, and stay curious.</p>
+      </section>
+
+      <section className="dashboard-stats">
         <StatCard title="Chapter" value="1" icon={BookOpen} />
 
         <StatCard
@@ -32,8 +40,8 @@ function Dashboard() {
           icon={Layers}
         />
 
-        <StatCard title="AI Ready" value="✓" icon={Brain} />
-      </div>
+        <StatCard title="Study Time" value="42 min" icon={Clock3} />
+      </section>
     </div>
   );
 }
