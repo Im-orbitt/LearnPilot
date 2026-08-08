@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import "./QuizCard.css";
 
+import Button from "../../../components/ui/Button/Button";
+
 export default function QuizCard({ question, index, onAnswered }) {
   const [selected, setSelected] = useState(null);
   const [submitted, setSubmitted] = useState(false);
@@ -38,7 +40,7 @@ export default function QuizCard({ question, index, onAnswered }) {
       </div>
 
       {!submitted ? (
-        <button
+        <Button
           className="submit-btn"
           disabled={selected === null}
           onClick={() => {
@@ -47,7 +49,7 @@ export default function QuizCard({ question, index, onAnswered }) {
           }}
         >
           Check Answer
-        </button>
+        </Button>
       ) : (
         <p className={correct ? "correct-text" : "wrong-text"}>
           {correct ? "✅ Correct!" : `❌ Correct answer: ${question.answer}`}

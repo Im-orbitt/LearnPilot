@@ -1,67 +1,56 @@
-import "./QuizSession.css";
-
 import { useState } from "react";
 
+import Button from "../../../components/ui/Button/Button";
 import QuizCard from "../QuizCard/QuizCard";
 
 export default function QuizSession({ quiz }) {
   const [current, setCurrent] = useState(0);
-  const [score, setScore] = useState(0);
-  const [answered, setAnswered] = useState({});
+  const [answers, setAnswers] = useState({});
   const [finished, setFinished] = useState(false);
 
-  function handleAnswered(correct) {
-    if (answered[current]) return;
-
-    setAnswered((prev) => ({
-      ...prev,
-      [current]: true,
-    }));
-
-    if (correct) {
-      setScore((s) => s + 1);
-    }
+  if (!quiz?.length) {
+    return <p>No quiz questions available.</p>;
   }
+
+  function handleAnswered(isCorrect) {
+    setAnswers((prev) => ({
+      ...prev,
+      [current]: isCorrect,
+    }));
+  }
+
+  const score = Object.values(answers).filter(Boolean).length;
 
   if (finished) {
     return (
-      <div className="lesson-section">
+      <div className="quiz-results">
         <h2>🎉 Quiz Complete!</h2>
 
         <p>
-          You scored <strong>{score}</strong> / {quiz.length}
+          Score: <strong>{score}</strong> / {quiz.length}
         </p>
 
-        <button
+        <Button
           onClick={() => {
             setCurrent(0);
-            setScore(0);
-            setAnswered({});
+            setAnswers({});
             setFinished(false);
           }}
         >
           Retry Quiz
-        </button>
+        </Button>
       </div>
     );
   }
 
-  return (
-    <>
-      <div className="quiz-session-progress">
-        <span>
-          Question {current + 1} / {quiz.length}
-        </span>
+  const answered = answers[current] !== undefined;
+  const isLastQuestion = current === quiz.length - 1;
 
-        <div className="progress-bar">
-          <div
-            className="progress-fill"
-            style={{
-              width: `${((current + 1) / quiz.length) * 100}%`,
-            }}
-          />
-        </div>
-      </div>
+  return (
+    <div className="quiz-session">
+      <p>
+        Question {current + 1} / {quiz.length}
+      </p>
 
       <QuizCard
         question={quiz[current]}
@@ -69,20 +58,27 @@ export default function QuizSession({ quiz }) {
         onAnswered={handleAnswered}
       />
 
-      <div className="lesson-nav">
-        <button
+      <div className="quiz-navigation">
+        <Button
           disabled={current === 0}
-          onClick={() => setCurrent((c) => c - 1)}
+          onClick={() => setCurrent((value) => value - 1)}
         >
           Previous
-        </button>
+        </Button>
 
-        {current === quiz.length - 1 ? (
-          <button onClick={() => setFinished(true)}>Finish Quiz</button>
+        {!isLastQuestion ? (
+          <Button
+            disabled={!answered}
+            onClick={() => setCurrent((value) => value + 1)}
+          >
+            Next
+          </Button>
         ) : (
-          <button onClick={() => setCurrent((c) => c + 1)}>Next</button>
+          <Button disabled={!answered} onClick={() => setFinished(true)}>
+            Finish Quiz
+          </Button>
         )}
       </div>
-    </>
+    </div>
   );
 }
