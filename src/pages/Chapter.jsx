@@ -8,7 +8,7 @@ import Button from "../components/ui/Button/Button";
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
 
 function Chapter() {
-  const { book, setCurrentTopic } = useBook();
+  const { book, setCurrentTopicIndex } = useBook();
   const navigate = useNavigate();
 
   if (!book) {
@@ -20,8 +20,8 @@ function Chapter() {
     );
   }
 
-  function openTopic(topic) {
-    setCurrentTopic(topic);
+  function openTopic(index) {
+    setCurrentTopicIndex(index);
     navigate("/app/lesson");
   }
 

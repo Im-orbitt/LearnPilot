@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { BookContext } from "../contexts/BookContext";
+import { BookContext } from "./BookContext";
 
 export function BookProvider({ children }) {
   const [book, setBookState] = useState(() => {
