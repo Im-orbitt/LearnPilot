@@ -1,11 +1,11 @@
 .topic-card {
-  padding: 1.5rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: white;
-  box-shadow: var(--shadow-sm);
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: white;
+    box-shadow: var(--shadow-sm);
 }
 
 .topic-card h3 {
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }

@@ -1,11 +1,18 @@
 import "./Topbar.css";
 
-import { useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useBook } from "../../../hooks/useBook";
+
+import { Bell, Search } from "lucide-react";
 
 function Topbar() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { book, currentTopic } = useBook();
+
+  const [search, setSearch] = useState("");
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const pages = {
     "/app/dashboard": {
@@ -44,7 +51,51 @@ function Topbar() {
 
   if (pathname === "/app/lesson" && currentTopic) {
     title = currentTopic.title;
-    subtitle = "Study notes, quiz and AI tutor";
+    subtitle = "Choose how you want to study";
+  }
+
+  function handleSearch(event) {
+    event.preventDefault();
+
+    const query = search.trim().toLowerCase();
+
+    if (!query) return;
+
+    const matches = [
+      {
+        keywords: ["dashboard", "home"],
+        path: "/app/dashboard",
+      },
+      {
+        keywords: ["library", "books", "upload"],
+        path: "/app/library",
+      },
+      {
+        keywords: ["chapter", "topics"],
+        path: "/app/chapter",
+      },
+      {
+        keywords: ["progress"],
+        path: "/app/progress",
+      },
+      {
+        keywords: ["settings"],
+        path: "/app/settings",
+      },
+      {
+        keywords: ["parent"],
+        path: "/app/parent",
+      },
+    ];
+
+    const match = matches.find((item) =>
+      item.keywords.some((keyword) => query.includes(keyword)),
+    );
+
+    if (match) {
+      navigate(match.path);
+      setSearch("");
+    }
   }
 
   return (
@@ -54,7 +105,38 @@ function Topbar() {
         <p>{subtitle}</p>
       </div>
 
-      <div className="topbar-status">AI Ready</div>
+      <div className="topbar-actions">
+        <form className="topbar-search" onSubmit={handleSearch}>
+          <Search className="search-icon" size={18} />
+
+          <input
+            type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search LearnPilot..."
+            aria-label="Search LearnPilot"
+          />
+        </form>
+
+        <div className="notification-wrapper">
+          <button
+            className="topbar-icon-button"
+            type="button"
+            onClick={() => setShowNotifications((value) => !value)}
+            aria-label="Notifications"
+            aria-expanded={showNotifications}
+          >
+            <Bell size={19} />
+          </button>
+
+          {showNotifications && (
+            <div className="notification-popover">
+              <h3>Notifications</h3>
+              <p>You're all caught up!</p>
+            </div>
+          )}
+        </div>
+      </div>
     </header>
   );
 }

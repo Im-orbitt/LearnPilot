@@ -1,35 +1,210 @@
 .topbar {
-    height: 72px;
+    min-height: 76px;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: var(--space-xl);
 
-    padding: 0 2rem;
+    padding: var(--space-md) var(--space-xl);
 
-    background: white;
+    background: var(--surface);
     border-bottom: 1px solid var(--border);
+
+    position: relative;
+    z-index: 10;
+}
+
+.topbar-title {
+    min-width: 0;
 }
 
 .topbar-title h1 {
     margin: 0;
-    font-size: 1.4rem;
+
+    color: var(--text-primary);
+
+    font-size: var(--font-xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .topbar-title p {
-    margin-top: .25rem;
+    margin-top: var(--space-xs);
+
     color: var(--text-secondary);
-    font-size: .9rem;
+    font-size: var(--font-sm);
 }
 
-.topbar-status {
-    padding: .45rem .9rem;
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
 
-    border-radius: 999px;
+/* =========================
+   SEARCH
+   ========================= */
 
-    background: rgba(34, 197, 94, .12);
-    color: #16a34a;
+.topbar-search {
+    width: 260px;
+    height: 42px;
 
-    font-size: .85rem;
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+
+    padding: 0 var(--space-md);
+
+    background: var(--surface-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background var(--transition-fast);
+}
+
+.topbar-search:focus-within {
+    background: var(--surface);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.search-icon {
+    color: var(--primary);
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.topbar-search input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+}
+
+.topbar-search input::placeholder {
+    color: var(--text-light);
+}
+
+/* =========================
+   NOTIFICATIONS
+   ========================= */
+
+.notification-wrapper {
+    position: relative;
+}
+
+.topbar-icon-button {
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+
+    background: var(--surface);
+
+    color: var(--text-secondary);
+
+    cursor: pointer;
+
+    transition:
+        color var(--transition-fast),
+        border-color var(--transition-fast),
+        background var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.topbar-icon-button:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.topbar-icon-button:active {
+    transform: scale(.95);
+}
+
+.topbar-icon-button span {
+    font-size: 1.25rem;
+}
+
+/* =========================
+   NOTIFICATION POPOVER
+   ========================= */
+
+.notification-popover {
+    position: absolute;
+    top: calc(100% + var(--space-sm));
+    right: 0;
+
+    width: 260px;
+
+    padding: var(--space-lg);
+
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+
+    box-shadow: var(--shadow-md);
+}
+
+.notification-popover h3 {
+    margin: 0;
+
+    color: var(--text-primary);
+    font-size: var(--font-md);
+}
+
+.notification-popover p {
+    margin-top: var(--space-sm);
+
+    color: var(--text-secondary);
+    font-size: var(--font-sm);
+    line-height: 1.5;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 800px) {
+    .topbar {
+        gap: var(--space-md);
+    }
+
+    .topbar-search {
+        width: 210px;
+    }
+}
+
+@media (max-width: 650px) {
+    .topbar-title p {
+        display: none;
+    }
+
+    .topbar-search {
+        width: 42px;
+        padding: 0;
+
+        justify-content: center;
+    }
+
+    .topbar-search input {
+        display: none;
+    }
 }
