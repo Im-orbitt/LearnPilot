@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { BookContext } from "./BookContext";
+import { BookContext } from "../contexts/BookContext";
 
 export function BookProvider({ children }) {
   const [book, setBookState] = useState(() => {
@@ -16,7 +16,15 @@ export function BookProvider({ children }) {
     }
   });
 
-  const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
+  const [currentTopicIndex, setCurrentTopicIndex] = useState(() => {
+    const saved = localStorage.getItem("learnpilot-current-topic");
+
+    if (saved === null) return 0;
+
+    const index = Number(saved);
+
+    return Number.isInteger(index) && index >= 0 ? index : 0;
+  });
 
   function setBook(newBook) {
     setBookState(newBook);
@@ -30,6 +38,10 @@ export function BookProvider({ children }) {
       localStorage.removeItem("learnpilot-book");
     }
   }, [book]);
+
+  useEffect(() => {
+    localStorage.setItem("learnpilot-current-topic", String(currentTopicIndex));
+  }, [currentTopicIndex]);
 
   const currentTopic = book?.chapter?.topics?.[currentTopicIndex] ?? null;
 

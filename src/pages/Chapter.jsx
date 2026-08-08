@@ -33,11 +33,11 @@ function Chapter() {
       </div>
 
       <div className="topics-grid">
-        {book.chapter.topics.map((topic) => (
+        {book.chapter.topics.map((topic, index) => (
           <div className="topic-card" key={topic.title}>
             <h3>{topic.title}</h3>
 
-            <Button onClick={() => openTopic(topic)}>Study Topic</Button>
+            <Button onClick={() => openTopic(index)}>Study Topic</Button>
           </div>
         ))}
       </div>
