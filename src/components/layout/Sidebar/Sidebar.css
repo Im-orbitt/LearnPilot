@@ -1,15 +1,15 @@
 .sidebar {
-    width: 260px;
+    width: 250px;
     min-height: 100vh;
 
-    padding: 2rem 1.25rem;
+    padding: 1.75rem 1rem;
 
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 2.5rem;
 
-    background: #ffffff;
-    border-right: 1px solid var(--border);
+    background: var(--primary);
+    color: white;
 }
 
 .sidebar-logo {
@@ -17,7 +17,9 @@
     align-items: center;
     gap: .75rem;
 
-    color: var(--primary);
+    padding: 0 .75rem;
+
+    color: white;
     font-size: 1.4rem;
     font-weight: 700;
 }
@@ -25,7 +27,7 @@
 .sidebar nav {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: .35rem;
 }
 
 .sidebar nav a {
@@ -33,19 +35,24 @@
     align-items: center;
     gap: .8rem;
 
-    padding: .9rem 1rem;
+    padding: .8rem .9rem;
 
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
 
-    color: var(--text-secondary);
-    transition: .2s;
+    color: rgba(255, 255, 255, .78);
+
+    transition:
+        background var(--transition-fast),
+        color var(--transition-fast);
 }
 
 .sidebar nav a:hover {
-    background: rgba(0, 0, 0, .05);
+    background: rgba(255, 255, 255, .12);
+    color: white;
 }
 
 .sidebar nav a.active {
-    background: var(--primary);
-    color: white;
+    background: white;
+    color: var(--primary);
+    font-weight: 600;
 }
