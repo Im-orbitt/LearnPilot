@@ -16,19 +16,6 @@
     background: white;
 }
 
-.quiz-card {
-    margin-top: 1rem;
-}
-
-.quiz-card ul {
-    padding-left: 1.25rem;
-}
-
-pre {
-    white-space: pre-wrap;
-    font-family: inherit;
-}
-
 .lesson-nav {
     display: flex;
     justify-content: space-between;

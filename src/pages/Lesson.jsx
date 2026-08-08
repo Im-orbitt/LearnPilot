@@ -3,7 +3,10 @@ import "./Lesson.css";
 import { useBook } from "../hooks/useBook";
 
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
-import QuizSession from "../features/lesson/QuizSession/QuizSession";
+
+import NotesViewer from "../features/lesson/NotesViewer/NotesViewer";
+import QuizSection from "../features/lesson/QuizSection/QuizSection";
+import TutorChat from "../features/lesson/TutorChat/TutorChat";
 
 function Lesson() {
   const { currentTopic } = useBook();
@@ -23,22 +26,11 @@ function Lesson() {
         <h1>{currentTopic.title}</h1>
       </header>
 
-      <section className="lesson-section">
-        <h2>📝 Notes</h2>
+      <NotesViewer notes={currentTopic.notes} />
 
-        <pre>{currentTopic.notes}</pre>
-      </section>
+      <QuizSection quiz={currentTopic.quiz} />
 
-      <section className="lesson-section">
-        <h2>🧠 Quiz</h2>
-
-        <QuizSession quiz={currentTopic.quiz} />
-      </section>
-
-      <section className="lesson-section">
-        <h2>🤖 AI Tutor</h2>
-        <p>Coming soon...</p>
-      </section>
+      <TutorChat />
     </div>
   );
 }
