@@ -21,3 +21,24 @@
     justify-content: space-between;
     margin-top: 2rem;
 }
+
+.lesson-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.lesson-actions button {
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: white;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.lesson-actions button:hover {
+    border-color: var(--primary);
+}

@@ -9,7 +9,12 @@ import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import Library from "../pages/Library";
 import Chapter from "../pages/Chapter";
+
 import Lesson from "../pages/Lesson";
+import Notes from "../pages/Notes";
+import Quiz from "../pages/Quiz";
+import Tutor from "../pages/Tutor";
+
 import Progress from "../pages/Progress";
 import Settings from "../pages/Settings";
 import Parent from "../pages/Parent";
@@ -35,6 +40,10 @@ function AppRoutes() {
           <Route path="library" element={<Library />} />
           <Route path="chapter" element={<Chapter />} />
           <Route path="lesson" element={<Lesson />} />
+          /* lesson sub-routes */
+          <Route path="lesson/notes" element={<Notes />} />
+          <Route path="lesson/quiz" element={<Quiz />} />
+          <Route path="lesson/tutor" element={<Tutor />} />
           <Route path="progress" element={<Progress />} />
           <Route path="settings" element={<Settings />} />
           <Route path="parent" element={<Parent />} />

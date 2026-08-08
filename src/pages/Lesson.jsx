@@ -1,15 +1,13 @@
 import "./Lesson.css";
 
 import { useBook } from "../hooks/useBook";
+import { useNavigate } from "react-router-dom";
 
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
 
-import NotesViewer from "../features/lesson/NotesViewer/NotesViewer";
-import QuizSection from "../features/lesson/QuizSection/QuizSection";
-import TutorChat from "../features/lesson/TutorChat/TutorChat";
-
 function Lesson() {
   const { currentTopic } = useBook();
+  const navigate = useNavigate();
 
   if (!currentTopic) {
     return (
@@ -24,13 +22,40 @@ function Lesson() {
     <div className="lesson-page">
       <header className="lesson-header">
         <h1>{currentTopic.title}</h1>
+        <p>Choose how you want to study this topic.</p>
       </header>
 
-      <NotesViewer notes={currentTopic.notes} />
+      <section className="lesson-section">
+        <h2>📚 Study Overview</h2>
 
-      <QuizSection quiz={currentTopic.quiz} />
+        <p>
+          Review your notes, test your knowledge, or ask the AI Tutor for help
+          with this topic.
+        </p>
 
-      <TutorChat />
+        <div className="lesson-actions">
+          <button onClick={() => navigate("/app/lesson/notes")}>
+            📚 Study Notes
+          </button>
+
+          <button onClick={() => navigate("/app/lesson/quiz")}>
+            🧠 Take Quiz
+          </button>
+
+          <button onClick={() => navigate("/app/lesson/tutor")}>
+            🤖 Ask AI Tutor
+          </button>
+        </div>
+      </section>
+
+      <section className="lesson-section">
+        <h2>What you'll learn</h2>
+
+        <p>
+          This topic contains {currentTopic.notes?.length || 0} characters of
+          generated notes.
+        </p>
+      </section>
     </div>
   );
 }
