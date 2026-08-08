@@ -7,6 +7,7 @@ export default function QuizCard({ question, index, onAnswered }) {
   const [submitted, setSubmitted] = useState(false);
 
   const correct = selected === question.answer;
+  const letters = ["A", "B", "C", "D"];
 
   return (
     <div className="quiz-card">
@@ -15,7 +16,7 @@ export default function QuizCard({ question, index, onAnswered }) {
       </h3>
 
       <div className="quiz-options">
-        {question.options.map((option) => {
+        {question.options.map((option, i) => {
           let className = "quiz-option";
 
           if (submitted) {
@@ -30,7 +31,7 @@ export default function QuizCard({ question, index, onAnswered }) {
               disabled={submitted}
               onClick={() => setSelected(option)}
             >
-              {option}
+              <strong>{letters[i]}.</strong> {option}
             </button>
           );
         })}

@@ -1,3 +1,5 @@
+import "./QuizSession.css";
+
 import { useState } from "react";
 
 import QuizCard from "../QuizCard/QuizCard";
@@ -46,9 +48,20 @@ export default function QuizSession({ quiz }) {
 
   return (
     <>
-      <p>
-        Question {current + 1} of {quiz.length}
-      </p>
+      <div className="quiz-session-progress">
+        <span>
+          Question {current + 1} / {quiz.length}
+        </span>
+
+        <div className="progress-bar">
+          <div
+            className="progress-fill"
+            style={{
+              width: `${((current + 1) / quiz.length) * 100}%`,
+            }}
+          />
+        </div>
+      </div>
 
       <QuizCard
         question={quiz[current]}
