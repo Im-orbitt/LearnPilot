@@ -4,6 +4,7 @@ import { useBook } from "../hooks/useBook";
 
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
 import QuizCard from "../features/lesson/QuizCard/QuizCard";
+import ReactMarkdown from "react-markdown";
 
 function Lesson() {
   const { currentTopic } = useBook();
@@ -27,14 +28,7 @@ function Lesson() {
         <h2>📝 Notes</h2>
 
         <div className="notes-content">
-          {currentTopic.notes
-            ?.split("\n")
-            .filter((line) => line.trim() !== "")
-            .map((line, index) => (
-              <p className="note-line" key={index}>
-                {line}
-              </p>
-            ))}
+          <ReactMarkdown>{currentTopic.notes}</ReactMarkdown>
         </div>
       </section>
 

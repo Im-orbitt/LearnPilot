@@ -17,31 +17,44 @@
 }
 
 .notes-content {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-
-.notes-content {
-    display: flex;
-    flex-direction: column;
-    gap: .75rem;
-    margin-top: 1.5rem;
-}
-
-.note-line {
-    margin: 0;
     line-height: 1.8;
 }
 
-.note-card h3 {
-    margin: 0 0 .75rem;
+.notes-content h1,
+.notes-content h2,
+.notes-content h3 {
+    margin-top: 1.75rem;
+    margin-bottom: .75rem;
 }
 
-.note-card p {
-    margin: 0;
-    line-height: 1.7;
+.notes-content h1:first-child,
+.notes-content h2:first-child,
+.notes-content h3:first-child {
+    margin-top: 0;
+}
+
+.notes-content p {
+    margin: .75rem 0;
+}
+
+.notes-content ul,
+.notes-content ol {
+    margin: .75rem 0;
+    padding-left: 1.5rem;
+}
+
+.notes-content li {
+    margin: .4rem 0;
+}
+
+.notes-content strong {
+    font-weight: 700;
+}
+
+.notes-content code {
+    padding: .15rem .35rem;
+    border-radius: 4px;
+    background: #f1f5f9;
 }
 
 .quiz-card {
