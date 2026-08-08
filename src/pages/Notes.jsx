@@ -1,6 +1,8 @@
 import { useBook } from "../hooks/useBook";
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
 
+import ReactMarkdown from "react-markdown";
+
 function Notes() {
   const { currentTopic } = useBook();
 
@@ -19,7 +21,7 @@ function Notes() {
 
       <section className="lesson-section">
         <h2>📝 Notes</h2>
-        <pre>{currentTopic.notes}</pre>
+        <ReactMarkdown>{currentTopic.notes}</ReactMarkdown>
       </section>
     </div>
   );

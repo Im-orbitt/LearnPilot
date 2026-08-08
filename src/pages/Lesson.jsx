@@ -1,13 +1,14 @@
 import "./Lesson.css";
 
 import { useBook } from "../hooks/useBook";
+import { useNavigate } from "react-router-dom";
 
+import Button from "../components/ui/Button/Button";
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
-import QuizCard from "../features/lesson/QuizCard/QuizCard";
-import ReactMarkdown from "react-markdown";
 
 function Lesson() {
   const { currentTopic } = useBook();
+  const navigate = useNavigate();
 
   if (!currentTopic) {
     return (
@@ -22,27 +23,36 @@ function Lesson() {
     <div className="lesson-page">
       <header className="lesson-header">
         <h1>{currentTopic.title}</h1>
+        <p>Choose how you want to study this topic.</p>
       </header>
 
-      <section className="lesson-section notes-section">
-        <h2>📝 Notes</h2>
+      <section className="lesson-options">
+        <div className="lesson-option">
+          <h2>📝 Notes</h2>
+          <p>Read through your AI-generated notes and review the key ideas.</p>
 
-        <div className="notes-content">
-          <ReactMarkdown>{currentTopic.notes}</ReactMarkdown>
+          <Button onClick={() => navigate("/app/lesson/notes")}>
+            Open Notes
+          </Button>
         </div>
-      </section>
 
-      <section className="lesson-section">
-        <h2>🧠 Quiz</h2>
+        <div className="lesson-option">
+          <h2>🧠 Quiz</h2>
+          <p>Test your understanding with an interactive quiz.</p>
 
-        {currentTopic.quiz?.map((question, index) => (
-          <QuizCard key={index} question={question} index={index} />
-        ))}
-      </section>
+          <Button onClick={() => navigate("/app/lesson/quiz")}>
+            Start Quiz
+          </Button>
+        </div>
 
-      <section className="lesson-section">
-        <h2>🤖 AI Tutor</h2>
-        <p>Coming soon...</p>
+        <div className="lesson-option">
+          <h2>🤖 AI Tutor</h2>
+          <p>Ask the AI tutor questions about this topic.</p>
+
+          <Button onClick={() => navigate("/app/lesson/tutor")}>
+            Open AI Tutor
+          </Button>
+        </div>
       </section>
     </div>
   );
