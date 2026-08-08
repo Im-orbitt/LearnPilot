@@ -13,6 +13,7 @@ import Chapter from "../pages/Chapter";
 import Lesson from "../pages/Lesson";
 import Notes from "../pages/Notes";
 import Quiz from "../pages/Quiz";
+import QuizAnswers from "../pages/QuizAnswers";
 import Tutor from "../pages/Tutor";
 
 import Progress from "../pages/Progress";
@@ -43,6 +44,7 @@ function AppRoutes() {
           /* lesson sub-routes */
           <Route path="lesson/notes" element={<Notes />} />
           <Route path="lesson/quiz" element={<Quiz />} />
+          <Route path="lesson/quiz/answers" element={<QuizAnswers />} />
           <Route path="lesson/tutor" element={<Tutor />} />
           <Route path="progress" element={<Progress />} />
           <Route path="settings" element={<Settings />} />

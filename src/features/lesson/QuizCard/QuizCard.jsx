@@ -2,14 +2,13 @@ import { useState } from "react";
 
 import "./QuizCard.css";
 
-import Button from "../../../components/ui/Button/Button";
-
 export default function QuizCard({ question, index, onAnswered }) {
   const [selected, setSelected] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
 
-  const correct = selected === question.answer;
-  const letters = ["A", "B", "C", "D"];
+  function handleSelect(option) {
+    setSelected(option);
+    onAnswered?.(option === question.answer);
+  }
 
   return (
     <div className="quiz-card">
@@ -18,43 +17,24 @@ export default function QuizCard({ question, index, onAnswered }) {
       </h3>
 
       <div className="quiz-options">
-        {question.options.map((option, i) => {
+        {question.options.map((option) => {
           let className = "quiz-option";
 
-          if (submitted) {
-            if (option === question.answer) className += " correct";
-            else if (option === selected) className += " wrong";
+          if (selected === option) {
+            className += " selected";
           }
 
           return (
             <button
               key={option}
               className={className}
-              disabled={submitted}
-              onClick={() => setSelected(option)}
+              onClick={() => handleSelect(option)}
             >
-              <strong>{letters[i]}.</strong> {option}
+              {option}
             </button>
           );
         })}
       </div>
-
-      {!submitted ? (
-        <Button
-          className="submit-btn"
-          disabled={selected === null}
-          onClick={() => {
-            setSubmitted(true);
-            onAnswered?.(correct);
-          }}
-        >
-          Check Answer
-        </Button>
-      ) : (
-        <p className={correct ? "correct-text" : "wrong-text"}>
-          {correct ? "✅ Correct!" : `❌ Correct answer: ${question.answer}`}
-        </p>
-      )}
     </div>
   );
 }

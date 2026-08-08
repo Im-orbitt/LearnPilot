@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Button from "../../../components/ui/Button/Button";
 import QuizCard from "../QuizCard/QuizCard";
@@ -7,6 +8,8 @@ export default function QuizSession({ quiz }) {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState({});
   const [finished, setFinished] = useState(false);
+
+  const navigate = useNavigate();
 
   if (!quiz?.length) {
     return <p>No quiz questions available.</p>;
@@ -29,6 +32,10 @@ export default function QuizSession({ quiz }) {
         <p>
           Score: <strong>{score}</strong> / {quiz.length}
         </p>
+
+        <Button onClick={() => navigate("/app/lesson/quiz/answers")}>
+          View Correct Answers
+        </Button>
 
         <Button
           onClick={() => {
