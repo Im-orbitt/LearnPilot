@@ -26,6 +26,11 @@ export function BookProvider({ children }) {
     return Number.isInteger(index) && index >= 0 ? index : 0;
   });
 
+  const [lessonProgress, setLessonProgress] = useState({
+    notesCompleted: false,
+    quizCompleted: false,
+  });
+
   function setBook(newBook) {
     setBookState(newBook);
     setCurrentTopicIndex(0);
@@ -53,6 +58,8 @@ export function BookProvider({ children }) {
         currentTopic,
         currentTopicIndex,
         setCurrentTopicIndex,
+        lessonProgress,
+        setLessonProgress,
       }}
     >
       {children}

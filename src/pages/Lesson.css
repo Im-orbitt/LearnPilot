@@ -6,6 +6,9 @@
 
 .lesson-header {
     margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+
+    border-bottom: 1px solid var(--border);
 }
 
 .lesson-eyebrow {
@@ -27,29 +30,13 @@
 }
 
 .lesson-header p {
-    margin-top: .5rem;
+    margin-top: .6rem;
 
     color: var(--text-secondary);
+    font-size: var(--font-md);
 }
 
-.lesson-options {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.25rem;
-}
-
-@media (max-width: 850px) {
-    .lesson-options {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 600px) {
-    .lesson-page {
-        padding: 1.5rem 1rem;
-    }
-
-    .lesson-header h1 {
-        font-size: var(--font-xl);
-    }
+.lesson-workflow {
+    display: flex;
+    flex-direction: column;
 }

@@ -1,6 +1,13 @@
 import "./Lesson.css";
 
-import { BookOpen, Brain, MessageCircleQuestion } from "lucide-react";
+import {
+  BookOpen,
+  Brain,
+  //Check,
+  //Lock,
+  MessageCircleQuestion,
+} from "lucide-react";
+
 import { useBook } from "../hooks/useBook";
 import { useNavigate } from "react-router-dom";
 
@@ -8,7 +15,7 @@ import EmptyState from "../components/feedback/EmptyState/EmptyState";
 import LessonOption from "../features/lesson/LessonOption/LessonOption";
 
 function Lesson() {
-  const { currentTopic } = useBook();
+  const { currentTopic, lessonProgress } = useBook();
   const navigate = useNavigate();
 
   if (!currentTopic) {
@@ -20,30 +27,40 @@ function Lesson() {
     );
   }
 
-  const lessonOptions = [
+  const options = [
     {
+      number: "01",
       icon: BookOpen,
-      label: "Review",
-      title: "Notes",
-      description:
-        "Read through your AI-generated notes and review the key ideas.",
+      label: "START HERE",
+      title: "Review your notes",
+      description: "Learn the key ideas before testing what you know.",
       action: "Open Notes",
+      completed: lessonProgress.notesCompleted,
+      locked: false,
       onClick: () => navigate("/app/lesson/notes"),
     },
     {
+      number: "02",
       icon: Brain,
-      label: "Practice",
-      title: "Quiz",
-      description: "Test your understanding with an interactive quiz.",
+      label: "NEXT STEP",
+      title: "Test your understanding",
+      description:
+        "Take a short quiz to see how well you understood the topic.",
       action: "Start Quiz",
+      completed: lessonProgress.quizCompleted,
+      locked: !lessonProgress.notesCompleted,
       onClick: () => navigate("/app/lesson/quiz"),
     },
     {
+      number: "03",
       icon: MessageCircleQuestion,
-      label: "Ask",
-      title: "AI Tutor",
-      description: "Ask questions and get help understanding this topic.",
+      label: "FINAL STEP",
+      title: "Ask your AI Tutor",
+      description:
+        "Have a conversation about anything you still want to understand.",
       action: "Open AI Tutor",
+      completed: false,
+      locked: !lessonProgress.quizCompleted,
       onClick: () => navigate("/app/lesson/tutor"),
     },
   ];
@@ -55,12 +72,16 @@ function Lesson() {
 
         <h1>{currentTopic.title}</h1>
 
-        <p>Choose how you want to study this topic.</p>
+        <p>Follow the steps below to work through this topic.</p>
       </header>
 
-      <section className="lesson-options">
-        {lessonOptions.map((option) => (
-          <LessonOption key={option.title} {...option} />
+      <section className="lesson-workflow">
+        {options.map((option, index) => (
+          <LessonOption
+            key={option.number}
+            {...option}
+            isLast={index === options.length - 1}
+          />
         ))}
       </section>
     </div>
