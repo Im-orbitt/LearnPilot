@@ -1,10 +1,11 @@
 import "./Lesson.css";
 
+import { BookOpen, Brain, MessageCircleQuestion } from "lucide-react";
 import { useBook } from "../hooks/useBook";
 import { useNavigate } from "react-router-dom";
 
-import Button from "../components/ui/Button/Button";
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
+import LessonOption from "../features/lesson/LessonOption/LessonOption";
 
 function Lesson() {
   const { currentTopic } = useBook();
@@ -19,40 +20,48 @@ function Lesson() {
     );
   }
 
+  const lessonOptions = [
+    {
+      icon: BookOpen,
+      label: "Review",
+      title: "Notes",
+      description:
+        "Read through your AI-generated notes and review the key ideas.",
+      action: "Open Notes",
+      onClick: () => navigate("/app/lesson/notes"),
+    },
+    {
+      icon: Brain,
+      label: "Practice",
+      title: "Quiz",
+      description: "Test your understanding with an interactive quiz.",
+      action: "Start Quiz",
+      onClick: () => navigate("/app/lesson/quiz"),
+    },
+    {
+      icon: MessageCircleQuestion,
+      label: "Ask",
+      title: "AI Tutor",
+      description: "Ask questions and get help understanding this topic.",
+      action: "Open AI Tutor",
+      onClick: () => navigate("/app/lesson/tutor"),
+    },
+  ];
+
   return (
     <div className="lesson-page">
       <header className="lesson-header">
+        <span className="lesson-eyebrow">CURRENT TOPIC</span>
+
         <h1>{currentTopic.title}</h1>
+
         <p>Choose how you want to study this topic.</p>
       </header>
 
       <section className="lesson-options">
-        <div className="lesson-option">
-          <h2>📝 Notes</h2>
-          <p>Read through your AI-generated notes and review the key ideas.</p>
-
-          <Button onClick={() => navigate("/app/lesson/notes")}>
-            Open Notes
-          </Button>
-        </div>
-
-        <div className="lesson-option">
-          <h2>🧠 Quiz</h2>
-          <p>Test your understanding with an interactive quiz.</p>
-
-          <Button onClick={() => navigate("/app/lesson/quiz")}>
-            Start Quiz
-          </Button>
-        </div>
-
-        <div className="lesson-option">
-          <h2>🤖 AI Tutor</h2>
-          <p>Ask the AI tutor questions about this topic.</p>
-
-          <Button onClick={() => navigate("/app/lesson/tutor")}>
-            Open AI Tutor
-          </Button>
-        </div>
+        {lessonOptions.map((option) => (
+          <LessonOption key={option.title} {...option} />
+        ))}
       </section>
     </div>
   );

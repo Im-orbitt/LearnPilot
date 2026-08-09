@@ -1,62 +1,55 @@
 .lesson-page {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 2.5rem 2rem;
 }
 
 .lesson-header {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
-.lesson-section {
-    margin-block: 2rem;
-    padding: 1.5rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    background: white;
+.lesson-eyebrow {
+    display: block;
+
+    margin-bottom: .5rem;
+
+    color: var(--primary);
+    font-size: var(--font-xs);
+    font-weight: 800;
+    letter-spacing: .08em;
 }
 
-.notes-content {
-    line-height: 1.8;
+.lesson-header h1 {
+    margin: 0;
+
+    font-size: var(--font-2xl);
+    line-height: 1.2;
 }
 
-.notes-content h1,
-.notes-content h2,
-.notes-content h3 {
-    margin-top: 1.75rem;
-    margin-bottom: .75rem;
+.lesson-header p {
+    margin-top: .5rem;
+
+    color: var(--text-secondary);
 }
 
-.notes-content h1:first-child,
-.notes-content h2:first-child,
-.notes-content h3:first-child {
-    margin-top: 0;
+.lesson-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
 }
 
-.notes-content p {
-    margin: .75rem 0;
+@media (max-width: 850px) {
+    .lesson-options {
+        grid-template-columns: 1fr;
+    }
 }
 
-.notes-content ul,
-.notes-content ol {
-    margin: .75rem 0;
-    padding-left: 1.5rem;
-}
+@media (max-width: 600px) {
+    .lesson-page {
+        padding: 1.5rem 1rem;
+    }
 
-.notes-content li {
-    margin: .4rem 0;
-}
-
-.notes-content strong {
-    font-weight: 700;
-}
-
-.notes-content code {
-    padding: .15rem .35rem;
-    border-radius: 4px;
-    background: #f1f5f9;
-}
-
-.quiz-card {
-    margin-top: 1rem;
+    .lesson-header h1 {
+        font-size: var(--font-xl);
+    }
 }
