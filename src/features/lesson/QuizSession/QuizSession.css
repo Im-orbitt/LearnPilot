@@ -19,3 +19,11 @@
     background: var(--primary);
     transition: width .25s;
 }
+
+.quiz-results-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+
+    margin-top: 1.5rem;
+}
