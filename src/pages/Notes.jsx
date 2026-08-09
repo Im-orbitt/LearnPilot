@@ -1,3 +1,5 @@
+import "./Notes.css";
+
 import { useBook } from "../hooks/useBook";
 import { useNavigate } from "react-router-dom";
 
@@ -28,6 +30,22 @@ function Notes() {
     navigate("/app/lesson");
   }
 
+  let headingIndex = 0;
+
+  const markdownComponents = {
+    h1: ({ children }) => (
+      <h1 id={`notes-heading-${headingIndex++}`}>{children}</h1>
+    ),
+
+    h2: ({ children }) => (
+      <h2 id={`notes-heading-${headingIndex++}`}>{children}</h2>
+    ),
+
+    h3: ({ children }) => (
+      <h3 id={`notes-heading-${headingIndex++}`}>{children}</h3>
+    ),
+  };
+
   return (
     <div className="lesson-page">
       <header className="lesson-header">
@@ -39,10 +57,10 @@ function Notes() {
       </header>
 
       <section className="lesson-section">
-        <h2>Notes</h2>
-
         <div className="notes-content">
-          <ReactMarkdown>{currentTopic.notes}</ReactMarkdown>
+          <ReactMarkdown components={markdownComponents}>
+            {currentTopic.notes}
+          </ReactMarkdown>
         </div>
       </section>
 

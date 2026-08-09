@@ -12,6 +12,7 @@ import {
   Settings,
   PanelLeftClose,
   PanelLeftOpen,
+  List,
 } from "lucide-react";
 
 const links = [
@@ -39,10 +40,11 @@ function Sidebar({ collapsed, onToggle, lessonMode = false, lessonType = "" }) {
     return (
       <aside className="sidebar lesson-sidebar notes-outline">
         <div className="lesson-sidebar-header">
-          <span>Notes</span>
+          <List size={18} />
+          <span>Notes Outline</span>
         </div>
 
-        <div className="notes-outline-list">
+        <nav className="notes-outline-list">
           {headings.length > 0 ? (
             headings.map((heading, index) => (
               <a href={`#notes-heading-${index}`} key={`${heading}-${index}`}>
@@ -52,7 +54,7 @@ function Sidebar({ collapsed, onToggle, lessonMode = false, lessonType = "" }) {
           ) : (
             <p>No sections available.</p>
           )}
-        </div>
+        </nav>
       </aside>
     );
   }

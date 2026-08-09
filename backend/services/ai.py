@@ -80,19 +80,20 @@ Return ONLY valid JSON.
 
 Format:
 {{
-  "topics": [
-    {{
-      "title": "Topic name",
-      "notes": "Detailed Markdown notes."
-    }}
-  ]
+"topics": [
+{{
+"title": "Topic name",
+"notes": "Detailed Markdown notes."
+}}
+]
 }}
 
 Rules:
+
 - Use EXACTLY the same topic titles.
 - Keep the same order.
 - Do not add or remove topics.
-- Explain concepts clearly and at a school-student level.
+- Explain concepts clearly at a school-student level.
 - Cover the important information from the textbook.
 - Include definitions of important terms.
 - Explain processes, relationships, causes, effects, and differences where relevant.
@@ -107,7 +108,18 @@ Rules:
 - Each topic should contain substantial study material, not just a short paragraph.
 - Aim for roughly 300–600 words per topic when the source material supports it.
 - Do not invent information that is not supported by the textbook.
-- Return ONLY JSON.
+
+IMPORTANT MARKDOWN STRUCTURE RULES:
+
+- The topic title is already displayed separately by the application.
+- NEVER repeat the topic title inside the "notes" Markdown.
+- Do NOT begin the notes with an H1 (#) containing the topic title.
+- Do NOT create a heading called "Notes".
+- Begin directly with the first useful section or explanation.
+- Use H2 (##) and H3 (###) headings for meaningful subsections.
+- Headings should describe the actual content of that section.
+
+Return ONLY JSON.
 
 Chapter:
 {text}

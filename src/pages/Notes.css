@@ -1,0 +1,145 @@
+.lesson-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-xl) 0 var(--space-2xl);
+}
+
+.lesson-header {
+    margin-bottom: var(--space-xl);
+}
+
+.lesson-eyebrow {
+    display: inline-block;
+    margin-bottom: var(--space-sm);
+
+    color: var(--primary);
+    font-size: var(--font-xs);
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.lesson-header h1 {
+    margin: 0;
+
+    color: var(--text-primary);
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    line-height: 1.15;
+    letter-spacing: -.03em;
+}
+
+.lesson-header p {
+    max-width: 650px;
+    margin-top: var(--space-sm);
+
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.lesson-section {
+    padding: var(--space-xl);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.lesson-section>h2 {
+    margin-bottom: var(--space-lg);
+
+    color: var(--primary);
+    font-size: var(--font-xl);
+}
+
+.notes-content {
+    color: var(--text-primary);
+    line-height: 1.75;
+}
+
+/* =========================
+   NOTE SECTIONS
+   ========================= */
+
+.notes-content h1,
+.notes-content h2,
+.notes-content h3 {
+    margin: 2.5rem 0 1rem;
+    padding: 1rem 1.1rem;
+
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--primary);
+    border-radius: var(--radius-sm);
+
+    background: var(--surface-secondary);
+
+    color: var(--primary);
+
+    font-size: var(--font-lg);
+    line-height: 1.35;
+}
+
+.notes-content h1:first-child,
+.notes-content h2:first-child,
+.notes-content h3:first-child {
+    margin-top: 0;
+}
+
+/* Keep the content below each heading visually grouped */
+
+.notes-content p,
+.notes-content ul,
+.notes-content ol {
+    margin-left: .25rem;
+    margin-right: .25rem;
+}
+
+.notes-content p {
+    margin-top: .9rem;
+    margin-bottom: .9rem;
+}
+
+.notes-content ul,
+.notes-content ol {
+    margin-top: .9rem;
+    margin-bottom: .9rem;
+    padding-left: 1.5rem;
+}
+
+.notes-content li {
+    margin: .45rem 0;
+}
+
+.notes-content strong {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.notes-content code {
+    padding: .15rem .35rem;
+
+    border-radius: 4px;
+
+    background: var(--primary-light);
+    color: var(--primary-hover);
+}
+
+.lesson-page>button {
+    margin-top: var(--space-lg);
+}
+
+@media (max-width: 650px) {
+    .lesson-page {
+        padding: var(--space-lg) 0;
+    }
+
+    .lesson-section {
+        padding: var(--space-lg);
+    }
+
+    .notes-content h1,
+    .notes-content h2,
+    .notes-content h3 {
+        padding: .85rem 1rem;
+    }
+}

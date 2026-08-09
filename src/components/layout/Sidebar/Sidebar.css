@@ -14,6 +14,10 @@
     transition: width var(--transition-base);
 }
 
+.sidebar.lesson-sidebar {
+    flex-shrink: 0;
+}
+
 .sidebar--collapsed {
     width: 82px;
     padding: 2rem .75rem;
@@ -106,49 +110,39 @@
 }
 
 .lesson-sidebar {
-    padding-top: 1.5rem;
+    overflow-y: auto;
 }
 
 .lesson-sidebar-empty {
     width: 72px;
+    min-width: 72px;
+
+    padding: 0;
+
+    flex-shrink: 0;
 }
 
 .lesson-sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+
     padding: 0 .5rem 1rem;
 
-    color: var(--text-primary);
+    color: white;
     font-size: var(--font-sm);
     font-weight: 800;
+
+    border-bottom: 1px solid rgba(255, 255, 255, .2);
 }
 
-.notes-outline-list {
-    display: flex;
-    flex-direction: column;
-    gap: .25rem;
-}
+.lesson-sidebar-header::before {
+    content: "";
 
-.notes-outline-list a {
-    padding: .6rem .75rem;
+    width: 4px;
+    height: 18px;
 
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-full);
 
-    color: var(--text-secondary);
-    font-size: var(--font-sm);
-    line-height: 1.4;
-
-    transition:
-        color var(--transition-fast),
-        background var(--transition-fast);
-}
-
-.notes-outline-list a:hover {
-    color: var(--primary);
-    background: var(--primary-light);
-}
-
-.notes-outline-list p {
-    padding: .5rem;
-
-    color: var(--text-light);
-    font-size: var(--font-sm);
+    background: white;
 }
