@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useBook } from "../../../hooks/useBook";
 
-import { Bell, Search } from "lucide-react";
+import { ArrowLeft, Bell, Search } from "lucide-react";
 
-function Topbar() {
+function Topbar({ lessonMode = false, lessonType = "" }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { book, currentTopic } = useBook();
@@ -40,6 +40,45 @@ function Topbar() {
       subtitle: "Monitor your child's learning progress.",
     },
   };
+
+  if (lessonMode) {
+    const lessonTitles = {
+      notes: "Notes",
+      quiz: "Quiz",
+      tutor: "AI Tutor",
+    };
+
+    const title = lessonTitles[lessonType] ?? "Lesson";
+
+    function handleBack() {
+      const confirmed = window.confirm(
+        "Are you sure you want to leave this lesson?",
+      );
+
+      if (confirmed) {
+        navigate("/app/lesson");
+      }
+    }
+
+    return (
+      <header className="topbar topbar-lesson">
+        <button
+          className="topbar-back"
+          type="button"
+          onClick={handleBack}
+          aria-label="Back to lesson"
+        >
+          <ArrowLeft size={19} />
+          <span>Back to Lesson</span>
+        </button>
+
+        <div className="topbar-lesson-title">
+          <h1>{title}</h1>
+          {currentTopic && <p>{currentTopic.title}</p>}
+        </div>
+      </header>
+    );
+  }
 
   let title = pages[pathname]?.title ?? "LearnPilot";
   let subtitle = pages[pathname]?.subtitle ?? "";

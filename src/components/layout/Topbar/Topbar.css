@@ -208,3 +208,58 @@
         display: none;
     }
 }
+
+.topbar-lesson {
+    justify-content: flex-start;
+    gap: var(--space-lg);
+}
+
+.topbar-back {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+
+    padding: .55rem .75rem;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+
+    background: var(--surface);
+    color: var(--text-secondary);
+
+    cursor: pointer;
+
+    transition:
+        color var(--transition-fast),
+        border-color var(--transition-fast),
+        background var(--transition-fast);
+}
+
+.topbar-back:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.topbar-lesson-title {
+    min-width: 0;
+}
+
+.topbar-lesson-title h1 {
+    margin: 0;
+
+    color: var(--text-primary);
+    font-size: var(--font-lg);
+    font-weight: 700;
+}
+
+.topbar-lesson-title p {
+    margin-top: .2rem;
+
+    color: var(--text-secondary);
+    font-size: var(--font-xs);
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -1,6 +1,8 @@
 import "./Sidebar.css";
 
 import { NavLink } from "react-router-dom";
+import { useBook } from "../../../hooks/useBook";
+
 import {
   Brain,
   LayoutDashboard,
@@ -20,7 +22,41 @@ const links = [
   { to: "/app/settings", label: "Settings", icon: Settings },
 ];
 
-function Sidebar({ collapsed, onToggle }) {
+function Sidebar({ collapsed, onToggle, lessonMode = false, lessonType = "" }) {
+  const { currentTopic } = useBook();
+
+  if (lessonMode && lessonType === "quiz") {
+    return <aside className="sidebar lesson-sidebar lesson-sidebar-empty" />;
+  }
+
+  if (lessonMode && lessonType === "notes") {
+    const headings =
+      currentTopic?.notes
+        ?.split("\n")
+        .filter((line) => /^#{1,3}\s/.test(line))
+        .map((line) => line.replace(/^#{1,3}\s/, "").trim()) ?? [];
+
+    return (
+      <aside className="sidebar lesson-sidebar notes-outline">
+        <div className="lesson-sidebar-header">
+          <span>Notes</span>
+        </div>
+
+        <div className="notes-outline-list">
+          {headings.length > 0 ? (
+            headings.map((heading, index) => (
+              <a href={`#notes-heading-${index}`} key={`${heading}-${index}`}>
+                {heading}
+              </a>
+            ))
+          ) : (
+            <p>No sections available.</p>
+          )}
+        </div>
+      </aside>
+    );
+  }
+
   return (
     <aside className={`sidebar ${collapsed ? "sidebar--collapsed" : ""}`}>
       <div className="sidebar-logo">
