@@ -31,9 +31,16 @@ export function BookProvider({ children }) {
     quizCompleted: false,
   });
 
+  const [quizAnswers, setQuizAnswers] = useState({});
+
   function setBook(newBook) {
     setBookState(newBook);
     setCurrentTopicIndex(0);
+    setQuizAnswers({});
+    setLessonProgress({
+      notesCompleted: false,
+      quizCompleted: false,
+    });
   }
 
   useEffect(() => {
@@ -60,6 +67,8 @@ export function BookProvider({ children }) {
         setCurrentTopicIndex,
         lessonProgress,
         setLessonProgress,
+        quizAnswers,
+        setQuizAnswers,
       }}
     >
       {children}

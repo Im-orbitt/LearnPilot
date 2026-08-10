@@ -1,9 +1,10 @@
 import { useBook } from "../hooks/useBook";
-
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
 
+import QuizReview from "../features/lesson/QuizReview/QuizReview";
+
 function QuizAnswers() {
-  const { currentTopic } = useBook();
+  const { currentTopic, quizAnswers } = useBook();
 
   if (!currentTopic) {
     return (
@@ -16,20 +17,16 @@ function QuizAnswers() {
 
   return (
     <div className="lesson-page">
-      <h1>{currentTopic.title} — Correct Answers</h1>
+      <header className="lesson-header">
+        <span className="lesson-eyebrow">QUIZ REVIEW</span>
+
+        <h1>{currentTopic.title}</h1>
+
+        <p>Review the correct answers from your quiz.</p>
+      </header>
 
       <section className="lesson-section">
-        {currentTopic.quiz.map((question, index) => (
-          <div key={index}>
-            <h3>
-              {index + 1}. {question.question}
-            </h3>
-
-            <p>
-              <strong>{question.answer}</strong>
-            </p>
-          </div>
-        ))}
+        <QuizReview quiz={currentTopic.quiz} answers={quizAnswers} />
       </section>
     </div>
   );

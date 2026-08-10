@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useBook } from "../../../hooks/useBook";
+
+import "./QuizSession.css";
 
 import Button from "../../../components/ui/Button/Button";
 import QuizCard from "../QuizCard/QuizCard";
 
 export default function QuizSession({ quiz, onComplete }) {
+  const { quizAnswers, setQuizAnswers } = useBook();
+
   const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState({});
   const [finished, setFinished] = useState(false);
 
   const navigate = useNavigate();
@@ -15,10 +19,13 @@ export default function QuizSession({ quiz, onComplete }) {
     return <p>No quiz questions available.</p>;
   }
 
-  function handleAnswered(isCorrect) {
-    setAnswers((previous) => ({
+  function handleAnswered(option) {
+    setQuizAnswers((previous) => ({
       ...previous,
-      [current]: isCorrect,
+      [current]: {
+        selected: option,
+        isCorrect: option === quiz[current].answer,
+      },
     }));
   }
 
@@ -27,7 +34,9 @@ export default function QuizSession({ quiz, onComplete }) {
     onComplete();
   }
 
-  const score = Object.values(answers).filter(Boolean).length;
+  const score = Object.values(quizAnswers).filter(
+    (answer) => answer?.isCorrect,
+  ).length;
 
   if (finished) {
     return (
@@ -46,7 +55,7 @@ export default function QuizSession({ quiz, onComplete }) {
           <Button
             onClick={() => {
               setCurrent(0);
-              setAnswers({});
+              setQuizAnswers({});
               setFinished(false);
             }}
           >
@@ -61,7 +70,7 @@ export default function QuizSession({ quiz, onComplete }) {
     );
   }
 
-  const answered = answers[current] !== undefined;
+  const answered = quizAnswers[current] !== undefined;
   const isLastQuestion = current === quiz.length - 1;
 
   return (

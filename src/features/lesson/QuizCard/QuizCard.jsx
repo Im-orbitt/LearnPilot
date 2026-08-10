@@ -7,7 +7,7 @@ export default function QuizCard({ question, index, onAnswered }) {
 
   function handleSelect(option) {
     setSelected(option);
-    onAnswered?.(option === question.answer);
+    onAnswered?.(option);
   }
 
   return (
@@ -27,6 +27,7 @@ export default function QuizCard({ question, index, onAnswered }) {
           return (
             <button
               key={option}
+              type="button"
               className={className}
               onClick={() => handleSelect(option)}
             >
