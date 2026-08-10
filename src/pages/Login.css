@@ -157,3 +157,27 @@
         padding: 2rem 1.5rem;
     }
 }
+
+.auth-error {
+    margin: -.25rem 0 0;
+    padding: .75rem 1rem;
+
+    border: 1px solid #fecaca;
+    border-radius: var(--radius-sm);
+
+    background: #fef2f2;
+    color: #b91c1c;
+
+    font-size: var(--font-sm);
+    line-height: 1.4;
+}
+
+.auth-footer a {
+    color: var(--primary-dark);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    color: var(--primary);
+}

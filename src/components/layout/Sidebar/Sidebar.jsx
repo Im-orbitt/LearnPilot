@@ -2,6 +2,8 @@ import "./Sidebar.css";
 
 import { NavLink } from "react-router-dom";
 import { useBook } from "../../../hooks/useBook";
+import { useAuth } from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 import {
   Brain,
@@ -25,6 +27,8 @@ const links = [
 
 function Sidebar({ collapsed, onToggle, lessonMode = false, lessonType = "" }) {
   const { currentTopic } = useBook();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   if (lessonMode && lessonType === "quiz") {
     return <aside className="sidebar lesson-sidebar lesson-sidebar-empty" />;
@@ -88,6 +92,34 @@ function Sidebar({ collapsed, onToggle, lessonMode = false, lessonType = "" }) {
           </NavLink>
         ))}
       </nav>
+      {user && (
+        <div className="sidebar-account">
+          <div className="sidebar-account-info">
+            <div className="sidebar-account-avatar">
+              {user.name.charAt(0).toUpperCase()}
+            </div>
+
+            {!collapsed && (
+              <div className="sidebar-account-details">
+                <strong>{user.name}</strong>
+                <span>{user.email}</span>
+              </div>
+            )}
+          </div>
+
+          {!collapsed && (
+            <button
+              className="sidebar-logout"
+              onClick={async () => {
+                await logout();
+                navigate("/login");
+              }}
+            >
+              Log out
+            </button>
+          )}
+        </div>
+      )}
     </aside>
   );
 }

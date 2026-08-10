@@ -1,19 +1,21 @@
-import "./Login.css";
+import "./Register.css";
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Brain } from "lucide-react";
 
 import Button from "../components/ui/Button/Button";
-import { login } from "../services/auth";
+import { register } from "../services/auth";
 import { useAuth } from "../hooks/useAuth";
 
-function Login() {
+function Register() {
   const navigate = useNavigate();
   const { setUser } = useAuth();
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,15 +25,25 @@ function Login() {
 
     setError("");
 
-    if (!email.trim() || !password) {
-      setError("Please enter your email and password.");
+    if (!name.trim() || !email.trim() || !password || !confirmPassword) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
 
     try {
       setLoading(true);
 
-      const data = await login(email.trim(), password);
+      const data = await register(name.trim(), email.trim(), password);
 
       setUser(data.user);
 
@@ -55,11 +67,22 @@ function Login() {
         </div>
 
         <div className="auth-header">
-          <h1>Welcome back</h1>
-          <p>Continue your learning journey.</p>
+          <h1>Create your account</h1>
+          <p>Start your learning journey with LearnPilot.</p>
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
+          <label>
+            Name
+            <input
+              type="text"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="Your name"
+              autoComplete="name"
+            />
+          </label>
+
           <label>
             Email
             <input
@@ -77,20 +100,31 @@ function Login() {
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              placeholder="Enter your password"
-              autoComplete="current-password"
+              placeholder="At least 8 characters"
+              autoComplete="new-password"
+            />
+          </label>
+
+          <label>
+            Confirm password
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              placeholder="Enter your password again"
+              autoComplete="new-password"
             />
           </label>
 
           {error && <p className="auth-error">{error}</p>}
 
           <Button type="submit" disabled={loading}>
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? "Creating account..." : "Create account"}
           </Button>
         </form>
 
         <p className="auth-footer">
-          Don't have an account? <Link to="/register">Create one</Link>
+          Already have an account? <Link to="/login">Sign in</Link>
         </p>
 
         <Link className="auth-back" to="/">
@@ -101,4 +135,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;

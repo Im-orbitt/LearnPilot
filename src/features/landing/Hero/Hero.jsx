@@ -20,7 +20,7 @@ function Hero() {
       </p>
 
       <div className="hero-buttons">
-        <Link to="/app/library">
+        <Link to="/login">
           <button className="primary-btn">Upload Chapter</button>
         </Link>
 

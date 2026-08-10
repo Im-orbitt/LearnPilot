@@ -4,8 +4,12 @@ import MainLayout from "../layouts/MainLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import DashboardLayout from "../layouts/DashboardLayout";
 
+import ProtectedRoute from "../components/auth/ProtectedRoute";
+import PublicOnlyRoute from "../components/auth/PublicOnlyRoute";
+
 import Landing from "../pages/Landing";
 import Login from "../pages/Login";
+import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import Library from "../pages/Library";
 import Chapter from "../pages/Chapter";
@@ -30,25 +34,32 @@ function AppRoutes() {
         </Route>
 
         {/* Authentication */}
-        <Route path="/login" element={<AuthLayout />}>
-          <Route index element={<Login />} />
+        <Route element={<PublicOnlyRoute />}>
+          <Route path="/login" element={<AuthLayout />}>
+            <Route index element={<Login />} />
+          </Route>
+
+          <Route path="/register" element={<AuthLayout />}>
+            <Route index element={<Register />} />
+          </Route>
         </Route>
 
         {/* Application */}
-        <Route path="/app" element={<DashboardLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="library" element={<Library />} />
-          <Route path="chapter" element={<Chapter />} />
-          <Route path="lesson" element={<Lesson />} />
-          /* lesson sub-routes */
-          <Route path="lesson/notes" element={<Notes />} />
-          <Route path="lesson/quiz" element={<Quiz />} />
-          <Route path="lesson/quiz/answers" element={<QuizAnswers />} />
-          <Route path="lesson/tutor" element={<Tutor />} />
-          <Route path="progress" element={<Progress />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="parent" element={<Parent />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/app" element={<DashboardLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="library" element={<Library />} />
+            <Route path="chapter" element={<Chapter />} />
+            <Route path="lesson" element={<Lesson />} />
+            <Route path="lesson/notes" element={<Notes />} />
+            <Route path="lesson/quiz" element={<Quiz />} />
+            <Route path="lesson/quiz/answers" element={<QuizAnswers />} />
+            <Route path="lesson/tutor" element={<Tutor />} />
+            <Route path="progress" element={<Progress />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="parent" element={<Parent />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
