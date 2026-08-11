@@ -13,3 +13,9 @@
 .library-actions {
     margin-top: var(--space-md);
 }
+
+.library-books {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}

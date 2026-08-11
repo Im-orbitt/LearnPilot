@@ -20,6 +20,7 @@ from services.books import (
     initialize_books_database,
     create_book,
     get_user_books,
+    count_user_books,
 )
 
 app = FastAPI()
@@ -175,6 +176,12 @@ async def upload_pdf(
         raise HTTPException(
             status_code=401,
             detail="Not authenticated.",
+        )
+    
+    if count_user_books(user["id"]) >= 2:
+        raise HTTPException(
+            status_code=403,
+            detail="You've reached the 2-book limit on the Free plan.",
         )
 
     pdf_bytes = await file.read()

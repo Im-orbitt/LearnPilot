@@ -77,7 +77,6 @@ def get_user_books(user_id):
         for row in rows
     ]
 
-
 def delete_book(book_id, user_id):
     with get_connection() as connection:
         connection.execute(
@@ -89,3 +88,16 @@ def delete_book(book_id, user_id):
         )
 
         connection.commit()
+        
+def count_user_books(user_id):
+    with get_connection() as connection:
+        row = connection.execute(
+            """
+            SELECT COUNT(*) AS count
+            FROM books
+            WHERE user_id = ?
+            """,
+            (user_id,),
+        ).fetchone()
+
+    return row["count"]

@@ -8,9 +8,9 @@ import EmptyState from "../components/feedback/EmptyState/EmptyState";
 import StatCard from "../features/dashboard/StatCard/StatCard";
 
 function Dashboard() {
-  const { book } = useBook();
+  const { books, book } = useBook();
 
-  if (!book) {
+  if (books.length === 0) {
     return (
       <div className="dashboard-page">
         <EmptyState
@@ -32,7 +32,7 @@ function Dashboard() {
       </section>
 
       <section className="dashboard-stats">
-        <StatCard title="Chapter" value="1" icon={BookOpen} />
+        <StatCard title="Books" value={books.length} icon={BookOpen} />
 
         <StatCard title="Topics" value={book.topics.length} icon={Layers} />
 

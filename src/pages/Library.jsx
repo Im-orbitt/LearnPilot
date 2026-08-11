@@ -10,7 +10,7 @@ import BookCard from "../features/library/BookCard/BookCard";
 import UploadSection from "../features/library/UploadSection/UploadSection";
 
 function Library() {
-  const { book, setBook, refreshBooks } = useBook();
+  const { books, setBook, refreshBooks } = useBook();
 
   const navigate = useNavigate();
 
@@ -30,8 +30,8 @@ function Library() {
     try {
       const data = await uploadPdf(file);
 
-      setBook(data.book.chapter);
       await refreshBooks();
+      setBook(data.book.chapter);
 
       setSuccess("Chapter generated successfully!");
     } catch (err) {
@@ -50,17 +50,26 @@ function Library() {
         onUpload={handleUpload}
       />
 
-      {!book && !uploading && (
+      {books.length === 0 && !uploading && (
         <EmptyState
           title="No books yet"
           message="Upload your first PDF to get started."
         />
       )}
 
-      {book && (
-        <>
-          <BookCard chapter={book} onOpen={() => navigate("/app/chapter")} />
-        </>
+      {books.length > 0 && (
+        <div className="library-books">
+          {books.map((item) => (
+            <BookCard
+              key={item.id}
+              chapter={item.chapter}
+              onOpen={() => {
+                setBook(item.chapter);
+                navigate("/app/chapter");
+              }}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
