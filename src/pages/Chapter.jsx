@@ -26,7 +26,7 @@ function Chapter() {
     navigate("/app/lesson");
   }
 
-  const topics = book.chapter.topics;
+  const topics = book.topics;
 
   return (
     <div className="chapter-page">
@@ -38,9 +38,9 @@ function Chapter() {
         <div className="chapter-header-content">
           <p className="chapter-eyebrow">Your chapter</p>
 
-          <h1>{book.chapter.title}</h1>
+          <h1>{book.title}</h1>
 
-          <p className="chapter-summary">{book.chapter.summary}</p>
+          <p className="chapter-summary">{book.summary}</p>
 
           <div className="chapter-meta">
             <span>

@@ -10,7 +10,7 @@ import BookCard from "../features/library/BookCard/BookCard";
 import UploadSection from "../features/library/UploadSection/UploadSection";
 
 function Library() {
-  const { book, setBook } = useBook();
+  const { book, setBook, refreshBooks } = useBook();
 
   const navigate = useNavigate();
 
@@ -30,7 +30,9 @@ function Library() {
     try {
       const data = await uploadPdf(file);
 
-      setBook(data);
+      setBook(data.book.chapter);
+      await refreshBooks();
+
       setSuccess("Chapter generated successfully!");
     } catch (err) {
       setError(err.message);
@@ -57,10 +59,7 @@ function Library() {
 
       {book && (
         <>
-          <BookCard
-            chapter={book.chapter}
-            onOpen={() => navigate("/app/chapter")}
-          />
+          <BookCard chapter={book} onOpen={() => navigate("/app/chapter")} />
         </>
       )}
     </div>

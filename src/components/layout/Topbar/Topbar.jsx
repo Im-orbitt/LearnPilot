@@ -84,8 +84,8 @@ function Topbar({ lessonMode = false, lessonType = "" }) {
   let subtitle = pages[pathname]?.subtitle ?? "";
 
   if (pathname === "/app/chapter" && book) {
-    title = book.chapter.title;
-    subtitle = `${book.chapter.topics.length} topics ready to study`;
+    title = book.title;
+    subtitle = `${book.topics.length} topics ready to study`;
   }
 
   if (pathname === "/app/lesson" && currentTopic) {

@@ -34,11 +34,7 @@ function Dashboard() {
       <section className="dashboard-stats">
         <StatCard title="Chapter" value="1" icon={BookOpen} />
 
-        <StatCard
-          title="Topics"
-          value={book.chapter.topics.length}
-          icon={Layers}
-        />
+        <StatCard title="Topics" value={book.topics.length} icon={Layers} />
 
         <StatCard title="Study Time" value="42 min" icon={Clock3} />
       </section>

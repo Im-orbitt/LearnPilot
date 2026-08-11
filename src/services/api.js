@@ -1,21 +1,23 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 export async function uploadPdf(file) {
   const formData = new FormData();
+
   formData.append("file", file);
 
   const response = await fetch(`${API_URL}/upload`, {
     method: "POST",
     body: formData,
+    credentials: "include",
   });
 
-  if (!response.ok) {
-    const message = await response.text();
+  const data = await response.json();
 
-    throw new Error(message || `Upload failed (${response.status})`);
+  if (!response.ok) {
+    throw new Error(data.detail || "Upload failed.");
   }
 
-  return response.json();
+  return data;
 }
 
 export async function getBackendStatus() {

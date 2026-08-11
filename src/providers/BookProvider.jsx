@@ -1,30 +1,14 @@
 import { useEffect, useState } from "react";
 
 import { BookContext } from "../contexts/BookContext";
+import { useAuth } from "../hooks/useAuth";
 
 export function BookProvider({ children }) {
-  const [book, setBookState] = useState(() => {
-    const saved = localStorage.getItem("learnpilot-book");
+  const { user, loading: authLoading } = useAuth();
 
-    if (!saved) return null;
-
-    try {
-      return JSON.parse(saved);
-    } catch {
-      localStorage.removeItem("learnpilot-book");
-      return null;
-    }
-  });
-
-  const [currentTopicIndex, setCurrentTopicIndex] = useState(() => {
-    const saved = localStorage.getItem("learnpilot-current-topic");
-
-    if (saved === null) return 0;
-
-    const index = Number(saved);
-
-    return Number.isInteger(index) && index >= 0 ? index : 0;
-  });
+  const [books, setBooks] = useState([]);
+  const [book, setBookState] = useState(null);
+  const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
 
   const [lessonProgress, setLessonProgress] = useState({
     notesCompleted: false,
@@ -32,6 +16,55 @@ export function BookProvider({ children }) {
   });
 
   const [quizAnswers, setQuizAnswers] = useState({});
+
+  const [loading, setLoading] = useState(true);
+
+  async function refreshBooks() {
+    const response = await fetch("http://localhost:8000/books", {
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to load books.");
+    }
+
+    const data = await response.json();
+
+    setBooks(data.books);
+
+    if (data.books.length > 0) {
+      setBookState(data.books[0].chapter);
+    } else {
+      setBookState(null);
+    }
+
+    return data.books;
+  }
+
+  useEffect(() => {
+    if (authLoading) return;
+
+    if (!user) {
+      setBooks([]);
+      setBookState(null);
+      setLoading(false);
+      return;
+    }
+
+    async function loadBooks() {
+      try {
+        await refreshBooks();
+      } catch (error) {
+        console.error("Failed to load books:", error);
+        setBooks([]);
+        setBookState(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadBooks();
+  }, [user, authLoading]);
 
   function setBook(newBook) {
     setBookState(newBook);
@@ -43,25 +76,15 @@ export function BookProvider({ children }) {
     });
   }
 
-  useEffect(() => {
-    if (book) {
-      localStorage.setItem("learnpilot-book", JSON.stringify(book));
-    } else {
-      localStorage.removeItem("learnpilot-book");
-    }
-  }, [book]);
-
-  useEffect(() => {
-    localStorage.setItem("learnpilot-current-topic", String(currentTopicIndex));
-  }, [currentTopicIndex]);
-
-  const currentTopic = book?.chapter?.topics?.[currentTopicIndex] ?? null;
+  const currentTopic = book?.topics?.[currentTopicIndex] ?? null;
 
   return (
     <BookContext.Provider
       value={{
         book,
+        books,
         setBook,
+        refreshBooks,
         currentTopic,
         currentTopicIndex,
         setCurrentTopicIndex,
@@ -69,6 +92,7 @@ export function BookProvider({ children }) {
         setLessonProgress,
         quizAnswers,
         setQuizAnswers,
+        loading,
       }}
     >
       {children}
