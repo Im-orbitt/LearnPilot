@@ -16,6 +16,11 @@ from services.auth import (
     delete_session,
 )
 
+from services.books import (
+    initialize_books_database,
+    create_book,
+    get_user_books,
+)
 
 app = FastAPI()
 
@@ -27,9 +32,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 initialize_database()
-
+initialize_books_database()
 
 class RegisterRequest(BaseModel):
     name: str
@@ -140,9 +144,39 @@ def get_current_user(request: Request):
 
     return {"user": user}
 
+@app.get("/books")
+def get_books(request: Request):
+    token = request.cookies.get("learnpilot_session")
+
+    user = get_user_from_session(token)
+
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authenticated.",
+        )
+
+    books = get_user_books(user["id"])
+
+    return {
+        "books": books,
+    }
 
 @app.post("/upload")
-async def upload_pdf(file: UploadFile = File(...)):
+async def upload_pdf(
+    request: Request,
+    file: UploadFile = File(...),
+):
+    token = request.cookies.get("learnpilot_session")
+
+    user = get_user_from_session(token)
+
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authenticated.",
+        )
+
     pdf_bytes = await file.read()
 
     text = extract_text(pdf_bytes)
@@ -172,7 +206,12 @@ async def upload_pdf(file: UploadFile = File(...)):
     for topic in chapter["topics"]:
         topic["quiz"] = quiz_lookup.get(topic["title"], [])
 
+    book = create_book(
+        user["id"],
+        file.filename,
+        chapter,
+    )
+
     return {
-        "filename": file.filename,
-        "chapter": chapter,
+        "book": book,
     }
