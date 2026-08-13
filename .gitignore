@@ -23,9 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Backend
-backend/.venv/
-backend/.env
-backend/__pycache__/
-backend/services/__pycache__/
-backend/learnpilot.db
+.venv
+.env
+__pycache__
+*.db
