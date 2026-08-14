@@ -1,60 +1,11 @@
 import hashlib
 import secrets
-import sqlite3
 
-from pathlib import Path
-
-import json
-
-DATABASE_PATH = Path(__file__).resolve().parent.parent / "learnpilot.db"
-
-
-def get_connection():
-    connection = sqlite3.connect(DATABASE_PATH)
-    connection.row_factory = sqlite3.Row
-
-    return connection
-
+from services.supabase import supabase
+from postgrest.exceptions import APIError
 
 def initialize_database():
-    with get_connection() as connection:
-        connection.execute(
-            """
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                email TEXT NOT NULL UNIQUE,
-                password_hash TEXT NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-            """
-        )
-
-        connection.execute(
-            """
-            CREATE TABLE IF NOT EXISTS sessions (
-                token TEXT PRIMARY KEY,
-                user_id INTEGER NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES users(id)
-            )
-            """
-        )
-
-        connection.execute(
-            """
-            CREATE TABLE IF NOT EXISTS books (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                filename TEXT NOT NULL,
-                chapter_json TEXT NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES users(id)
-            )
-            """
-        )
-
-        connection.commit()
+    pass
 
 
 def hash_password(password):
@@ -93,42 +44,59 @@ def verify_password(password, stored_hash):
 
 
 def create_user(name, email, password):
+    email = email.lower()
     password_hash = hash_password(password)
 
     try:
-        with get_connection() as connection:
-            cursor = connection.execute(
-                """
-                INSERT INTO users (name, email, password_hash)
-                VALUES (?, ?, ?)
-                """,
-                (name, email.lower(), password_hash),
+        response = (
+            supabase.table("users")
+            .insert(
+                {
+                    "name": name,
+                    "email": email,
+                    "password_hash": password_hash,
+                }
+            )
+            .execute()
+        )
+
+    except APIError as error:
+        if error.code == "23505":
+            raise ValueError(
+                "An account with this email already exists."
             )
 
-            connection.commit()
+        raise
 
-            return {
-                "id": cursor.lastrowid,
-                "name": name,
-                "email": email.lower(),
-            }
+    if not response.data:
+        raise ValueError("Failed to create account.")
 
-    except sqlite3.IntegrityError:
-        raise ValueError("An account with this email already exists.")
+    user = response.data[0]
+
+    return {
+        "id": user["id"],
+        "name": user["name"],
+        "email": user["email"],
+    }
 
 
 def authenticate_user(email, password):
-    with get_connection() as connection:
-        user = connection.execute(
-            """
-            SELECT id, name, email, password_hash
-            FROM users
-            WHERE email = ?
-            """,
-            (email.lower(),),
-        ).fetchone()
+    email = email.lower()
 
-    if not user or not verify_password(password, user["password_hash"]):
+    response = (
+        supabase.table("users")
+        .select("id, name, email, password_hash")
+        .eq("email", email)
+        .limit(1)
+        .execute()
+    )
+
+    if not response.data:
+        return None
+
+    user = response.data[0]
+
+    if not verify_password(password, user["password_hash"]):
         return None
 
     return {
@@ -141,16 +109,19 @@ def authenticate_user(email, password):
 def create_session(user_id):
     token = secrets.token_urlsafe(32)
 
-    with get_connection() as connection:
-        connection.execute(
-            """
-            INSERT INTO sessions (token, user_id)
-            VALUES (?, ?)
-            """,
-            (token, user_id),
+    response = (
+        supabase.table("sessions")
+        .insert(
+            {
+                "token": token,
+                "user_id": user_id,
+            }
         )
+        .execute()
+    )
 
-        connection.commit()
+    if not response.data:
+        raise RuntimeError("Failed to create session.")
 
     return token
 
@@ -159,16 +130,18 @@ def get_user_from_session(token):
     if not token:
         return None
 
-    with get_connection() as connection:
-        user = connection.execute(
-            """
-            SELECT users.id, users.name, users.email
-            FROM users
-            JOIN sessions ON sessions.user_id = users.id
-            WHERE sessions.token = ?
-            """,
-            (token,),
-        ).fetchone()
+    response = (
+        supabase.table("sessions")
+        .select("user_id, users(id, name, email)")
+        .eq("token", token)
+        .limit(1)
+        .execute()
+    )
+
+    if not response.data:
+        return None
+
+    user = response.data[0].get("users")
 
     if not user:
         return None
@@ -184,10 +157,4 @@ def delete_session(token):
     if not token:
         return
 
-    with get_connection() as connection:
-        connection.execute(
-            "DELETE FROM sessions WHERE token = ?",
-            (token,),
-        )
-
-        connection.commit()
+    supabase.table("sessions").delete().eq("token", token).execute()

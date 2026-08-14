@@ -1,7 +1,13 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from fastapi import FastAPI, UploadFile, File, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
+
+from services.supabase import supabase
 
 from services.pdf import extract_text
 from services.parser import process_chapter
