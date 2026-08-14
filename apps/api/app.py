@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, UploadFile, File, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
@@ -24,10 +25,14 @@ from services.books import (
 )
 
 app = FastAPI()
+IS_PRODUCTION = os.getenv("ENVIRONMENT") == "production"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://learnpilot-seven.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -85,8 +90,8 @@ def register(data: RegisterRequest, response: Response):
         key="learnpilot_session",
         value=token,
         httponly=True,
-        samesite="lax",
-        secure=False,
+        samesite="none" if IS_PRODUCTION else "lax",
+        secure=IS_PRODUCTION,
         max_age=60 * 60 * 24 * 30,
     )
 
@@ -112,8 +117,8 @@ def login(data: LoginRequest, response: Response):
         key="learnpilot_session",
         value=token,
         httponly=True,
-        samesite="lax",
-        secure=False,
+        samesite="none" if IS_PRODUCTION else "lax",
+        secure=IS_PRODUCTION,
         max_age=60 * 60 * 24 * 30,
     )
 

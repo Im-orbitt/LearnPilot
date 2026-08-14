@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 async function handleResponse(response) {
   const data = await response.json();
@@ -44,7 +44,7 @@ export async function register(name, email, password) {
 }
 
 export async function getCurrentUser() {
-  const response = await fetch("http://localhost:8000/auth/me", {
+  const response = await fetch(`${API_URL}/auth/me`, {
     credentials: "include",
   });
 

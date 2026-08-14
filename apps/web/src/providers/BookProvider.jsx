@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { BookContext } from "../contexts/BookContext";
 import { useAuth } from "../hooks/useAuth";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 export function BookProvider({ children }) {
   const { user, loading: authLoading } = useAuth();
 
@@ -20,7 +22,7 @@ export function BookProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   async function refreshBooks() {
-    const response = await fetch("http://localhost:8000/books", {
+    const response = await fetch(`${API_URL}/books`, {
       credentials: "include",
     });
 
