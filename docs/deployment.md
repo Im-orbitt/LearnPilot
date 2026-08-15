@@ -1,5 +1,10 @@
 # Deployment Guide
 
+> **Documentation policy:** This document is updated at each LearnPilot release.
+> It may not reflect unreleased changes on the current development branch.
+>
+> **Last updated:** v0.6.1
+
 This guide describes the production deployment setup used by LearnPilot.
 
 LearnPilot is deployed as three main services:

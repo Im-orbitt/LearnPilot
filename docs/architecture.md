@@ -1,5 +1,10 @@
 # LearnPilot — Architecture
 
+> **Documentation policy:** This document is updated at each LearnPilot release.
+> It may not reflect unreleased changes on the current development branch.
+>
+> **Last updated:** v0.6.1
+
 This document describes LearnPilot’s architecture: frontend, backend, the AI learning pipeline, authentication, and database interactions.
 
 ## System overview

@@ -1,5 +1,10 @@
 # Development Guide
 
+> **Documentation policy:** This document is updated at each LearnPilot release.
+> It may not reflect unreleased changes on the current development branch.
+>
+> **Last updated:** v0.6.1
+
 This guide explains how to set up LearnPilot for local development.
 
 ## Prerequisites
