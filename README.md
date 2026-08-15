@@ -86,8 +86,8 @@ The Free plan currently supports up to **2 books per user**.
 
 ### Deployment
 
-- **Vercel** — frontend
-- **Render** — backend
+- **Vercel** — frontend hosting and production API proxy
+- **Render** — FastAPI backend
 
 ## Architecture
 
@@ -102,7 +102,8 @@ learnpilot/
 └── ...
 ```
 
-The frontend communicates with the FastAPI backend through the API layer. The backend handles authentication, PDF processing, AI generation, and database persistence.
+The frontend communicates with the FastAPI backend through the API layer.
+In production, Vercel proxies `/api/*` requests to the Render backend. The backend handles authentication, PDF processing, AI generation, and database persistence.
 
 ## Getting Started
 

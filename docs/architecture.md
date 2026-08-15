@@ -3,7 +3,7 @@
 > **Documentation policy:** This document is updated at each LearnPilot release.
 > It may not reflect unreleased changes on the current development branch.
 >
-> **Last updated:** v0.7.0
+> **Last updated:** v0.7.1
 
 This document describes LearnPilot's architecture, including the frontend, backend, AI learning pipeline, authentication, database interactions, and monorepo structure.
 
@@ -465,17 +465,22 @@ Register / Login
  Create Session
       │
       ▼
- HTTP-only Cookie
+HTTP-only Cookie
       │
       ▼
- Browser
+Browser
       │
-      │ subsequent requests
-      ▼
- FastAPI
+      │ /api/* requests
       │
       ▼
- Validate Session
+Vercel
+      │
+      │ rewrite
+      ▼
+FastAPI
+      │
+      ▼
+Validate Session
       │
       ▼
  Authenticated User
@@ -517,6 +522,17 @@ This prevents one user from accessing another user's books.
 1. The backend removes the active session.
 2. The session cookie is cleared.
 3. The frontend clears its authenticated user state.
+
+## Production authentication and API routing
+
+In production, the frontend uses `/api` as its API base URL.
+
+Vercel rewrites `/api/*` requests to the Render backend. This means the
+browser interacts with the API through the frontend's origin while Render
+continues to host the FastAPI application.
+
+This architecture prevents the authentication session from depending on a
+third-party cookie between Vercel and Render.
 
 ---
 
@@ -757,15 +773,18 @@ Environment secrets such as API keys and database credentials are stored in envi
 
 # Deployment architecture
 
-LearnPilot is deployed as two separate applications from the same monorepo.
+LearnPilot is deployed as two applications from the same monorepo.
 
 ```text
 GitHub Repository
        │
        ├──────────────► Vercel
        │                  │
-       │                  └── React + Vite frontend
-       │
+       │                  ├── React + Vite frontend
+       │                  │
+       │                  └── /api/* proxy
+       │                         │
+       │                         ▼
        └──────────────► Render
                           │
                           └── FastAPI backend
@@ -775,13 +794,17 @@ GitHub Repository
                                    └──► Supabase
 ```
 
-The frontend communicates with the deployed FastAPI backend over HTTP.
+In production, the frontend sends API requests to /api/\*. Vercel rewrites
+these requests to the Render backend.
+
+This keeps the browser-facing API requests on the Vercel frontend origin and
+avoids authentication problems caused by third-party cookies.
 
 ---
 
 # Current architecture status
 
-As of **v0.7.0**, the core LearnPilot architecture is functional.
+As of **v0.7.1**, the core LearnPilot architecture is functional.
 
 Implemented core systems include:
 

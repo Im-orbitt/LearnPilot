@@ -3,7 +3,7 @@
 > **Documentation policy:** This document is updated at each LearnPilot release.
 > It may not reflect unreleased changes on the current development branch.
 >
-> **Last updated:** v0.7.0
+> **Last updated:** v0.7.1
 
 This guide describes the production deployment setup used by LearnPilot.
 
@@ -231,7 +231,64 @@ The production build is created with:
 npm run build
 ```
 
+### API proxy
+
+The frontend uses a Vercel rewrite to proxy API requests through the same
+Vercel origin as the frontend.
+
+This avoids relying on third-party cookies between the Vercel frontend and
+Render backend.
+
+The Vercel configuration is:
+
+```json
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "https://learnpilot-backend-suet.onrender.com/:path*"
+    }
+  ]
+}
+```
+
+The frontend API configuration points to the proxy:
+
+```env
+VITE_API_URL=/api
+```
+
+Requests therefore follow this path:
+
+```
+Browser
+   │
+   │ /api/auth/login
+   ▼
+Vercel
+   │
+   │ proxy
+   ▼
+Render FastAPI
+   │
+   ▼
+Supabase
+```
+
+This keeps authentication requests on the frontend's origin and allows the
+session cookie to persist across page refreshes.
+
 ### Frontend environment variables
+
+The production frontend should use:
+
+```env
+VITE_API_URL=/api
+```
 
 Any frontend environment variables should contain only values that are safe to expose to the browser.
 
@@ -241,9 +298,8 @@ Any frontend environment variables should contain only values that are safe to e
 
 ## 5) CORS
 
-The FastAPI backend uses CORS to allow requests from the deployed frontend.
-
-The production frontend origin must be included in the backend's CORS configuration.
+The FastAPI backend uses CORS to allow requests from the frontend during
+development and for direct production requests.
 
 The development frontend is:
 
@@ -253,7 +309,11 @@ http://localhost:5173
 
 The production frontend is hosted on Vercel.
 
-The backend should allow only the production frontend origin while avoiding unnecessarily broad production CORS rules.
+Production API requests normally use the Vercel /api proxy, so the browser
+communicates with the same origin as the frontend rather than directly making
+cross-origin requests to Render.
+
+The backend still allows the configured frontend origins for CORS.
 
 ---
 
@@ -261,7 +321,9 @@ The backend should allow only the production frontend origin while avoiding unne
 
 LearnPilot uses HTTP-only session cookies.
 
-In production, cookies are configured with:
+In production, authentication uses an HTTP-only session cookie.
+
+The cookie is configured with:
 
 ```text
 Secure
@@ -269,7 +331,9 @@ SameSite=None
 HttpOnly
 ```
 
-This allows the frontend and backend to operate across their separate production origins while keeping the session cookie inaccessible to frontend JavaScript.
+The production frontend communicates with the backend through the Vercel /api proxy. This avoids the browser treating the Render session cookie as a third-party cookie when the user interacts with LearnPilot.
+
+The session token remains inaccessible to frontend JavaScript.
 
 The backend creates a session after successful registration or login.
 
@@ -308,10 +372,12 @@ Git Repository
       ▼                     ▼
    Vercel                 Render
       │                     │
-      └──────────┬──────────┘
-                 │
-                 ▼
-             Production
+      │ /api/* proxy        │
+      └────────────────────►
+                            │
+                            ├──► Supabase
+                            │
+                            └──► Gemini
 ```
 
 Changes to the frontend are built and deployed through Vercel.
@@ -390,6 +456,8 @@ Test the main application flow:
 7. Open the library.
 8. Confirm the book is stored and displayed correctly.
 9. Log out and verify the session is invalidated.
+10. Refresh the page after logging in and verify the session remains active.
+11. Upload a book after refreshing and verify authentication is preserved.
 
 ---
 
