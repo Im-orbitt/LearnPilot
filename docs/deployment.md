@@ -3,7 +3,7 @@
 > **Documentation policy:** This document is updated at each LearnPilot release.
 > It may not reflect unreleased changes on the current development branch.
 >
-> **Last updated:** v0.6.1
+> **Last updated:** v0.7.0
 
 This guide describes the production deployment setup used by LearnPilot.
 
@@ -160,13 +160,13 @@ This keeps the backend deployment isolated from the frontend.
 
 ### Build
 
-Install the Python dependencies from:
+The backend dependencies are defined in:
 
 ```text
-requirements.txt
+apps/api/requirements.txt
 ```
 
-The backend dependencies can be installed with:
+Render installs them from the service root with:
 
 ```bash
 pip install -r requirements.txt

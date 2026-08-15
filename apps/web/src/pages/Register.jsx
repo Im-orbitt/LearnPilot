@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Brain } from "lucide-react";
 
 import Button from "../components/ui/Button/Button";
+import Input from "../components/ui/input/Input";
 import { register } from "../services/auth";
 import { useAuth } from "../hooks/useAuth";
 
@@ -72,49 +73,41 @@ function Register() {
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
-          <label>
-            Name
-            <input
-              type="text"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder="Your name"
-              autoComplete="name"
-            />
-          </label>
+          <Input
+            label="Name"
+            type="text"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            placeholder="Your name"
+            autoComplete="name"
+          />
 
-          <label>
-            Email
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="you@example.com"
-              autoComplete="email"
-            />
-          </label>
+          <Input
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="you@example.com"
+            autoComplete="email"
+          />
 
-          <label>
-            Password
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="At least 8 characters"
-              autoComplete="new-password"
-            />
-          </label>
+          <Input
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="At least 8 characters"
+            autoComplete="new-password"
+          />
 
-          <label>
-            Confirm password
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(event) => setConfirmPassword(event.target.value)}
-              placeholder="Enter your password again"
-              autoComplete="new-password"
-            />
-          </label>
+          <Input
+            label="Confirm password"
+            type="password"
+            value={confirmPassword}
+            onChange={(event) => setConfirmPassword(event.target.value)}
+            placeholder="Enter your password again"
+            autoComplete="new-password"
+          />
 
           {error && <p className="auth-error">{error}</p>}
 

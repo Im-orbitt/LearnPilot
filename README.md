@@ -4,14 +4,16 @@
 
 Upload a chapter. Master it with AI.
 
-LearnPilot is an AI-powered learning platform that transforms textbook chapters into structured study material.
+LearnPilot is an AI-powered learning platform that transforms textbook chapters into structured, interactive study experiences.
 
 Upload a textbook chapter as a PDF and LearnPilot turns it into:
 
 - **Structured chapter topics**
 - **Detailed study notes**
 - **Topic-based quizzes**
+- **Quiz answer review**
 - **A personal learning library**
+- **A guided lesson workflow**
 
 ## Features
 
@@ -21,15 +23,29 @@ Turn textbook content into detailed, topic-organized study notes designed for ac
 
 ### AI Quizzes
 
-Generate topic-based multiple-choice questions to test your understanding.
+Generate topic-based multiple-choice questions to test your understanding, with scoring and answer review.
+
+### Guided Lessons
+
+Work through each topic using a structured learning flow:
+
+1. Review your notes
+2. Test your understanding
+3. Ask the AI Tutor
+
+The AI Tutor interface is currently being prepared for a future release.
 
 ### Personal Library
 
-Keep your uploaded chapters and generated learning material organized in your own library.
+Keep uploaded chapters and generated learning material organized in your own library.
 
 ### Authentication
 
 Create an account and securely access your own books and learning content.
+
+### Progress Tracking
+
+Progress tracking is planned for a future release.
 
 ### Free Plan
 
@@ -37,20 +53,56 @@ The Free plan currently supports up to **2 books per user**.
 
 ## How it works
 
-1. **Upload PDF**
-2. Extract textbook content
-3. Generate chapter structure
-4. Generate study notes
-5. Generate quizzes
-6. Save to your library
+1. **Create an account**
+2. **Upload a PDF**
+3. Extract textbook content
+4. Generate chapter structure
+5. Generate topic-based study notes
+6. Generate quizzes
+7. Save the generated chapter to your library
+8. Study topics through the guided lesson workflow
 
 ## Tech Stack
 
-- **Frontend:** React + Vite
-- **Backend:** FastAPI + Python
-- **AI:** Google Gemini
-- **Database:** Supabase / PostgreSQL
-- **Deployment:** Vercel + Render
+### Frontend
+
+- **React**
+- **Vite**
+- **React Router**
+- **Lucide React**
+- **React Markdown**
+
+### Backend
+
+- **FastAPI**
+- **Python**
+- **PyMuPDF**
+- **Google Gemini API**
+
+### Data
+
+- **Supabase**
+- **PostgreSQL**
+
+### Deployment
+
+- **Vercel** — frontend
+- **Render** — backend
+
+## Architecture
+
+LearnPilot uses a monorepo structure:
+
+```text
+learnpilot/
+├── apps/
+│   ├── web/          # React + Vite frontend
+│   └── api/          # FastAPI backend
+├── docs/             # Project documentation
+└── ...
+```
+
+The frontend communicates with the FastAPI backend through the API layer. The backend handles authentication, PDF processing, AI generation, and database persistence.
 
 ## Getting Started
 
@@ -66,7 +118,26 @@ For local development instructions, environment variables, architecture, and dep
 
 LearnPilot is under active development.
 
-The core learning pipeline, authentication, personal book library, cloud database integration, and production deployment are currently implemented.
+The core learning experience is currently implemented, including:
+
+- User authentication
+- PDF upload and processing
+- AI-generated chapter structures
+- AI-generated study notes
+- AI-generated quizzes
+- Quiz scoring and answer review
+- Personal book library
+- Guided lesson workflow
+- Supabase/PostgreSQL integration
+- Production deployment
+
+The following areas are still planned or being developed:
+
+- AI Tutor
+- Progress tracking
+- Settings
+- Parent dashboard
+- Additional learning and personalization features
 
 ## License
 

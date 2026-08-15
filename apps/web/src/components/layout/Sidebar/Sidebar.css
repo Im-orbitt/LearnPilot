@@ -167,23 +167,6 @@
     min-width: 0;
 }
 
-.sidebar-account-avatar {
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-
-    display: grid;
-    place-items: center;
-
-    border-radius: 50%;
-
-    background: rgba(255, 255, 255, .2);
-    color: white;
-
-    font-size: var(--font-sm);
-    font-weight: 800;
-}
-
 .sidebar-account-details {
     min-width: 0;
 

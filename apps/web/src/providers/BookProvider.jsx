@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 
 import { BookContext } from "../contexts/BookContext";
 import { useAuth } from "../hooks/useAuth";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+import { getBooks } from "../services/api";
 
 export function BookProvider({ children }) {
   const { user, loading: authLoading } = useAuth();
@@ -22,15 +21,7 @@ export function BookProvider({ children }) {
   const [booksLoading, setBooksLoading] = useState(false);
 
   async function refreshBooks() {
-    const response = await fetch(`${API_URL}/books`, {
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to load books.");
-    }
-
-    const data = await response.json();
+    const data = await getBooks();
 
     setBooks(data.books);
 

@@ -7,6 +7,7 @@ import EmptyState from "../components/feedback/EmptyState/EmptyState";
 import Button from "../components/ui/Button/Button";
 
 import ReactMarkdown from "react-markdown";
+import { createMarkdownComponents } from "../utils/markdown";
 
 function Notes() {
   const { currentTopic, setLessonProgress } = useBook();
@@ -30,22 +31,6 @@ function Notes() {
     navigate("/app/lesson");
   }
 
-  let headingIndex = 0;
-
-  const markdownComponents = {
-    h1: ({ children }) => (
-      <h1 id={`notes-heading-${headingIndex++}`}>{children}</h1>
-    ),
-
-    h2: ({ children }) => (
-      <h2 id={`notes-heading-${headingIndex++}`}>{children}</h2>
-    ),
-
-    h3: ({ children }) => (
-      <h3 id={`notes-heading-${headingIndex++}`}>{children}</h3>
-    ),
-  };
-
   return (
     <div className="lesson-page">
       <header className="lesson-header">
@@ -58,7 +43,7 @@ function Notes() {
 
       <section className="lesson-section">
         <div className="notes-content">
-          <ReactMarkdown components={markdownComponents}>
+          <ReactMarkdown components={createMarkdownComponents()}>
             {currentTopic.notes}
           </ReactMarkdown>
         </div>

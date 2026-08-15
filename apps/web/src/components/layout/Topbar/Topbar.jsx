@@ -3,6 +3,7 @@ import "./Topbar.css";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useBook } from "../../../hooks/useBook";
+import NotificationPopover from "../../ui/NotificationPopover/NotificationPopover";
 
 import { ArrowLeft, Bell, Search } from "lucide-react";
 
@@ -168,12 +169,7 @@ function Topbar({ lessonMode = false, lessonType = "" }) {
             <Bell size={19} />
           </button>
 
-          {showNotifications && (
-            <div className="notification-popover">
-              <h3>Notifications</h3>
-              <p>You're all caught up!</p>
-            </div>
-          )}
+          {showNotifications && <NotificationPopover />}
         </div>
       </div>
     </header>

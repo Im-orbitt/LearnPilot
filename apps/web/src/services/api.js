@@ -1,4 +1,16 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+import { API_URL } from "./config";
+
+export async function getBooks() {
+  const response = await fetch(`${API_URL}/books`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to load books.");
+  }
+
+  return response.json();
+}
 
 export async function uploadPdf(file) {
   const formData = new FormData();

@@ -144,41 +144,6 @@
 }
 
 /* =========================
-   NOTIFICATION POPOVER
-   ========================= */
-
-.notification-popover {
-    position: absolute;
-    top: calc(100% + var(--space-sm));
-    right: 0;
-
-    width: 260px;
-
-    padding: var(--space-lg);
-
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-
-    box-shadow: var(--shadow-md);
-}
-
-.notification-popover h3 {
-    margin: 0;
-
-    color: var(--text-primary);
-    font-size: var(--font-md);
-}
-
-.notification-popover p {
-    margin-top: var(--space-sm);
-
-    color: var(--text-secondary);
-    font-size: var(--font-sm);
-    line-height: 1.5;
-}
-
-/* =========================
    RESPONSIVE
    ========================= */
 

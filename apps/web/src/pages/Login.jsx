@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Brain } from "lucide-react";
 
 import Button from "../components/ui/Button/Button";
+import Input from "../components/ui/input/Input";
 import { login } from "../services/auth";
 import { useAuth } from "../hooks/useAuth";
 
@@ -60,27 +61,21 @@ function Login() {
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
-          <label>
-            Email
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="you@example.com"
-              autoComplete="email"
-            />
-          </label>
+          <Input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="you@example.com"
+            autoComplete="email"
+          />
 
-          <label>
-            Password
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="Enter your password"
-              autoComplete="current-password"
-            />
-          </label>
+          <Input
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="Enter your password"
+            autoComplete="current-password"
+          />
 
           {error && <p className="auth-error">{error}</p>}
 

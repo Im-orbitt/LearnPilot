@@ -5,6 +5,9 @@ import { useBook } from "../../../hooks/useBook";
 import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
+import { extractMarkdownHeadings } from "../../../utils/markdown";
+import Avatar from "../../../components/ui/Avatar/Avatar";
+
 import {
   Brain,
   LayoutDashboard,
@@ -35,11 +38,7 @@ function Sidebar({ collapsed, onToggle, lessonMode = false, lessonType = "" }) {
   }
 
   if (lessonMode && lessonType === "notes") {
-    const headings =
-      currentTopic?.notes
-        ?.split("\n")
-        .filter((line) => /^#{1,3}\s/.test(line))
-        .map((line) => line.replace(/^#{1,3}\s/, "").trim()) ?? [];
+    const headings = extractMarkdownHeadings(currentTopic?.notes);
 
     return (
       <aside className="sidebar lesson-sidebar notes-outline">
@@ -95,9 +94,7 @@ function Sidebar({ collapsed, onToggle, lessonMode = false, lessonType = "" }) {
       {user && (
         <div className="sidebar-account">
           <div className="sidebar-account-info">
-            <div className="sidebar-account-avatar">
-              {user.name.charAt(0).toUpperCase()}
-            </div>
+            <Avatar name={user.name} />
 
             {!collapsed && (
               <div className="sidebar-account-details">

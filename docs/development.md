@@ -3,7 +3,7 @@
 > **Documentation policy:** This document is updated at each LearnPilot release.
 > It may not reflect unreleased changes on the current development branch.
 >
-> **Last updated:** v0.6.1
+> **Last updated:** v0.7.0
 
 This guide explains how to set up LearnPilot for local development.
 
@@ -186,18 +186,30 @@ Backend functionality is separated into service modules:
 ```text
 apps/api/
 ├── app.py
-└── services/
-    ├── ai.py
-    ├── auth.py
-    ├── books.py
-    ├── notes.py
-    ├── parser.py
-    ├── pdf.py
-    ├── quiz.py
-    └── supabase.py
+├── core/
+│   └── config.py
+├── db/
+│   └── supabase.py
+├── routes/
+│   ├── auth.py
+│   ├── books.py
+│   └── upload.py
+├── schemas/
+│   ├── auth.py
+│   └── books.py
+├── services/
+│   ├── ai.py
+│   ├── auth.py
+│   ├── books.py
+│   ├── notes.py
+│   ├── parser.py
+│   ├── pdf.py
+│   └── quiz.py
+└── utils/
+    └── auth.py
 ```
 
-When adding backend functionality, keep logic inside the appropriate service module instead of putting everything into `app.py`. The API routes should primarily coordinate these services.
+When adding backend functionality, keep HTTP endpoint logic in routes/, request/response models in schemas/, configuration in core/, database access in db/, reusable business logic in services/, and authentication helpers in utils/. Keep app.py focused on application setup and router registration.
 
 ---
 
@@ -241,7 +253,7 @@ npm run lint
 LearnPilot uses Supabase for its database. The backend communicates with Supabase through:
 
 ```text
-apps/api/services/supabase.py
+apps/api/db/supabase.py
 ```
 
 When changing schema, update the corresponding backend code as well.
