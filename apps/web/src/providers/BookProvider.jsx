@@ -19,7 +19,7 @@ export function BookProvider({ children }) {
 
   const [quizAnswers, setQuizAnswers] = useState({});
 
-  const [loading, setLoading] = useState(true);
+  const [booksLoading, setBooksLoading] = useState(false);
 
   async function refreshBooks() {
     const response = await fetch(`${API_URL}/books`, {
@@ -44,16 +44,13 @@ export function BookProvider({ children }) {
   }
 
   useEffect(() => {
-    if (authLoading) return;
-
-    if (!user) {
-      setBooks([]);
-      setBookState(null);
-      setLoading(false);
+    if (authLoading || !user) {
       return;
     }
 
     async function loadBooks() {
+      setBooksLoading(true);
+
       try {
         await refreshBooks();
       } catch (error) {
@@ -61,7 +58,7 @@ export function BookProvider({ children }) {
         setBooks([]);
         setBookState(null);
       } finally {
-        setLoading(false);
+        setBooksLoading(false);
       }
     }
 
@@ -79,6 +76,8 @@ export function BookProvider({ children }) {
   }
 
   const currentTopic = book?.topics?.[currentTopicIndex] ?? null;
+
+  const loading = authLoading || (Boolean(user) && booksLoading);
 
   return (
     <BookContext.Provider
