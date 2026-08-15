@@ -1,219 +1,104 @@
-# Development Guide
+# LearnPilot — Development
 
-> **Documentation policy:** This document is updated at each LearnPilot release.
-> It may not reflect unreleased changes on the current development branch.
+> **Documentation policy:** This document is updated when the development workflow changes.
 >
-> **Last updated:** v0.7.0
+> **Last updated:** v0.7.1
 
-This guide explains how to set up LearnPilot for local development.
+LearnPilot is developed as a monorepo containing a React frontend and a FastAPI backend.
 
 ## Prerequisites
 
-Before starting, make sure you have:
+Before developing LearnPilot, you should have:
 
 - Git
-- Node.js
-- npm
-- Python 3.13+
+- Node.js and npm
+- Python 3.13.14
 - A Supabase project
 - A Google Gemini API key
 
-## Clone the repository
-
-```bash
-git clone <repository-url>
-cd learnpilot
-```
-
-## Project structure
-
-LearnPilot is a monorepo with separate frontend and backend applications:
-
-```text
-learnpilot/
-├── apps/
-│   ├── web/    # React + Vite frontend
-│   └── api/    # FastAPI backend
-├── docs/
-├── LICENSE
-└── README.md
-```
-
-The frontend and backend are developed independently and run as separate processes.
-
 ---
 
-## Backend setup
+## Getting started
 
-The backend is located in:
+Clone the repository and install the dependencies for both applications.
 
-```text
-apps/api/
-```
+### Frontend
 
-### 1) Create a virtual environment
-
-From the repository root:
-
-```powershell
-cd apps/api
-```
-
-Create the virtual environment:
-
-```powershell
-python -m venv .venv
-```
-
-### 2) Activate the virtual environment
-
-On Windows PowerShell:
-
-```powershell
-.venv\Scripts\Activate.ps1
-```
-
-On Windows Command Prompt:
-
-```cmd
-.venv\Scripts\activate
-```
-
-On macOS/Linux:
+The frontend uses Node.js and npm.
 
 ```bash
-source .venv/bin/activate
-```
-
-### 3) Install dependencies
-
-```powershell
-pip install -r requirements.txt
-```
-
-### 4) Configure environment variables
-
-Create a `.env` file inside:
-
-```text
-apps/api/.env
-```
-
-Add required environment variables:
-
-```env
-GENAI_API_KEY=your_gemini_api_key
-SUPABASE_URL=your_supabase_url
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-ENVIRONMENT=development
-```
-
-**Important:** Never commit `.env` files or secret credentials to Git.  
-The Supabase service-role key is a sensitive credential and must remain on the backend.
-
-### 5) Start the backend
-
-From `apps/api`:
-
-```powershell
-uvicorn app:app --reload
-```
-
-- API: `http://127.0.0.1:8000`
-- Swagger UI: `http://127.0.0.1:8000/docs`
-
----
-
-## Frontend setup
-
-The frontend is located in:
-
-```text
-apps/web/
-```
-
-Open a second terminal and run:
-
-```powershell
 cd apps/web
 npm install
+```
+
+Start the development server with:
+
+```bash
 npm run dev
 ```
 
-Vite will print the local URL (typically):
+### Backend
 
-```text
-http://localhost:5173
+The backend uses Python 3.13.14 and a virtual environment.
+
+```bash
+cd apps/api
+python -m venv .venv
 ```
+
+Activate the environment and install the dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+The backend requires environment variables for Gemini, Supabase, and the development environment.
+
+Run the development server with:
+
+```bash
+uvicorn app:app --reload
+```
+
+The frontend normally runs on `http://localhost:5173` and the backend on `http://127.0.0.1:8000`.
+
+---
+
+## Environment variables
+
+Development secrets belong in the backend's local `.env` file.
+
+```env
+GENAI_API_KEY=...
+SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE_KEY=...
+ENVIRONMENT=development
+```
+
+Never commit real credentials to the repository.
+
+Frontend environment variables should only contain values that are safe to expose to the browser.
 
 ---
 
 ## Development workflow
 
-### 1) Start the backend
+When working on LearnPilot:
 
-```powershell
-cd apps/api
-.venv\Scripts\Activate.ps1
-uvicorn app:app --reload
-```
+1. Create a branch for your changes.
+2. Make the changes in the appropriate application or module.
+3. Run the frontend and backend locally.
+4. Test the affected functionality.
+5. Run the frontend lint and build checks.
+6. Review your changes with Git.
+7. Push your branch.
+8. Open a Pull Request against `main`.
 
-### 2) Start the frontend
-
-In a second terminal:
-
-```powershell
-cd apps/web
-npm run dev
-```
-
-### 3) Open LearnPilot
-
-Open the frontend URL provided by Vite.
+Keep changes focused and avoid mixing unrelated features or fixes into the same Pull Request.
 
 ---
 
-# Backend development
-
-The backend entry point is:
-
-```text
-apps/api/app.py
-```
-
-Backend functionality is separated into service modules:
-
-```text
-apps/api/
-├── app.py
-├── core/
-│   └── config.py
-├── db/
-│   └── supabase.py
-├── routes/
-│   ├── auth.py
-│   ├── books.py
-│   └── upload.py
-├── schemas/
-│   ├── auth.py
-│   └── books.py
-├── services/
-│   ├── ai.py
-│   ├── auth.py
-│   ├── books.py
-│   ├── notes.py
-│   ├── parser.py
-│   ├── pdf.py
-│   └── quiz.py
-└── utils/
-    └── auth.py
-```
-
-When adding backend functionality, keep HTTP endpoint logic in routes/, request/response models in schemas/, configuration in core/, database access in db/, reusable business logic in services/, and authentication helpers in utils/. Keep app.py focused on application setup and router registration.
-
----
-
-# Frontend development
+## Frontend development
 
 The frontend uses:
 
@@ -223,159 +108,115 @@ The frontend uses:
 - React Markdown
 - Lucide React
 
-Frontend code is located under:
+Frontend development should keep reusable UI, feature-specific functionality, pages, state, and API communication separated.
 
-```text
-apps/web/src/
-```
+Run the available checks from `apps/web`:
 
-Build and preview:
-
-```powershell
-npm run build
-npm run preview
-```
-
----
-
-# Linting
-
-Run the linter from `apps/web`:
-
-```powershell
+```bash
 npm run lint
+npm run build
 ```
 
 ---
 
-# Database development
+## Backend development
 
-LearnPilot uses Supabase for its database. The backend communicates with Supabase through:
+The backend uses:
+
+- FastAPI
+- Python
+- PyMuPDF
+- Google Gemini
+- Supabase
+
+Backend code should keep HTTP handling, business logic, database access, and configuration separated.
+
+When adding functionality, place it in the appropriate existing module rather than putting application logic directly into `app.py`.
+
+---
+
+## Database development
+
+Supabase provides the PostgreSQL database used by LearnPilot.
+
+Changes to the database schema should be coordinated with the backend code that uses that schema.
+
+Never expose the Supabase service-role key to the frontend.
+
+---
+
+## AI development
+
+Gemini powers LearnPilot's chapter, notes, and quiz generation.
+
+AI-related changes should be tested with real textbook content where practical, since changes to prompts or processing logic can affect the generated learning material.
+
+API credentials must always remain server-side.
+
+---
+
+## Testing the application
+
+The most important end-to-end flow is:
 
 ```text
-apps/api/db/supabase.py
+Register
+   ↓
+Login
+   ↓
+Upload PDF
+   ↓
+Generate learning material
+   ↓
+View book in library
+   ↓
+Open notes and quizzes
 ```
 
-When changing schema, update the corresponding backend code as well.
+Changes affecting authentication, uploads, AI generation, or database operations should be tested through the relevant part of this flow.
 
 ---
 
-# AI development
-
-LearnPilot uses the Google Gemini API for AI-powered content generation.
-
-AI-related logic is located in:
-
-```text
-apps/api/services/ai.py
-```
-
-Never hard-code API keys into the source code.
-
-```env
-GENAI_API_KEY=...
-```
-
----
-
-# Testing the upload pipeline
-
-A typical test:
-
-1. Start backend and frontend
-2. Register / login
-3. Upload a PDF textbook chapter
-4. Wait for notes + quizzes generation
-5. Check the generated chapter data in the user’s library
-
----
-
-# Git workflow
+## Git
 
 Useful commands:
 
-```powershell
+```bash
 git status
 git diff
-git add <files>
+git add .
 git commit -m "type(scope): description"
 git push
 ```
 
----
-
-# Environment and secrets
-
-Never commit:
-
-- Gemini API keys
-- Supabase service-role keys
-- Session secrets
-- Passwords
-- Other private credentials
-
-Keep development secrets in:
-
-```text
-apps/api/.env
-```
-
-Make sure `.env` is included in `.gitignore`. If a secret is accidentally committed, rotate it immediately.
+Use clear, focused commit messages that describe the change being made.
 
 ---
 
-# Common development issues
+## Contributing
 
-## Backend cannot start
+Contributions and improvements are welcome.
 
-Make sure the virtual environment is activated and dependencies are installed.
+Before making a substantial change, it is recommended to discuss the idea first so that it fits LearnPilot's current direction.
 
-## Frontend dependencies are missing
+For help with the project, development questions, or larger proposed changes, contact the project maintainer through the contact information provided in the repository or project profile.
 
-From `apps/web`:
-
-```powershell
-npm install
-```
-
-## Frontend cannot reach the backend
-
-Ensure both servers are running and check CORS.
-
-Frontend: `http://localhost:5173`  
-Backend: `http://127.0.0.1:8000`
-
-## Supabase requests fail
-
-Validate:
-
-```env
-SUPABASE_URL=...
-SUPABASE_SERVICE_ROLE_KEY=...
-```
-
-## Gemini requests fail
-
-Validate:
-
-```env
-GENAI_API_KEY=...
-```
+Pull Requests should clearly describe what was changed and why, and should include relevant testing information when applicable.
 
 ---
 
-# Development checklist
+## Production deployment
 
-Before merging, verify:
+Production deployment is handled separately from local development.
 
-- [ ] Frontend runs successfully
-- [ ] Backend runs successfully
-- [ ] No new Pylance errors
-- [ ] No new ESLint errors
-- [ ] Relevant functionality was tested
-- [ ] Secrets are not committed
-- [ ] `git diff` reviewed
-- [ ] Meaningful commit message
+LearnPilot uses:
+
+- **Vercel** for the frontend
+- **Render** for the backend
+- **Supabase** for the database
+- **Google Gemini** for AI generation
+
+See the [Deployment](./deployment.md) documentation for the production architecture and deployment setup.
 
 ---
 

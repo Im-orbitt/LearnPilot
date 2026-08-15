@@ -1,838 +1,243 @@
 # LearnPilot — Architecture
 
-> **Documentation policy:** This document is updated at each LearnPilot release.
-> It may not reflect unreleased changes on the current development branch.
+> **Documentation policy:** This document is updated when the architecture changes.
 >
 > **Last updated:** v0.7.1
 
-This document describes LearnPilot's architecture, including the frontend, backend, AI learning pipeline, authentication, database interactions, and monorepo structure.
+LearnPilot is a client-server learning platform. The frontend handles the user interface and communicates with a FastAPI backend, while the backend handles authentication, PDF processing, AI generation, and database operations.
 
 ## System overview
 
-LearnPilot follows a client-server architecture:
-
 ```text
-Student (Browser)
-        │
-        │ HTTP
-        ▼
-React + Vite Frontend
-        │
-        │ HTTP
-        ▼
-FastAPI Backend
-        │
-        ├────────► Google Gemini
-        │             │
-        │             └── AI-generated learning content
-        │
-        ├────────► Supabase / PostgreSQL
-        │             │
-        │             └── Users, sessions, books
-        │
-        └────────► PyMuPDF
-                      │
-                      └── PDF text extraction
+                         Browser
+                            │
+                            ▼
+                     React + Vite
+                            │
+                         /api/*
+                            │
+                            ▼
+                         Vercel
+                     API proxy/rewrite
+                            │
+                            ▼
+                       FastAPI API
+                       /         \
+                      /           \
+                     ▼             ▼
+              Google Gemini    Supabase
+                AI generation   PostgreSQL
 ```
 
-### Responsibilities
-
-**Frontend (React + Vite)**
-
-- Render the application UI
-- Handle user interaction
-- Upload textbook PDFs
-- Communicate with the backend API
-- Display chapters, notes, and quizzes
-- Manage authentication state
-- Manage the user's book/library state
-- Provide reusable UI components and feature-specific components
-
-**Backend (FastAPI)**
-
-- Handle authentication and sessions
-- Validate API requests
-- Extract text from uploaded PDFs
-- Generate chapter structures, notes, and quizzes through Gemini
-- Persist books and user data in Supabase
-- Enforce user-specific access and free-plan limits
+The frontend never communicates directly with Gemini or uses privileged Supabase credentials.
 
 ---
 
-## Monorepo structure
-
-LearnPilot is organized as a monorepo containing independent frontend and backend applications.
-
-```text
-learnpilot/
-├── apps/
-│   ├── api/
-│   │   ├── app.py
-│   │   ├── core/
-│   │   │   └── config.py
-│   │   ├── db/
-│   │   │   └── supabase.py
-│   │   ├── routes/
-│   │   │   ├── auth.py
-│   │   │   ├── books.py
-│   │   │   └── upload.py
-│   │   ├── schemas/
-│   │   │   ├── auth.py
-│   │   │   └── books.py
-│   │   ├── services/
-│   │   │   ├── ai.py
-│   │   │   ├── auth.py
-│   │   │   ├── books.py
-│   │   │   ├── notes.py
-│   │   │   ├── parser.py
-│   │   │   ├── pdf.py
-│   │   │   └── quiz.py
-│   │   ├── utils/
-│   │   │   └── auth.py
-│   │   └── requirements.txt
-│   │
-│   └── web/
-│       ├── src/
-│       │   ├── components/
-│       │   ├── contexts/
-│       │   ├── features/
-│       │   ├── hooks/
-│       │   ├── layouts/
-│       │   ├── pages/
-│       │   ├── providers/
-│       │   ├── routes/
-│       │   ├── services/
-│       │   ├── styles/
-│       │   └── utils/
-│       ├── package.json
-│       └── vite.config.js
-│
-├── docs/
-│   ├── architecture.md
-│   ├── development.md
-│   └── deployment.md
-│
-├── LICENSE
-└── README.md
-```
-
-The frontend and backend can be developed and deployed independently while remaining part of the same repository.
-
----
-
-# Frontend architecture
+## Frontend
 
 The frontend is built with **React + Vite**.
 
-Its responsibilities include:
+It is responsible for:
 
-- Rendering the application interface
-- Handling navigation and routes
+- Rendering the user interface
+- Handling navigation
 - Managing authentication state
 - Uploading PDFs
-- Calling backend APIs
 - Displaying generated learning material
-- Managing the user's book/library state
+- Managing the user's library and learning experience
 
-Sensitive operations such as Gemini API calls, password hashing, session handling, and Supabase service-role access remain on the backend.
+Frontend API communication is centralized in the services layer.
 
-## Frontend structure
-
-The frontend separates reusable UI, application features, pages, state, and shared styling.
-
-```text
-src/
-├── components/
-│   ├── auth/
-│   ├── feedback/
-│   ├── layout/
-│   └── ui/
-│
-├── contexts/
-├── features/
-├── hooks/
-├── layouts/
-├── pages/
-├── providers/
-├── routes/
-├── services/
-├── styles/
-└── utils/
-```
-
-### Components
-
-`components/` contains reusable application-wide components.
-
-Examples include:
-
-- `Button`
-- `Card`
-- `FileUpload`
-- `Spinner`
-- `Avatar`
-- `Badge`
-- `NotificationPopover`
-- `EmptyState`
-- `Navbar`
-- `Sidebar`
-- `Topbar`
-- `Footer`
-
-UI components are designed to be reusable rather than recreating the same markup inside individual pages.
-
-### Features
-
-`features/` contains components that belong to a specific product area.
-
-Current feature areas include:
-
-- `landing`
-- `dashboard`
-- `library`
-- `chapter`
-- `lesson`
-
-For example:
-
-```text
-features/
-└── lesson/
-    ├── LessonOption/
-    ├── NotesViewer/
-    ├── QuizCard/
-    ├── QuizReview/
-    ├── QuizSection/
-    ├── QuizSession/
-    └── TutorChat/
-```
-
-This keeps feature-specific UI separate from generic reusable components.
-
-### Pages
-
-`pages/` contains route-level components.
-
-Current pages include:
-
-- Landing
-- Login
-- Register
-- Dashboard
-- Library
-- Chapter
-- Lesson
-- Notes
-- Quiz
-- Quiz Answers
-- Tutor
-- Progress
-- Parent
-- Settings
-
-Some pages and features are still under active development and may contain placeholder functionality.
-
-### Layouts
-
-`layouts/` defines larger page structures used across routes.
-
-Current layouts include:
-
-- `MainLayout`
-- `AuthLayout`
-- `DashboardLayout`
-
-### Providers and contexts
-
-Application-level state is handled through React providers and contexts.
-
-Current state areas include:
-
-- Authentication
-- Book/library data
-- Quiz answers
-
-### Services
-
-`services/` contains frontend API and configuration logic.
-
-```text
-services/
-├── api.js
-├── auth.js
-└── config.js
-```
-
-Components and pages use these services instead of directly implementing API communication throughout the UI.
-
-### Shared styles
-
-Global design values and shared styling are centralized under:
-
-```text
-styles/
-├── globals.css
-└── variables.css
-```
-
-`variables.css` contains reusable design tokens such as colors, spacing, typography, radii, and transitions.
-
-`globals.css` contains application-wide CSS rules.
-
-Feature, page, layout, and component styles remain colocated with their respective components where appropriate.
+In production, API requests use the `/api` path. Vercel rewrites these requests to the Render-hosted FastAPI backend.
 
 ---
 
-# Backend architecture
+## Backend
 
 The backend is built with **FastAPI**.
 
-The main entry point is:
+It is responsible for:
+
+- Authentication and session management
+- API request handling and validation
+- PDF processing
+- AI-powered content generation
+- Book and user data persistence
+- Enforcing authenticated access and application limits
+
+The backend is organized around a few main responsibilities:
 
 ```text
-apps/api/app.py
+Routes
+  │
+  ▼
+Services
+  │
+  ├── AI
+  ├── Authentication
+  ├── Books
+  ├── PDF processing
+  ├── Notes
+  └── Quizzes
+
+Database
+  │
+  └── Supabase
 ```
 
-The backend is separated into routes, schemas, services, database access, configuration, and utilities.
-
-```text
-api/
-├── app.py
-├── core/
-├── db/
-├── routes/
-├── schemas/
-├── services/
-└── utils/
-```
-
-## Routes
-
-`routes/` contains HTTP endpoint definitions.
-
-```text
-routes/
-├── auth.py
-├── books.py
-└── upload.py
-```
-
-### `routes/auth.py`
-
-Handles authentication endpoints such as:
-
-- Registration
-- Login
-- Logout
-- Current-user lookup
-
-### `routes/books.py`
-
-Handles authenticated book/library operations.
-
-### `routes/upload.py`
-
-Handles PDF upload and starts the learning-material generation pipeline.
-
-Keeping endpoint definitions in route modules prevents `app.py` from becoming a large collection of business logic.
+Routes handle HTTP requests, while services contain the application's core business logic.
 
 ---
 
-## Schemas
+## Authentication
 
-`schemas/` contains request and response models used by the API.
+LearnPilot uses session-based authentication.
 
 ```text
-schemas/
-├── auth.py
-└── books.py
+Login / Register
+       │
+       ▼
+    FastAPI
+       │
+       ├── Verify / create user
+       │
+       ├── Create session
+       │
+       ▼
+    Supabase
+       │
+       ▼
+ HTTP-only session cookie
+       │
+       ▼
+    Browser
 ```
 
-Schemas provide structured validation for API data entering and leaving the backend.
+Authenticated requests include the session cookie. The backend validates the session and determines the associated user before allowing access to protected resources.
+
+The frontend does not have direct access to the session token.
 
 ---
 
-## Services
+## PDF learning pipeline
 
-`services/` contains the backend's core business logic.
-
-```text
-services/
-├── ai.py
-├── auth.py
-├── books.py
-├── notes.py
-├── parser.py
-├── pdf.py
-└── quiz.py
-```
-
-### `services/pdf.py`
-
-Extracts text from uploaded PDFs using PyMuPDF.
-
-### `services/parser.py`
-
-Converts extracted textbook content into a structured chapter/topic representation.
-
-### `services/ai.py`
-
-Provides the Gemini integration used for AI-generated learning material.
-
-### `services/notes.py`
-
-Generates topic-based study notes.
-
-### `services/quiz.py`
-
-Generates topic-based multiple-choice quizzes.
-
-### `services/auth.py`
-
-Handles authentication business logic including:
-
-- Password hashing
-- Password verification
-- Session creation
-- Session lookup
-- Session deletion
-
-### `services/books.py`
-
-Handles book persistence and retrieval through the database layer.
-
----
-
-## Database layer
-
-Database access is located under:
-
-```text
-db/
-└── supabase.py
-```
-
-This module provides the configured Supabase client used by backend services.
-
-Supabase provides the production PostgreSQL database.
-
----
-
-## Core configuration
-
-Backend configuration is centralized under:
-
-```text
-core/
-└── config.py
-```
-
-Configuration values are loaded from environment variables rather than being hardcoded into the application.
-
-Sensitive values such as API keys and database credentials are kept in environment variables and are not committed to the repository.
-
----
-
-## Authentication utilities
-
-Authentication-related request utilities are located under:
-
-```text
-utils/
-└── auth.py
-```
-
-These utilities are used by protected routes to identify the authenticated user from their session.
-
----
-
-# Authentication architecture
-
-LearnPilot uses **session-based authentication**.
-
-```text
-Register / Login
-      │
-      ▼
- FastAPI Route
-      │
-      ▼
- Auth Service
-      │
-      ├──────► Supabase
-      │
-      ▼
- Create Session
-      │
-      ▼
-HTTP-only Cookie
-      │
-      ▼
-Browser
-      │
-      │ /api/* requests
-      │
-      ▼
-Vercel
-      │
-      │ rewrite
-      ▼
-FastAPI
-      │
-      ▼
-Validate Session
-      │
-      ▼
- Authenticated User
-```
-
-## Registration flow
-
-1. The frontend submits registration data.
-2. The backend validates the request.
-3. The password is hashed using `scrypt`.
-4. The user is stored in the `users` table.
-5. A session token is generated.
-6. The session is stored in the `sessions` table.
-7. The session token is returned as an HTTP-only cookie.
-8. The frontend receives the authenticated user.
-
-## Login flow
-
-1. The frontend submits email and password.
-2. The backend looks up the user.
-3. The supplied password is verified against the stored hash.
-4. A new session token is generated.
-5. The session is stored in Supabase.
-6. The session token is sent as an HTTP-only cookie.
-
-## Authenticated requests
-
-Protected requests:
-
-1. Receive the session cookie.
-2. Validate the session.
-3. Resolve the associated user.
-4. Use the authenticated `user_id` to scope database operations.
-
-This prevents one user from accessing another user's books.
-
-## Logout flow
-
-1. The backend removes the active session.
-2. The session cookie is cleared.
-3. The frontend clears its authenticated user state.
-
-## Production authentication and API routing
-
-In production, the frontend uses `/api` as its API base URL.
-
-Vercel rewrites `/api/*` requests to the Render backend. This means the
-browser interacts with the API through the frontend's origin while Render
-continues to host the FastAPI application.
-
-This architecture prevents the authentication session from depending on a
-third-party cookie between Vercel and Render.
-
----
-
-# Book data model
-
-Books are associated with the user who uploaded them.
-
-```text
-User
- ├── Book
- ├── Book
- └── ...
-```
-
-Each book contains:
-
-```text
-books
-├── id
-├── user_id
-├── filename
-├── chapter_json
-└── created_at
-```
-
-`chapter_json` stores the generated chapter structure and learning material, including topics, notes, and quizzes.
-
-All authenticated book queries are scoped using the current user's `user_id`.
-
----
-
-# AI learning pipeline
-
-The core LearnPilot pipeline transforms a textbook PDF into structured learning material.
+The main learning pipeline converts a textbook PDF into structured study material.
 
 ```text
 PDF
  │
  ▼
-Extract Text
+FastAPI
  │
  ▼
-Generate Chapter Structure
+PyMuPDF
  │
- │ Gemini
+ │ extracted text
  ▼
-Topics
+Chapter structure
  │
- ├──────────────► Generate Notes
- │                    │
- │                    └── Gemini
+ ├──────────────► Notes
  │
- └──────────────► Generate Quiz
-                      │
-                      └── Gemini
- │
- ▼
-Combine Generated Material
- │
- ▼
-Store Book in Supabase
- │
- ▼
-Return Book Data
- │
- ▼
-React Frontend
+ └──────────────► Quiz
+        │
+        ▼
+   Google Gemini
+        │
+        ▼
+Generated learning material
+        │
+        ▼
+    Supabase
+        │
+        ▼
+     Frontend
 ```
 
-## Step 1 — PDF extraction
-
-The uploaded PDF is processed by:
-
-```text
-services/pdf.py
-```
-
-PyMuPDF extracts the readable textbook text.
-
-## Step 2 — Chapter structure
-
-The extracted content is passed through the parser/AI pipeline to produce:
-
-- Chapter title
-- Chapter summary
-- Topics
-
-Example:
-
-```json
-{
-  "title": "Example Chapter",
-  "summary": "Chapter summary",
-  "topics": [
-    {
-      "title": "Topic 1"
-    },
-    {
-      "title": "Topic 2"
-    }
-  ]
-}
-```
-
-## Step 3 — Notes generation
-
-LearnPilot generates revision-oriented notes for the topics.
-
-The goal is to produce useful study material rather than simply returning the original textbook text.
-
-## Step 4 — Quiz generation
-
-The quiz pipeline generates multiple-choice questions for the generated topics.
-
-Questions include:
-
-- Question text
-- Four options
-- Correct answer
-
-## Step 5 — Combine and persist
-
-The generated chapter structure, notes, and quizzes are combined into the book's `chapter_json`.
-
-The completed book is then saved to Supabase.
+The backend extracts readable text from the PDF, uses Gemini to generate the chapter structure and learning material, combines the results, and stores the completed book in Supabase.
 
 ---
 
-# Upload flow
-
-The `/upload` endpoint coordinates the complete textbook-processing pipeline.
-
-```text
-Browser
-  │
-  │ PDF upload
-  ▼
-POST /upload
-  │
-  ├─ Authenticate user
-  │
-  ├─ Check Free-plan book limit
-  │
-  ├─ Read uploaded PDF
-  │
-  ├─ Extract text
-  │
-  ├─ Generate chapter structure
-  │
-  ├─ Generate notes
-  │
-  ├─ Generate quizzes
-  │
-  ├─ Combine generated material
-  │
-  └─ Save book to Supabase
-              │
-              ▼
-        Return book data
-```
-
-The current Free plan supports up to **two stored books per user**.
-
----
-
-# Database architecture
+## Data
 
 LearnPilot uses **Supabase / PostgreSQL** for persistent application data.
 
-The core tables are:
+The main data areas are:
 
 ```text
-users
-sessions
-books
+Users
+  │
+  ├── Sessions
+  │
+  └── Books
+       │
+       └── Generated learning material
 ```
 
-## `users`
-
-```text
-users
-├── id
-├── name
-├── email
-├── password_hash
-└── created_at
-```
-
-Stores registered user accounts.
-
-## `sessions`
-
-```text
-sessions
-├── token
-├── user_id
-└── created_at
-```
-
-Stores active authentication sessions.
-
-## `books`
-
-```text
-books
-├── id
-├── user_id
-├── filename
-├── chapter_json
-└── created_at
-```
-
-Stores generated learning material associated with each user.
+Books are associated with their owner through `user_id`, allowing authenticated users to access only their own learning content.
 
 ---
 
-# Security model
+## Production architecture
 
-LearnPilot keeps sensitive operations on the backend.
+The production applications are deployed separately:
 
-The frontend never directly handles:
+```text
+                     GitHub
+                    /      \
+                   ▼        ▼
+                Vercel    Render
+                  │          │
+            React frontend  FastAPI
+                  │          │
+                  └─ /api ──►│
+                             │
+                       ┌─────┴─────┐
+                       ▼           ▼
+                   Supabase     Gemini
+```
+
+Vercel hosts the frontend and proxies `/api/*` requests to Render. Render hosts the FastAPI backend, which communicates with Supabase and Google Gemini.
+
+This separation keeps frontend hosting, backend processing, database storage, and AI services independent.
+
+---
+
+## Security model
+
+Sensitive operations remain on the backend.
+
+The frontend does not receive:
 
 - Gemini API credentials
 - Supabase service-role credentials
 - Password hashes
-- Session token generation
-- Authentication database operations
+- Privileged database access
 
-Authentication uses HTTP-only cookies so that session tokens are not directly accessible through normal frontend JavaScript.
+Passwords are stored as secure hashes, and authentication uses HTTP-only session cookies.
 
-Passwords are stored as secure hashes rather than plaintext.
-
-Protected database operations are scoped to the authenticated user's `user_id`.
-
-Environment secrets such as API keys and database credentials are stored in environment variables and excluded from version control.
+Production secrets are provided through environment variables rather than stored in the repository.
 
 ---
 
-# Deployment architecture
+## Core design principle
 
-LearnPilot is deployed as two applications from the same monorepo.
+LearnPilot keeps responsibilities separated:
 
 ```text
-GitHub Repository
-       │
-       ├──────────────► Vercel
-       │                  │
-       │                  ├── React + Vite frontend
-       │                  │
-       │                  └── /api/* proxy
-       │                         │
-       │                         ▼
-       └──────────────► Render
-                          │
-                          └── FastAPI backend
-                                   │
-                                   ├──► Gemini
-                                   │
-                                   └──► Supabase
+Frontend
+  → User experience
+
+Backend
+  → Application logic
+
+Supabase
+  → Persistent data
+
+Gemini
+  → AI generation
+
+Vercel / Render
+  → Production hosting
 ```
 
-In production, the frontend sends API requests to /api/\*. Vercel rewrites
-these requests to the Render backend.
-
-This keeps the browser-facing API requests on the Vercel frontend origin and
-avoids authentication problems caused by third-party cookies.
-
----
-
-# Current architecture status
-
-As of **v0.7.1**, the core LearnPilot architecture is functional.
-
-Implemented core systems include:
-
-- React + Vite frontend
-- FastAPI backend
-- Monorepo structure
-- PDF upload and extraction
-- AI chapter generation
-- AI notes generation
-- AI quiz generation
-- Supabase persistence
-- User authentication
-- Session-based authorization
-- Personal book library
-- Free-plan book limit
-- Reusable UI components
-- Feature-based frontend organization
-- Production deployment
-
-Several secondary pages and planned features remain under development. These do not affect the core textbook-to-learning-material pipeline.
-
----
-
-## Related docs
-
-- [Development](./development.md)
-- [Deployment](./deployment.md)
-
-```
-
-```
+This allows each part of the system to evolve independently while keeping sensitive operations and application logic on the backend.

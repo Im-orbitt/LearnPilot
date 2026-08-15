@@ -1,180 +1,79 @@
-# Deployment Guide
+# LearnPilot — Deployment
 
-> **Documentation policy:** This document is updated at each LearnPilot release.
-> It may not reflect unreleased changes on the current development branch.
+> **Documentation policy:** This document is updated when the production infrastructure changes.
 >
 > **Last updated:** v0.7.1
 
-This guide describes the production deployment setup used by LearnPilot.
-
-LearnPilot is deployed as three main services:
-
-```text
-┌──────────────────┐
-│      Vercel      │
-│ React Frontend   │
-└────────┬─────────┘
-         │
-         │ HTTPS
-         ▼
-┌──────────────────┐
-│      Render      │
-│  FastAPI Backend │
-└───────┬──────────┘
-        │
-        ├──────────────► Supabase
-        │                PostgreSQL
-        │
-        └──────────────► Google Gemini
-                         AI API
-```
+LearnPilot's production environment is split across several services. The frontend, backend, database, and AI service are hosted and managed separately.
 
 ## Production infrastructure
 
-| Component | Service       | Purpose                                |
-| --------- | ------------- | -------------------------------------- |
-| Frontend  | Vercel        | Hosts the React application            |
-| Backend   | Render        | Hosts the FastAPI API                  |
-| Database  | Supabase      | PostgreSQL database                    |
-| AI        | Google Gemini | Generates chapters, notes, and quizzes |
+```text
+                         GitHub
+                       /        \
+                      ▼          ▼
+                   Vercel      Render
+                     │            │
+              React frontend   FastAPI API
+                     │            │
+                     └─ /api ────►│
+                                  │
+                           ┌──────┴──────┐
+                           ▼             ▼
+                       Supabase       Gemini
+                       PostgreSQL       API
+```
+
+| Service           | Purpose                                                      |
+| ----------------- | ------------------------------------------------------------ |
+| **Vercel**        | Hosts the React frontend and proxies production API requests |
+| **Render**        | Hosts the FastAPI backend                                    |
+| **Supabase**      | Provides the PostgreSQL database                             |
+| **Google Gemini** | Provides AI generation                                       |
 
 ---
 
-## 1) Supabase
+## Frontend deployment
 
-Supabase provides the production PostgreSQL database.
+The frontend is deployed to **Vercel**.
 
-The application currently uses the following main tables:
-
-```text
-users
-sessions
-books
-```
-
-### Database tables
-
-#### `users`
-
-Stores registered user accounts.
+The Vercel project uses:
 
 ```text
-id
-name
-email
-password_hash
-created_at
+Root directory: apps/web
 ```
 
-#### `sessions`
+Vercel builds the React application and serves the resulting production frontend.
 
-Stores authentication sessions.
+Production API requests use:
 
 ```text
-token
-user_id
-created_at
+/api/*
 ```
 
-#### `books`
+Vercel rewrites these requests to the Render backend.
 
-Stores user-generated learning content.
+This allows the browser to communicate with the API through the frontend's origin and keeps authentication from depending on third-party cookies.
 
-```text
-id
-user_id
-filename
-chapter_json
-created_at
-```
-
-The `user_id` columns associate sessions and books with their respective users.
-
-### Supabase credentials
-
-The backend requires:
+The production frontend API configuration uses:
 
 ```env
-SUPABASE_URL=...
-SUPABASE_SERVICE_ROLE_KEY=...
-```
-
-The service-role key must only be used by the backend.
-
-**Never expose the service-role key in the frontend or commit it to Git.**
-
----
-
-## 2) Gemini API
-
-LearnPilot uses Google Gemini to generate learning content.
-
-The backend requires:
-
-```env
-GENAI_API_KEY=...
-```
-
-The key is configured as a server-side environment variable.
-
-The frontend never communicates directly with Gemini.
-
-The request flow is:
-
-```text
-Frontend
-   │
-   ▼
-FastAPI Backend
-   │
-   ▼
-Gemini API
-   │
-   ▼
-Generated learning content
+VITE_API_URL=/api
 ```
 
 ---
 
-## 3) Render Backend
+## Backend deployment
 
-The FastAPI backend is deployed on Render.
+The FastAPI backend is deployed to **Render**.
 
-The backend application is located at:
-
-```text
-apps/api/
-```
-
-### Render root directory
-
-Because LearnPilot is a monorepo, the Render service should use:
+The Render service uses:
 
 ```text
-apps/api
+Root directory: apps/api
 ```
 
-as its root directory.
-
-This keeps the backend deployment isolated from the frontend.
-
-### Build
-
-The backend dependencies are defined in:
-
-```text
-apps/api/requirements.txt
-```
-
-Render installs them from the service root with:
-
-```bash
-pip install -r requirements.txt
-```
-
-### Start command
-
-The FastAPI application is started with Uvicorn.
+The backend is started with:
 
 ```bash
 uvicorn app:app --host 0.0.0.0 --port $PORT
@@ -182,254 +81,117 @@ uvicorn app:app --host 0.0.0.0 --port $PORT
 
 Render provides the `$PORT` environment variable.
 
-### Environment variables
-
-Configure these environment variables in Render:
+The backend requires production environment variables for:
 
 ```env
-GENAI_API_KEY=your_gemini_api_key
-SUPABASE_URL=your_supabase_url
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+GENAI_API_KEY=...
+SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE_KEY=...
 ENVIRONMENT=production
 ```
 
-Do not place production credentials in the repository.
+Production credentials are configured directly in Render and are never committed to the repository.
 
 ---
 
-## 4) Vercel Frontend
+## Database
 
-The React frontend is deployed on Vercel.
+Production application data is stored in **Supabase / PostgreSQL**.
 
-The frontend is located at:
+The backend connects to Supabase using server-side credentials.
+
+The frontend does not connect directly to the database and must never receive the Supabase service-role key.
+
+---
+
+## AI service
+
+LearnPilot uses **Google Gemini** for AI-powered learning material generation.
+
+Gemini requests are made exclusively by the FastAPI backend.
+
+The Gemini API key is stored as a backend environment variable and is never exposed to the frontend.
+
+---
+
+## Authentication
+
+Production authentication uses HTTP-only session cookies.
+
+The production request flow is:
 
 ```text
-apps/web/
-```
-
-### Vercel root directory
-
-Because LearnPilot is a monorepo, the Vercel project should use:
-
-```text
-apps/web
-```
-
-as its root directory.
-
-### Install and build
-
-Vercel installs dependencies using:
-
-```bash
-npm install
-```
-
-The production build is created with:
-
-```bash
-npm run build
-```
-
-### API proxy
-
-The frontend uses a Vercel rewrite to proxy API requests through the same
-Vercel origin as the frontend.
-
-This avoids relying on third-party cookies between the Vercel frontend and
-Render backend.
-
-The Vercel configuration is:
-
-```json
-{
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/api/:path*",
-      "destination": "https://learnpilot-backend-suet.onrender.com/:path*"
-    }
-  ]
-}
-```
-
-The frontend API configuration points to the proxy:
-
-```env
-VITE_API_URL=/api
-```
-
-Requests therefore follow this path:
-
-```
 Browser
    │
-   │ /api/auth/login
+   │ /api/auth/*
    ▼
 Vercel
    │
-   │ proxy
+   │ rewrite
    ▼
-Render FastAPI
+Render / FastAPI
    │
    ▼
 Supabase
 ```
 
-This keeps authentication requests on the frontend's origin and allows the
-session cookie to persist across page refreshes.
+The session is stored in Supabase and represented in the browser by an HTTP-only cookie.
 
-### Frontend environment variables
-
-The production frontend should use:
-
-```env
-VITE_API_URL=/api
-```
-
-Any frontend environment variables should contain only values that are safe to expose to the browser.
-
-**Never put the Supabase service-role key or Gemini API key in the frontend environment.**
+The cookie uses secure production settings so that the session token is not accessible to frontend JavaScript.
 
 ---
 
-## 5) CORS
+## Deployment workflow
 
-The FastAPI backend uses CORS to allow requests from the frontend during
-development and for direct production requests.
+Production deployments are connected to the GitHub repository.
 
-The development frontend is:
+The normal development workflow is:
 
 ```text
-http://localhost:5173
+Create branch
+     ↓
+Develop and test locally
+     ↓
+Push branch
+     ↓
+Open Pull Request
+     ↓
+Review
+     ↓
+Merge into main
+     ↓
+Vercel / Render deploy
 ```
 
-The production frontend is hosted on Vercel.
+Contributors should not deploy directly to the production services.
 
-Production API requests normally use the Vercel /api proxy, so the browser
-communicates with the same origin as the frontend rather than directly making
-cross-origin requests to Render.
-
-The backend still allows the configured frontend origins for CORS.
+After a Pull Request is merged into `main`, the connected deployment platforms can build and deploy the updated applications.
 
 ---
 
-## 6) Authentication in Production
+## Production verification
 
-LearnPilot uses HTTP-only session cookies.
-
-In production, authentication uses an HTTP-only session cookie.
-
-The cookie is configured with:
+After a production deployment, verify the core application flow:
 
 ```text
-Secure
-SameSite=None
-HttpOnly
+Open frontend
+    ↓
+Register / Login
+    ↓
+Refresh page
+    ↓
+Session remains active
+    ↓
+Upload PDF
+    ↓
+Generate learning material
+    ↓
+View saved book
+    ↓
+Logout
 ```
 
-The production frontend communicates with the backend through the Vercel /api proxy. This avoids the browser treating the Render session cookie as a third-party cookie when the user interacts with LearnPilot.
-
-The session token remains inaccessible to frontend JavaScript.
-
-The backend creates a session after successful registration or login.
-
-The session token is stored in Supabase and sent to the browser as an HTTP-only cookie.
-
-```text
-Login
-  │
-  ▼
-FastAPI
-  │
-  ├── Create session
-  │
-  ├── Store session in Supabase
-  │
-  └── Set HTTP-only cookie
-          │
-          ▼
-       Browser
-```
-
----
-
-## 7) Deployment flow
-
-LearnPilot is deployed from the monorepo.
-
-```text
-Git Repository
-      │
-      ├─────────────────────┐
-      │                     │
-      ▼                     ▼
- apps/web/               apps/api/
-      │                     │
-      ▼                     ▼
-   Vercel                 Render
-      │                     │
-      │ /api/* proxy        │
-      └────────────────────►
-                            │
-                            ├──► Supabase
-                            │
-                            └──► Gemini
-```
-
-Changes to the frontend are built and deployed through Vercel.
-
-Changes to the backend are built and deployed through Render.
-
-Supabase remains the shared production database.
-
----
-
-## 8) Production deployment checklist
-
-Before deploying a new version, verify:
-
-### Frontend
-
-- [ ] Frontend builds successfully
-- [ ] `npm run lint` passes
-- [ ] Production API configuration is correct
-- [ ] No secret credentials are included in frontend code
-
-### Backend
-
-- [ ] Backend starts successfully
-- [ ] Required environment variables are configured
-- [ ] Production CORS origin is correct
-- [ ] Supabase connection works
-- [ ] Gemini API connection works
-- [ ] Authentication works
-- [ ] PDF upload works
-
-### Database
-
-- [ ] Required Supabase tables exist
-- [ ] Foreign-key relationships are configured
-- [ ] Production credentials are correct
-- [ ] Database access is restricted appropriately
-
-### Security
-
-- [ ] `.env` files are not committed
-- [ ] API keys are not present in source code
-- [ ] Supabase service-role credentials are backend-only
-- [ ] Production cookies use secure settings
-
----
-
-## 9) Verifying a deployment
-
-After deployment, verify the backend first.
-
-The FastAPI root endpoint should respond successfully:
+The backend root endpoint can also be used to verify that the API is online:
 
 ```text
 GET /
@@ -443,69 +205,23 @@ Expected response:
 }
 ```
 
-Then verify the frontend can communicate with the production backend.
-
-Test the main application flow:
-
-1. Open the deployed frontend.
-2. Register a new account.
-3. Log in.
-4. Upload a textbook chapter.
-5. Wait for processing to complete.
-6. Verify the generated notes and quizzes.
-7. Open the library.
-8. Confirm the book is stored and displayed correctly.
-9. Log out and verify the session is invalidated.
-10. Refresh the page after logging in and verify the session remains active.
-11. Upload a book after refreshing and verify authentication is preserved.
-
 ---
 
-## 10) Updating the production application
+## Production security
 
-LearnPilot's deployment platforms are connected to the Git repository.
+Production credentials must remain outside the repository.
 
-After completing and testing a change:
+Never commit:
 
-```bash
-git add .
-git commit -m "type(scope): description"
-git push
-```
+- Gemini API keys
+- Supabase service-role keys
+- Passwords
+- Session secrets
+- Other private credentials
 
-The connected deployment services can then build and deploy the updated applications.
-
-Always test important changes locally before pushing them to production.
+Frontend environment variables must contain only values that are safe to expose to the browser.
 
 ---
-
-## Deployment architecture summary
-
-The final production setup is:
-
-```text
-                    Git Repository
-                         │
-              ┌──────────┴──────────┐
-              │                     │
-              ▼                     ▼
-          apps/web/             apps/api/
-              │                     │
-              ▼                     ▼
-           Vercel                Render
-              │                     │
-              │ HTTPS               │
-              └──────────┬──────────┘
-                         │
-                         ▼
-                     Supabase
-                    PostgreSQL
-                         │
-                         │
-                  Gemini API
-```
-
-LearnPilot keeps the frontend, backend, database, and AI service separated so each part can be deployed and managed independently.
 
 ## Related documentation
 
