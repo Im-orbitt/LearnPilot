@@ -1,13 +1,18 @@
-import os
-
-from dotenv import load_dotenv
 from google import genai
 
-load_dotenv()
+from core.config import GENAI_API_KEY
 
-client = genai.Client(api_key=os.getenv("GENAI_API_KEY"))
 
-def clean_json(text: str):
+if not GENAI_API_KEY:
+    raise RuntimeError(
+        "GENAI_API_KEY environment variable is not configured."
+    )
+
+
+client = genai.Client(api_key=GENAI_API_KEY)
+
+
+def clean_json(text: str) -> str:
     text = text.strip()
 
     if text.startswith("```json"):
@@ -21,7 +26,10 @@ def clean_json(text: str):
 
     return text
 
-def generate_chapter_structure(text: str):
+
+def generate_chapter_structure(
+    text: str,
+) -> str:
     response = client.models.generate_content(
         model="gemini-3.5-flash-lite",
         contents=f"""
@@ -53,7 +61,7 @@ Format:
 Text:
 
 {text}
-"""
+""",
     )
 
     if response.text is None:
@@ -61,7 +69,11 @@ Text:
 
     return response.text
 
-def generate_notes(text: str, topics: list[str]):
+
+def generate_notes(
+    text: str,
+    topics: list[str],
+) -> str:
     response = client.models.generate_content(
         model="gemini-3.5-flash-lite",
         contents=f"""
@@ -123,7 +135,7 @@ Return ONLY JSON.
 
 Chapter:
 {text}
-"""
+""",
     )
 
     if response.text is None:
@@ -131,7 +143,10 @@ Chapter:
 
     return response.text
 
-def generate_quiz(notes_json: str):
+
+def generate_quiz(
+    notes_json: str,
+) -> str:
     response = client.models.generate_content(
         model="gemini-3.5-flash-lite",
         contents=f"""
@@ -159,33 +174,21 @@ Format:
 }}
 
 Rules:
-- Use EXACTLY the same topic titles.
-- Keep the same order.
-- Do not add or remove topics.
-- Base the notes primarily on the provided textbook content.
-- Cover ALL important information from the source that belongs to the topic.
-- Do not omit smaller but potentially exam-relevant facts, examples, names, numbers, processes, or applications.
-- Explain concepts clearly at a school-student level.
-- Define important terms.
-- Explain how and why things work when the source provides that information.
-- Include relevant examples from the textbook.
-- Include important scientists, discoveries, dates, numbers, or special facts when present in the source.
-- Include comparisons, differences, causes, effects, advantages, disadvantages, or sequences when relevant.
-- Use Markdown headings and subheadings to organize larger topics.
-- Use bullet points and numbered lists where they improve readability.
-- Highlight important terms using Markdown bold.
-- Do NOT simply copy the textbook word-for-word.
-- Do NOT turn the notes into a short summary.
-- Do NOT add unsupported information just to make the notes longer.
-- Do NOT repeat the same information in different wording.
-- Topic length should depend on how much useful information the textbook provides.
-- A short topic may have shorter notes; a detailed topic should have substantially longer notes.
-- The goal is that a student could use these notes as their primary revision material for this topic.
+
+- Generate exactly 10 questions.
+- Every question must have exactly 4 options.
+- The answer must exactly match one of the options.
+- Base every question ONLY on the provided notes.
+- Cover important information across the topic.
+- Include a mixture of factual, conceptual, and application questions where appropriate.
+- Do not introduce unsupported information.
+- Do not repeat essentially identical questions.
+- Keep questions clear and appropriate for a school student.
 - Return ONLY JSON.
 
 Notes:
 {notes_json}
-"""
+""",
     )
 
     if response.text is None:

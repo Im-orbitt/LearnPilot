@@ -1,12 +1,11 @@
 import json
 
-from services.ai import generate_chapter_structure
-from services.ai import clean_json
+from services.ai import clean_json, generate_chapter_structure
 
-def process_chapter(text: str):
+
+def process_chapter(
+    text: str,
+) -> dict:
     result = generate_chapter_structure(text)
-
-    if result is None:
-        raise ValueError("Gemini returned no chapter.")
 
     return json.loads(clean_json(result))

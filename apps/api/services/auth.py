@@ -4,7 +4,7 @@ from typing import Any, cast
 
 from postgrest.exceptions import APIError
 
-from services.supabase import supabase
+from db.supabase import supabase
 
 
 def hash_password(password: str) -> str:
@@ -21,7 +21,10 @@ def hash_password(password: str) -> str:
     return f"{salt.hex()}:{password_hash.hex()}"
 
 
-def verify_password(password: str, stored_hash: str) -> bool:
+def verify_password(
+    password: str,
+    stored_hash: str,
+) -> bool:
     try:
         salt_hex, password_hash_hex = stored_hash.split(":", 1)
 
@@ -36,7 +39,10 @@ def verify_password(password: str, stored_hash: str) -> bool:
             p=1,
         )
 
-        return secrets.compare_digest(actual_hash, expected_hash)
+        return secrets.compare_digest(
+            actual_hash,
+            expected_hash,
+        )
 
     except (ValueError, TypeError):
         return False
@@ -74,7 +80,10 @@ def create_user(
     if not response.data:
         raise ValueError("Failed to create account.")
 
-    user = cast(dict[str, Any], response.data[0])
+    user = cast(
+        dict[str, Any],
+        response.data[0],
+    )
 
     return {
         "id": user["id"],
@@ -91,7 +100,9 @@ def authenticate_user(
 
     response = (
         supabase.table("users")
-        .select("id, name, email, password_hash")
+        .select(
+            "id, name, email, password_hash"
+        )
         .eq("email", email)
         .limit(1)
         .execute()
@@ -100,9 +111,15 @@ def authenticate_user(
     if not response.data:
         return None
 
-    user = cast(dict[str, Any], response.data[0])
+    user = cast(
+        dict[str, Any],
+        response.data[0],
+    )
 
-    if not verify_password(password, str(user["password_hash"])):
+    if not verify_password(
+        password,
+        str(user["password_hash"]),
+    ):
         return None
 
     return {
@@ -140,7 +157,9 @@ def get_user_from_session(
 
     response = (
         supabase.table("sessions")
-        .select("user_id, users(id, name, email)")
+        .select(
+            "user_id, users(id, name, email)"
+        )
         .eq("token", token)
         .limit(1)
         .execute()
@@ -149,7 +168,11 @@ def get_user_from_session(
     if not response.data:
         return None
 
-    session = cast(dict[str, Any], response.data[0])
+    session = cast(
+        dict[str, Any],
+        response.data[0],
+    )
+
     user = session.get("users")
 
     if not isinstance(user, dict):
@@ -162,7 +185,9 @@ def get_user_from_session(
     }
 
 
-def delete_session(token: str | None) -> None:
+def delete_session(
+    token: str | None,
+) -> None:
     if not token:
         return
 

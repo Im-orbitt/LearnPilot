@@ -1,10 +1,14 @@
 import json
 from typing import Any, cast
 
-from services.supabase import supabase
+from db.supabase import supabase
 
 
-def create_book(user_id: int, filename: str, chapter: dict[str, Any]):
+def create_book(
+    user_id: int,
+    filename: str,
+    chapter: dict[str, Any],
+) -> dict[str, Any]:
     response = (
         supabase.table("books")
         .insert(
@@ -20,7 +24,10 @@ def create_book(user_id: int, filename: str, chapter: dict[str, Any]):
     if not response.data:
         raise RuntimeError("Failed to create book.")
 
-    book = cast(dict[str, Any], response.data[0])
+    book = cast(
+        dict[str, Any],
+        response.data[0],
+    )
 
     return {
         "id": book["id"],
@@ -29,29 +36,41 @@ def create_book(user_id: int, filename: str, chapter: dict[str, Any]):
     }
 
 
-def get_user_books(user_id: int):
+def get_user_books(
+    user_id: int,
+) -> list[dict[str, Any]]:
     response = (
         supabase.table("books")
-        .select("id, filename, chapter_json, created_at")
+        .select(
+            "id, filename, chapter_json, created_at"
+        )
         .eq("user_id", user_id)
         .order("created_at", desc=True)
         .execute()
     )
 
-    books = cast(list[dict[str, Any]], response.data or [])
+    books = cast(
+        list[dict[str, Any]],
+        response.data or [],
+    )
 
     return [
         {
             "id": book["id"],
             "filename": book["filename"],
-            "chapter": json.loads(str(book["chapter_json"])),
+            "chapter": json.loads(
+                str(book["chapter_json"])
+            ),
             "created_at": book["created_at"],
         }
         for book in books
     ]
 
 
-def delete_book(book_id: int, user_id: int):
+def delete_book(
+    book_id: int,
+    user_id: int,
+) -> None:
     (
         supabase.table("books")
         .delete()
@@ -61,7 +80,9 @@ def delete_book(book_id: int, user_id: int):
     )
 
 
-def count_user_books(user_id: int) -> int:
+def count_user_books(
+    user_id: int,
+) -> int:
     response = (
         supabase.table("books")
         .select("id")
