@@ -20,7 +20,7 @@ FRONTEND_URL = os.getenv(
 
 PRODUCTION_FRONTEND_URL = os.getenv(
     "PRODUCTION_FRONTEND_URL",
-    "https://learnpilot-seven.vercel.app",
+    "https://learnpilot-edu.vercel.app",
 )
 
 SESSION_COOKIE_NAME = "learnpilot_session"
