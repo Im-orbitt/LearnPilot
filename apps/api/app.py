@@ -15,7 +15,6 @@ from services.notes import process_notes
 from services.quiz import process_quiz
 
 from services.auth import (
-    initialize_database,
     create_user,
     authenticate_user,
     create_session,
@@ -24,7 +23,6 @@ from services.auth import (
 )
 
 from services.books import (
-    initialize_books_database,
     create_book,
     get_user_books,
     count_user_books,
@@ -43,9 +41,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-initialize_database()
-initialize_books_database()
 
 class RegisterRequest(BaseModel):
     name: str
@@ -224,6 +219,12 @@ async def upload_pdf(
     for topic in chapter["topics"]:
         topic["quiz"] = quiz_lookup.get(topic["title"], [])
 
+    if not file.filename:
+        raise HTTPException(
+            status_code=400,
+            detail="Uploaded file must have a filename.",
+        )
+    
     book = create_book(
         user["id"],
         file.filename,

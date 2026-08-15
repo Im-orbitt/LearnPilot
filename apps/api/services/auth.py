@@ -1,14 +1,13 @@
 import hashlib
 import secrets
+from typing import Any, cast
 
-from services.supabase import supabase
 from postgrest.exceptions import APIError
 
-def initialize_database():
-    pass
+from services.supabase import supabase
 
 
-def hash_password(password):
+def hash_password(password: str) -> str:
     salt = secrets.token_bytes(16)
 
     password_hash = hashlib.scrypt(
@@ -22,7 +21,7 @@ def hash_password(password):
     return f"{salt.hex()}:{password_hash.hex()}"
 
 
-def verify_password(password, stored_hash):
+def verify_password(password: str, stored_hash: str) -> bool:
     try:
         salt_hex, password_hash_hex = stored_hash.split(":", 1)
 
@@ -43,7 +42,11 @@ def verify_password(password, stored_hash):
         return False
 
 
-def create_user(name, email, password):
+def create_user(
+    name: str,
+    email: str,
+    password: str,
+) -> dict[str, Any]:
     email = email.lower()
     password_hash = hash_password(password)
 
@@ -71,7 +74,7 @@ def create_user(name, email, password):
     if not response.data:
         raise ValueError("Failed to create account.")
 
-    user = response.data[0]
+    user = cast(dict[str, Any], response.data[0])
 
     return {
         "id": user["id"],
@@ -80,7 +83,10 @@ def create_user(name, email, password):
     }
 
 
-def authenticate_user(email, password):
+def authenticate_user(
+    email: str,
+    password: str,
+) -> dict[str, Any] | None:
     email = email.lower()
 
     response = (
@@ -94,9 +100,9 @@ def authenticate_user(email, password):
     if not response.data:
         return None
 
-    user = response.data[0]
+    user = cast(dict[str, Any], response.data[0])
 
-    if not verify_password(password, user["password_hash"]):
+    if not verify_password(password, str(user["password_hash"])):
         return None
 
     return {
@@ -106,7 +112,7 @@ def authenticate_user(email, password):
     }
 
 
-def create_session(user_id):
+def create_session(user_id: int) -> str:
     token = secrets.token_urlsafe(32)
 
     response = (
@@ -126,7 +132,9 @@ def create_session(user_id):
     return token
 
 
-def get_user_from_session(token):
+def get_user_from_session(
+    token: str | None,
+) -> dict[str, Any] | None:
     if not token:
         return None
 
@@ -141,9 +149,10 @@ def get_user_from_session(token):
     if not response.data:
         return None
 
-    user = response.data[0].get("users")
+    session = cast(dict[str, Any], response.data[0])
+    user = session.get("users")
 
-    if not user:
+    if not isinstance(user, dict):
         return None
 
     return {
@@ -153,8 +162,13 @@ def get_user_from_session(token):
     }
 
 
-def delete_session(token):
+def delete_session(token: str | None) -> None:
     if not token:
         return
 
-    supabase.table("sessions").delete().eq("token", token).execute()
+    (
+        supabase.table("sessions")
+        .delete()
+        .eq("token", token)
+        .execute()
+    )

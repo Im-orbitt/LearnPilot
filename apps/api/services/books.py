@@ -1,103 +1,72 @@
 import json
-import sqlite3
+from typing import Any, cast
 
-from pathlib import Path
-
-
-DATABASE_PATH = Path(__file__).resolve().parent.parent / "learnpilot.db"
+from services.supabase import supabase
 
 
-def get_connection():
-    connection = sqlite3.connect(DATABASE_PATH)
-    connection.row_factory = sqlite3.Row
-
-    return connection
-
-
-def initialize_books_database():
-    with get_connection() as connection:
-        connection.execute(
-            """
-            CREATE TABLE IF NOT EXISTS books (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                filename TEXT NOT NULL,
-                chapter_json TEXT NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES users(id)
-            )
-            """
+def create_book(user_id: int, filename: str, chapter: dict[str, Any]):
+    response = (
+        supabase.table("books")
+        .insert(
+            {
+                "user_id": user_id,
+                "filename": filename,
+                "chapter_json": json.dumps(chapter),
+            }
         )
+        .execute()
+    )
 
-        connection.commit()
+    if not response.data:
+        raise RuntimeError("Failed to create book.")
 
+    book = cast(dict[str, Any], response.data[0])
 
-def create_book(user_id, filename, chapter):
-    with get_connection() as connection:
-        cursor = connection.execute(
-            """
-            INSERT INTO books (user_id, filename, chapter_json)
-            VALUES (?, ?, ?)
-            """,
-            (
-                user_id,
-                filename,
-                json.dumps(chapter),
-            ),
-        )
-
-        connection.commit()
-
-        return {
-            "id": cursor.lastrowid,
-            "filename": filename,
-            "chapter": chapter,
-        }
+    return {
+        "id": book["id"],
+        "filename": book["filename"],
+        "chapter": chapter,
+    }
 
 
-def get_user_books(user_id):
-    with get_connection() as connection:
-        rows = connection.execute(
-            """
-            SELECT id, filename, chapter_json, created_at
-            FROM books
-            WHERE user_id = ?
-            ORDER BY created_at DESC
-            """,
-            (user_id,),
-        ).fetchall()
+def get_user_books(user_id: int):
+    response = (
+        supabase.table("books")
+        .select("id, filename, chapter_json, created_at")
+        .eq("user_id", user_id)
+        .order("created_at", desc=True)
+        .execute()
+    )
+
+    books = cast(list[dict[str, Any]], response.data or [])
 
     return [
         {
-            "id": row["id"],
-            "filename": row["filename"],
-            "chapter": json.loads(row["chapter_json"]),
-            "created_at": row["created_at"],
+            "id": book["id"],
+            "filename": book["filename"],
+            "chapter": json.loads(str(book["chapter_json"])),
+            "created_at": book["created_at"],
         }
-        for row in rows
+        for book in books
     ]
 
-def delete_book(book_id, user_id):
-    with get_connection() as connection:
-        connection.execute(
-            """
-            DELETE FROM books
-            WHERE id = ? AND user_id = ?
-            """,
-            (book_id, user_id),
-        )
 
-        connection.commit()
-        
-def count_user_books(user_id):
-    with get_connection() as connection:
-        row = connection.execute(
-            """
-            SELECT COUNT(*) AS count
-            FROM books
-            WHERE user_id = ?
-            """,
-            (user_id,),
-        ).fetchone()
+def delete_book(book_id: int, user_id: int):
+    (
+        supabase.table("books")
+        .delete()
+        .eq("id", book_id)
+        .eq("user_id", user_id)
+        .execute()
+    )
 
-    return row["count"]
+
+def count_user_books(user_id: int) -> int:
+    response = (
+        supabase.table("books")
+        .select("id")
+        .eq("user_id", user_id)
+        .execute()
+    )
+
+    return len(response.data or [])
