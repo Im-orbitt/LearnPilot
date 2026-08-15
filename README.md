@@ -1,6 +1,8 @@
 # LearnPilot
 
-> Upload a chapter. Master it with AI.
+<img width="1366" height="697" alt="hero-modified" src="https://github.com/user-attachments/assets/55a14891-943f-48b2-96b5-47954b1d2511" />
+
+Upload a chapter. Master it with AI.
 
 LearnPilot is an AI-powered learning platform that transforms textbook chapters into structured study material.
 
