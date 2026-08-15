@@ -31,7 +31,7 @@ def set_session_cookie(
         key=SESSION_COOKIE_NAME,
         value=token,
         httponly=True,
-        samesite="none" if IS_PRODUCTION else "lax",
+        samesite="lax",
         secure=IS_PRODUCTION,
         max_age=SESSION_MAX_AGE,
     )
