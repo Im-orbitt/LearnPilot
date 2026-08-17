@@ -177,6 +177,42 @@ Changes affecting authentication, uploads, AI generation, or database operations
 
 ---
 
+## Testing using tests
+
+LearnPilot uses automated tests for both the backend and frontend.
+
+### Backend
+
+Backend tests use **pytest** and are located in:
+
+```text
+apps/api/tests/
+```
+
+Run them from apps/api
+
+```powershell
+pytest
+```
+
+External services such as Gemini and Supabase should be mocked when testing so tests do not consume API credits or modify production data.
+
+### Frontend
+
+Frontend tests use Vitest and React Testing Library.
+
+Run them from `apps/web`:
+
+```powershell
+npm test -- --run
+```
+
+Frontend API requests should be mocked during tests rather than making requests to the deployed backend.
+
+New functionality should include relevant tests where practical.
+
+---
+
 ## Git
 
 Useful commands:
