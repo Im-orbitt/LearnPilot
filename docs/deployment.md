@@ -2,7 +2,7 @@
 
 > **Documentation policy:** This document is updated when the production infrastructure changes.
 >
-> **Last updated:** v0.7.1
+> **Last updated:** v0.8.1
 
 LearnPilot's production environment is split across several services. The frontend, backend, database, and AI service are hosted and managed separately.
 
@@ -106,9 +106,16 @@ The frontend does not connect directly to the database and must never receive th
 
 ## AI service
 
-LearnPilot uses **Google Gemini** for AI-powered learning material generation.
+LearnPilot uses **Google Gemini** for AI-powered learning material generation and AI Tutor responses.
 
 Gemini requests are made exclusively by the FastAPI backend.
+
+The backend uses Gemini for:
+
+- Chapter structure generation
+- Study note generation
+- Quiz generation
+- AI Tutor responses
 
 The Gemini API key is stored as a backend environment variable and is never exposed to the frontend.
 
@@ -187,6 +194,10 @@ Upload PDF
 Generate learning material
     ↓
 View saved book
+    ↓
+Open a topic
+    ↓
+Ask the AI Tutor
     ↓
 Logout
 ```

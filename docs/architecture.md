@@ -2,7 +2,7 @@
 
 > **Documentation policy:** This document is updated when the architecture changes.
 >
-> **Last updated:** v0.7.1
+> **Last updated:** v0.8.1
 
 LearnPilot is a client-server learning platform. The frontend handles the user interface and communicates with a FastAPI backend, while the backend handles authentication, PDF processing, AI generation, and database operations.
 
@@ -64,6 +64,9 @@ It is responsible for:
 - AI-powered content generation
 - Book and user data persistence
 - Enforcing authenticated access and application limits
+- AI-powered content generation
+- AI Tutor responses
+- Book and user data persistence
 
 The backend is organized around a few main responsibilities:
 
@@ -78,7 +81,8 @@ Services
   ├── Books
   ├── PDF processing
   ├── Notes
-  └── Quizzes
+  ├── Quizzes
+  └── Tutor
 
 Database
   │
@@ -154,6 +158,43 @@ Generated learning material
 ```
 
 The backend extracts readable text from the PDF, uses Gemini to generate the chapter structure and learning material, combines the results, and stores the completed book in Supabase.
+
+---
+
+## AI Tutor
+
+The AI Tutor provides topic-grounded answers and explanations using the learning material associated with the selected book.
+
+```text
+Student question
+       │
+       ▼
+React Tutor page
+       │
+       │ POST /tutor
+       ▼
+FastAPI Tutor route
+       │
+       ├── Authenticate user
+       ├── Load user's books
+       ├── Select learning context
+       └── Pass context + question
+                    │
+                    ▼
+              Gemini Tutor
+                    │
+                    ▼
+              Tutor response
+                    │
+                    ▼
+              React Tutor UI
+```
+
+Tutor requests are handled entirely by the backend. The frontend never communicates directly with Gemini.
+
+Tutor responses are returned as Markdown and rendered by the frontend using React Markdown and the shared Markdown utilities.
+
+The Tutor is instructed to stay grounded in the provided learning material. Questions outside that material may receive a response explaining that the information is not covered by the available learning context.
 
 ---
 

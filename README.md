@@ -33,7 +33,11 @@ Work through each topic using a structured learning flow:
 2. Test your understanding
 3. Ask the AI Tutor
 
-The AI Tutor interface is currently being prepared for a future release.
+### AI Tutor
+
+Ask questions about the selected learning material and receive explanations grounded in the topic being studied.
+
+The Tutor uses the chapter content available to LearnPilot rather than acting as an unrestricted general-purpose chatbot.
 
 ### Personal Library
 
@@ -61,6 +65,7 @@ The Free plan currently supports up to **2 books per user**.
 6. Generate quizzes
 7. Save the generated chapter to your library
 8. Study topics through the guided lesson workflow
+9. Ask the AI Tutor questions about the learning material
 
 ## Tech Stack
 
@@ -117,7 +122,7 @@ For local development instructions, environment variables, architecture, and dep
 
 ## Project Status
 
-LearnPilot is under active development.
+> **Current version:** v0.8.1
 
 The core learning experience is currently implemented, including:
 
@@ -129,12 +134,12 @@ The core learning experience is currently implemented, including:
 - Quiz scoring and answer review
 - Personal book library
 - Guided lesson workflow
+- AI Tutor
 - Supabase/PostgreSQL integration
 - Production deployment
 
-The following areas are still planned or being developed:
+The following areas are being developed:
 
-- AI Tutor
 - Progress tracking
 - Settings
 - Parent dashboard

@@ -2,7 +2,7 @@
 
 > **Documentation policy:** This document is updated when the development workflow changes.
 >
-> **Last updated:** v0.7.1
+> **Last updated:** v0.8.1
 
 LearnPilot is developed as a monorepo containing a React frontend and a FastAPI backend.
 
@@ -147,9 +147,11 @@ Never expose the Supabase service-role key to the frontend.
 
 ## AI development
 
-Gemini powers LearnPilot's chapter, notes, and quiz generation.
+Gemini powers LearnPilot's chapter structure generation, study notes, quizzes, and AI Tutor.
 
-AI-related changes should be tested with real textbook content where practical, since changes to prompts or processing logic can affect the generated learning material.
+The AI Tutor receives the relevant learning context and the student's question through the backend. Tutor responses are generated server-side and returned to the frontend as Markdown.
+
+AI-related changes should be tested with mocked AI responses where possible so tests do not consume Gemini API credits.
 
 API credentials must always remain server-side.
 
@@ -171,6 +173,8 @@ Generate learning material
 View book in library
    ↓
 Open notes and quizzes
+   ↓
+Ask the AI Tutor
 ```
 
 Changes affecting authentication, uploads, AI generation, or database operations should be tested through the relevant part of this flow.
