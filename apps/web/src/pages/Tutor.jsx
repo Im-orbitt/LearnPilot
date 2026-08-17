@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { Bot, Send, User } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 import "./Tutor.css";
 
 import { useBook } from "../hooks/useBook";
 import { askTutor } from "../services/api";
+import { createMarkdownComponents } from "../utils/markdown";
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
 
 function Tutor() {
   const { currentBookId, currentTopic } = useBook();
+  const markdownComponents = createMarkdownComponents();
 
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([]);
@@ -128,7 +131,9 @@ function Tutor() {
                       {message.role === "tutor" ? "Tutor" : "You"}
                     </span>
 
-                    <p>{message.content}</p>
+                    <ReactMarkdown components={markdownComponents}>
+                      {message.content}
+                    </ReactMarkdown>
                   </div>
                 </div>
               ))}
