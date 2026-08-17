@@ -7,6 +7,7 @@ from core.config import (
 from routes.auth import router as auth_router
 from routes.books import router as books_router
 from routes.upload import router as upload_router
+from routes.tutor import router as tutor_router
 
 app = FastAPI()
 
@@ -28,3 +29,4 @@ def root():
 app.include_router(auth_router)
 app.include_router(books_router)
 app.include_router(upload_router)
+app.include_router(tutor_router)

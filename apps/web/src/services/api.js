@@ -41,3 +41,25 @@ export async function getBackendStatus() {
 
   return response.json();
 }
+
+export async function askTutor(bookId, question) {
+  const response = await fetch(`${API_URL}/tutor`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      book_id: String(bookId),
+      question,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.detail || "Tutor request failed.");
+  }
+
+  return data;
+}

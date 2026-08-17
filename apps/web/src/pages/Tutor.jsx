@@ -1,12 +1,19 @@
+import { useState } from "react";
+import { Bot, Send, User } from "lucide-react";
+
 import "./Tutor.css";
 
-import { Bot, Lock, Send } from "lucide-react";
-
 import { useBook } from "../hooks/useBook";
+import { askTutor } from "../services/api";
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
 
 function Tutor() {
-  const { currentTopic } = useBook();
+  const { currentBookId, currentTopic } = useBook();
+
+  const [question, setQuestion] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   if (!currentTopic) {
     return (
@@ -15,6 +22,45 @@ function Tutor() {
         message="Choose a topic from the Chapter page."
       />
     );
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    const trimmedQuestion = question.trim();
+
+    if (!trimmedQuestion || loading || !currentBookId) {
+      return;
+    }
+
+    setError("");
+
+    setMessages((previous) => [
+      ...previous,
+      {
+        role: "user",
+        content: trimmedQuestion,
+      },
+    ]);
+
+    setQuestion("");
+    setLoading(true);
+
+    try {
+      const data = await askTutor(currentBookId, trimmedQuestion);
+
+      setMessages((previous) => [
+        ...previous,
+        {
+          role: "tutor",
+          content: data.answer,
+        },
+      ]);
+    } catch (requestError) {
+      setError(requestError.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -43,38 +89,88 @@ function Tutor() {
 
           <span className="tutor-status">
             <span className="tutor-status-dot" />
-            Preparing
+            Online
           </span>
         </div>
 
         <div className="tutor-body">
-          <div className="tutor-empty-state">
-            <div className="tutor-empty-icon">
-              <Lock size={24} />
+          {messages.length === 0 ? (
+            <div className="tutor-empty-state">
+              <div className="tutor-empty-icon">
+                <Bot size={24} />
+              </div>
+
+              <h3>What would you like to learn?</h3>
+
+              <p>
+                Ask me anything about <strong>{currentTopic.title}</strong>. I
+                can explain difficult concepts, answer questions, and help you
+                understand the material.
+              </p>
             </div>
+          ) : (
+            <div className="tutor-messages">
+              {messages.map((message, index) => (
+                <div
+                  className={`tutor-message tutor-message-${message.role}`}
+                  key={`${message.role}-${index}`}
+                >
+                  <div className="tutor-message-icon">
+                    {message.role === "tutor" ? (
+                      <Bot size={17} />
+                    ) : (
+                      <User size={17} />
+                    )}
+                  </div>
 
-            <h3>Your AI Tutor is being prepared</h3>
+                  <div className="tutor-message-content">
+                    <span className="tutor-message-label">
+                      {message.role === "tutor" ? "Tutor" : "You"}
+                    </span>
 
-            <p>
-              The tutor will be able to answer questions about{" "}
-              <strong>{currentTopic.title}</strong>, explain difficult concepts,
-              and guide you through problems step by step.
-            </p>
+                    <p>{message.content}</p>
+                  </div>
+                </div>
+              ))}
 
-            <span className="tutor-note">
-              AI tutoring will be available in a future LearnPilot update.
-            </span>
-          </div>
+              {loading && (
+                <div className="tutor-message tutor-message-tutor">
+                  <div className="tutor-message-icon">
+                    <Bot size={17} />
+                  </div>
+
+                  <div className="tutor-message-content">
+                    <span className="tutor-message-label">Tutor</span>
+
+                    <p className="tutor-thinking">Thinking...</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-        <form className="tutor-input">
+        {error && (
+          <div className="tutor-error" role="alert">
+            {error}
+          </div>
+        )}
+
+        <form className="tutor-input" onSubmit={handleSubmit}>
           <input
             type="text"
+            value={question}
+            onChange={(event) => setQuestion(event.target.value)}
             placeholder="Ask your tutor anything..."
-            disabled
+            disabled={loading}
+            aria-label="Ask your tutor"
           />
 
-          <button type="button" disabled aria-label="Send question">
+          <button
+            type="submit"
+            disabled={loading || !question.trim()}
+            aria-label="Send question"
+          >
             <Send size={18} />
           </button>
         </form>

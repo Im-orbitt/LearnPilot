@@ -190,3 +190,94 @@
         padding: var(--space-xl);
     }
 }
+
+.tutor-messages {
+    width: 100%;
+    max-width: 760px;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.tutor-message {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+}
+
+.tutor-message-user {
+    flex-direction: row-reverse;
+}
+
+.tutor-message-icon {
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: var(--radius-full);
+
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.tutor-message-user .tutor-message-icon {
+    background: var(--surface-secondary);
+    color: var(--text-secondary);
+}
+
+.tutor-message-content {
+    max-width: 75%;
+}
+
+.tutor-message-label {
+    display: block;
+
+    margin-bottom: .25rem;
+
+    color: var(--text-light);
+    font-size: var(--font-xs);
+    font-weight: 700;
+}
+
+.tutor-message-content p {
+    margin: 0;
+
+    color: var(--text-primary);
+    line-height: 1.65;
+
+    white-space: pre-wrap;
+}
+
+.tutor-message-user .tutor-message-content {
+    text-align: right;
+}
+
+.tutor-thinking {
+    color: var(--text-secondary) !important;
+}
+
+.tutor-error {
+    padding: var(--space-sm) var(--space-md);
+
+    border-top: 1px solid var(--border);
+
+    background: var(--surface-secondary);
+
+    color: var(--danger);
+    font-size: var(--font-sm);
+}
+
+.tutor-input button {
+    cursor: pointer;
+    opacity: 1;
+}
+
+.tutor-input button:disabled {
+    cursor: not-allowed;
+    opacity: .45;
+}

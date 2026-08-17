@@ -9,6 +9,7 @@ export function BookProvider({ children }) {
 
   const [books, setBooks] = useState([]);
   const [book, setBookState] = useState(null);
+  const [currentBookId, setCurrentBookId] = useState(null);
   const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
 
   const [lessonProgress, setLessonProgress] = useState({
@@ -27,8 +28,10 @@ export function BookProvider({ children }) {
 
     if (data.books.length > 0) {
       setBookState(data.books[0].chapter);
+      setCurrentBookId(data.books[0].id);
     } else {
       setBookState(null);
+      setCurrentBookId(null);
     }
 
     return data.books;
@@ -48,6 +51,7 @@ export function BookProvider({ children }) {
         console.error("Failed to load books:", error);
         setBooks([]);
         setBookState(null);
+        setCurrentBookId(null);
       } finally {
         setBooksLoading(false);
       }
@@ -58,6 +62,11 @@ export function BookProvider({ children }) {
 
   function setBook(newBook) {
     setBookState(newBook);
+
+    const selectedBook = books.find((item) => item.chapter === newBook);
+
+    setCurrentBookId(selectedBook?.id ?? null);
+
     setCurrentTopicIndex(0);
     setQuizAnswers({});
     setLessonProgress({
@@ -77,6 +86,7 @@ export function BookProvider({ children }) {
         books,
         setBook,
         refreshBooks,
+        currentBookId,
         currentTopic,
         currentTopicIndex,
         setCurrentTopicIndex,

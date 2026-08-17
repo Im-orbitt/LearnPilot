@@ -195,3 +195,40 @@ Notes:
         raise ValueError("Gemini returned no quiz.")
 
     return response.text
+
+def generate_tutor_response(
+    context: str,
+    question: str,
+) -> str:
+    response = client.models.generate_content(
+        model="gemini-3.5-flash-lite",
+        contents=f"""
+You are LearnPilot's AI Tutor.
+
+Help a school student understand the provided learning material.
+
+Learning material:
+
+{context}
+
+Student question:
+
+{question}
+
+Rules:
+
+- Answer based primarily on the provided learning material.
+- Explain concepts clearly at a school-student level.
+- Break difficult ideas into simple steps when useful.
+- Give examples when they help understanding.
+- Do not invent facts unsupported by the learning material.
+- If the question cannot be answered from the provided material, say so clearly.
+- Do not unnecessarily repeat the learning material.
+- Be helpful and concise.
+""",
+    )
+
+    if response.text is None:
+        raise ValueError("Gemini returned no tutor response.")
+
+    return response.text.strip()
