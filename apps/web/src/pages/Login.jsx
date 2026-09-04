@@ -6,8 +6,10 @@ import { Brain } from "lucide-react";
 
 import Button from "../components/ui/Button/Button";
 import Input from "../components/ui/input/Input";
+import Spinner from "../components/ui/Spinner/Spinner";
 import { login } from "../services/auth";
 import { useAuth } from "../hooks/useAuth";
+import getErrorMessage from "../utils/error";
 
 function Login() {
   const navigate = useNavigate();
@@ -38,7 +40,7 @@ function Login() {
 
       navigate("/app/dashboard");
     } catch (error) {
-      setError(error.message);
+      setError(getErrorMessage(error, { fallback: "We couldn't sign you in. Check your credentials and try again." }));
     } finally {
       setLoading(false);
     }
@@ -77,10 +79,10 @@ function Login() {
             autoComplete="current-password"
           />
 
-          {error && <p className="auth-error">{error}</p>}
+          {error && <p className="auth-error" role="alert">{error}</p>}
 
           <Button type="submit" disabled={loading}>
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? <Spinner size={18} /> : "Sign in"}
           </Button>
         </form>
 

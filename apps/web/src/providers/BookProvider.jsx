@@ -20,6 +20,7 @@ export function BookProvider({ children }) {
   const [quizAnswers, setQuizAnswers] = useState({});
 
   const [booksLoading, setBooksLoading] = useState(false);
+  const [booksError, setBooksError] = useState("");
 
   async function refreshBooks() {
     const data = await getBooks();
@@ -44,11 +45,13 @@ export function BookProvider({ children }) {
 
     async function loadBooks() {
       setBooksLoading(true);
+      setBooksError("");
 
       try {
         await refreshBooks();
       } catch (error) {
         console.error("Failed to load books:", error);
+        setBooksError("We couldn't load your library. Please refresh to try again.");
         setBooks([]);
         setBookState(null);
         setCurrentBookId(null);
@@ -95,6 +98,7 @@ export function BookProvider({ children }) {
         quizAnswers,
         setQuizAnswers,
         loading,
+        booksError,
       }}
     >
       {children}

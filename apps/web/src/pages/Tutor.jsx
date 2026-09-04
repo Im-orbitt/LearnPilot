@@ -8,6 +8,8 @@ import { useBook } from "../hooks/useBook";
 import { askTutor } from "../services/api";
 import { createMarkdownComponents } from "../utils/markdown";
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
+import Spinner from "../components/ui/Spinner/Spinner";
+import getErrorMessage from "../utils/error";
 
 function Tutor() {
   const { currentBookId, currentTopic } = useBook();
@@ -60,7 +62,7 @@ function Tutor() {
         },
       ]);
     } catch (requestError) {
-      setError(requestError.message || "Something went wrong.");
+      setError(getErrorMessage(requestError, { fallback: "The tutor couldn't respond right now. Please try again in a moment." }));
     } finally {
       setLoading(false);
     }
@@ -176,7 +178,7 @@ function Tutor() {
             disabled={loading || !question.trim()}
             aria-label="Send question"
           >
-            <Send size={18} />
+            {loading ? <Spinner size={16} /> : <Send size={18} />}
           </button>
         </form>
       </section>

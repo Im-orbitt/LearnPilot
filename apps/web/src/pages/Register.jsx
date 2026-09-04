@@ -6,8 +6,10 @@ import { Brain } from "lucide-react";
 
 import Button from "../components/ui/Button/Button";
 import Input from "../components/ui/input/Input";
+import Spinner from "../components/ui/Spinner/Spinner";
 import { register } from "../services/auth";
 import { useAuth } from "../hooks/useAuth";
+import getErrorMessage from "../utils/error";
 
 function Register() {
   const navigate = useNavigate();
@@ -50,7 +52,7 @@ function Register() {
 
       navigate("/app/dashboard");
     } catch (error) {
-      setError(error.message);
+      setError(getErrorMessage(error, { fallback: "We couldn't create your account. Please try again." }));
     } finally {
       setLoading(false);
     }
@@ -109,10 +111,10 @@ function Register() {
             autoComplete="new-password"
           />
 
-          {error && <p className="auth-error">{error}</p>}
+          {error && <p className="auth-error" role="alert">{error}</p>}
 
           <Button type="submit" disabled={loading}>
-            {loading ? "Creating account..." : "Create account"}
+            {loading ? <Spinner size={18} /> : "Create account"}
           </Button>
         </form>
 

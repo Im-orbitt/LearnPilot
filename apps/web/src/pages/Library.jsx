@@ -6,8 +6,10 @@ import { useBook } from "../hooks/useBook";
 import { uploadPdf } from "../services/api";
 
 import EmptyState from "../components/feedback/EmptyState/EmptyState";
+import Spinner from "../components/ui/Spinner/Spinner";
 import BookCard from "../features/library/BookCard/BookCard";
 import UploadSection from "../features/library/UploadSection/UploadSection";
+import getErrorMessage from "../utils/error";
 
 function Library() {
   const { books, setBook, refreshBooks } = useBook();
@@ -35,7 +37,7 @@ function Library() {
 
       setSuccess("Chapter generated successfully!");
     } catch (err) {
-      setError(err.message);
+      setError(getErrorMessage(err, { fallback: "We couldn't process this PDF. Make sure it's a valid textbook PDF and try again." }));
     } finally {
       setUploading(false);
     }
@@ -55,6 +57,13 @@ function Library() {
           title="No books yet"
           message="Upload your first PDF to get started."
         />
+      )}
+
+      {uploading && books.length === 0 && (
+        <div className="library-loading" role="status" aria-live="polite">
+          <Spinner size={40} />
+          <p>Setting up your library...</p>
+        </div>
       )}
 
       {books.length > 0 && (
