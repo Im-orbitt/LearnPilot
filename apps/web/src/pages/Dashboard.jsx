@@ -21,6 +21,11 @@ function Dashboard() {
     );
   }
 
+  const totalTopics = books.reduce(
+    (sum, item) => sum + (item.chapter?.topics?.length ?? 0),
+    0,
+  );
+
   return (
     <div className="dashboard-page">
       <section className="dashboard-welcome">
@@ -34,9 +39,13 @@ function Dashboard() {
       <section className="dashboard-stats">
         <StatCard title="Books" value={books.length} icon={BookOpen} />
 
-        <StatCard title="Topics" value={book.topics.length} icon={Layers} />
+        <StatCard title="Total Topics" value={totalTopics} icon={Layers} />
 
-        <StatCard title="Study Time" value="42 min" icon={Clock3} />
+        <StatCard
+          title="Current Chapter"
+          value={book?.topics?.length ?? 0}
+          icon={Clock3}
+        />
       </section>
     </div>
   );

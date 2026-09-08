@@ -9,13 +9,15 @@ function FileUpload({ onChange, disabled }) {
         accept=".pdf"
         onChange={onChange}
         disabled={disabled}
+        aria-label="Upload a PDF textbook"
+        aria-describedby="file-upload-hint"
       />
 
       <UploadCloud size={52} className="upload-icon" />
 
       <h3>Upload your textbook</h3>
 
-      <p>Choose an NCERT or any study PDF.</p>
+      <p id="file-upload-hint">Choose an NCERT or any study PDF.</p>
 
       <div className="upload-badge">
         <FileText size={16} />

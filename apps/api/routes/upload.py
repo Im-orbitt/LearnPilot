@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
 from schemas.books import UploadResponse
@@ -9,7 +11,15 @@ from services.quiz import process_quiz
 from utils.auth import get_current_user
 
 
+logger = logging.getLogger(__name__)
+
+
 router = APIRouter()
+
+
+MAX_PDF_BYTES = 50 * 1024 * 1024  # 50 MB
+
+PDF_MAGIC_BYTES = b"%PDF-"
 
 
 @router.post(
@@ -34,17 +44,37 @@ async def upload_pdf(
 
     pdf_bytes = await file.read()
 
-    text = extract_text(pdf_bytes)
+    if len(pdf_bytes) > MAX_PDF_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail="Uploaded file is too large. Maximum size is 50 MB.",
+        )
+
+    if not pdf_bytes.startswith(PDF_MAGIC_BYTES):
+        raise HTTPException(
+            status_code=400,
+            detail="Uploaded file is not a valid PDF.",
+        )
+
+    try:
+        text = extract_text(pdf_bytes)
+    except Exception:
+        logger.exception("Failed to extract text from PDF")
+        raise HTTPException(
+            status_code=400,
+            detail="Uploaded file is not a valid PDF.",
+        )
 
     try:
         chapter = process_chapter(text)
         notes = process_notes(text, chapter["topics"])
         quiz = process_quiz(notes)
 
-    except Exception as error:
+    except Exception:
+        logger.exception("Failed to process PDF content")
         raise HTTPException(
             status_code=500,
-            detail=str(error),
+            detail="We couldn't process this PDF. Please try again.",
         )
 
     for chapter_topic, notes_topic in zip(

@@ -4,6 +4,40 @@ import { BookContext } from "../contexts/BookContext";
 import { useAuth } from "../hooks/useAuth";
 import { getBooks } from "../services/api";
 
+
+const STORAGE_KEY_PREFIX = "learnpilot_progress";
+
+
+function storageKey(userId, bookId, topicTitle) {
+  return `${STORAGE_KEY_PREFIX}:${userId}:${bookId}:${encodeURIComponent(topicTitle)}`;
+}
+
+
+function loadProgress(userId, bookId, topicTitle) {
+  try {
+    const raw = localStorage.getItem(storageKey(userId, bookId, topicTitle));
+    if (!raw) {
+      return null;
+    }
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+
+function saveProgress(userId, bookId, topicTitle, data) {
+  try {
+    localStorage.setItem(
+      storageKey(userId, bookId, topicTitle),
+      JSON.stringify(data),
+    );
+  } catch {
+    // Silently fail if storage is full or unavailable
+  }
+}
+
+
 export function BookProvider({ children }) {
   const { user, loading: authLoading } = useAuth();
 
@@ -63,6 +97,55 @@ export function BookProvider({ children }) {
     loadBooks();
   }, [user, authLoading]);
 
+  // Restore persisted progress when the current topic changes
+  // The setState calls inside this effect are intentional — they synchronize
+  // React state from localStorage when the user navigates to a different topic.
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    if (!user || !currentBookId || !book?.topics) {
+      return;
+    }
+
+    const topic = book.topics[currentTopicIndex];
+
+    if (!topic?.title) {
+      return;
+    }
+
+    const saved = loadProgress(user.id, currentBookId, topic.title);
+
+    if (saved) {
+      setLessonProgress({
+        notesCompleted: Boolean(saved.notesCompleted),
+        quizCompleted: Boolean(saved.quizCompleted),
+      });
+      setQuizAnswers(saved.quizAnswers || {});
+    } else {
+      setLessonProgress({ notesCompleted: false, quizCompleted: false });
+      setQuizAnswers({});
+    }
+  }, [user, currentBookId, currentTopicIndex, book]);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  // Persist progress whenever it changes
+  useEffect(() => {
+    if (!user || !currentBookId || !book?.topics) {
+      return;
+    }
+
+    const topic = book.topics[currentTopicIndex];
+
+    if (!topic?.title) {
+      return;
+    }
+
+    saveProgress(user.id, currentBookId, topic.title, {
+      notesCompleted: lessonProgress.notesCompleted,
+      quizCompleted: lessonProgress.quizCompleted,
+      quizAnswers,
+    });
+  }, [user, currentBookId, currentTopicIndex, book, lessonProgress, quizAnswers]);
+
   function setBook(newBook) {
     setBookState(newBook);
 
@@ -71,11 +154,6 @@ export function BookProvider({ children }) {
     setCurrentBookId(selectedBook?.id ?? null);
 
     setCurrentTopicIndex(0);
-    setQuizAnswers({});
-    setLessonProgress({
-      notesCompleted: false,
-      quizCompleted: false,
-    });
   }
 
   const currentTopic = book?.topics?.[currentTopicIndex] ?? null;
